@@ -1,0 +1,26 @@
+{
+  "name": "software-engineering-project-2019",
+  "version": "1.0.0",
+  "description": "Office Inventory",
+  "main": "login.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jando16407/Software-Engineering-Project-2019.git"
+  },
+  "keywords": [
+    "office",
+    "inventory"
+  ],
+  "author": "Group 11",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jando16407/Software-Engineering-Project-2019/issues"
+  },
+  "homepage": "https://github.com/jando16407/Software-Engineering-Project-2019#readme",
+  "dependencies": {
+    "firebase": "^6.1.0"
+  }
+}

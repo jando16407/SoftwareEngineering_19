@@ -1,6 +1,6 @@
-var firebase = require("firebase/app")
-require("firebase/auth")
-require("firebase/database")
+//var firebase = require("firebase")
+//require("firebase/auth")
+//require("firebase/database")
 
 var firebaseConfig = {
     apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
@@ -13,3 +13,36 @@ var firebaseConfig = {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+
+  //did user hit login?
+  var login = document.getElementById("loginButton")
+
+  login.onclick = function(){
+        //get email & password from fields
+        var emailInput = document.getElementById("emailInput")
+        var passwordInput = document.getElementById("passwordInput")
+
+        var email = emailInput.value
+        var password = passwordInput.value
+       
+        // get email input & password input
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert("error")
+            // ...
+        });
+    }
+  //checks if signed in and sends to appropriate page
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var email = user.email;
+      alert("LOGGED IN")
+      //sign in to appropriate page
+
+    } else {
+      // User is signed out.
+      // ...
+    }
+  });

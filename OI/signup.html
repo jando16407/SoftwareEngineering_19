@@ -10,40 +10,31 @@
     </h1>
     <p>
         <label for="name"><b>Full Name</b></label><br>
-        <input type="text" placeholder="Enter Full Name" name="name" required>
+        <input id="name" type="text" placeholder="Enter Full Name" name="name" required>
         <br>
         <label for="email"><b>Email</b></label><br>
-        <input type="text" placeholder="Enter Email" name="email" required>
+        <input id="email" type="text" placeholder="Enter Email" name="email" required>
         <br>
         <label for="psw"><b>Password</b></label><br>
-        <input type="password" placeholder="Enter Password" name="psw" required>
+        <input id="password1" type="password" placeholder="Enter Password" name="psw" required>
         <br>
         <label for="psw-repeat"><b>Repeat Password</b></label><br>
-        <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+        <input id="password2" type="password" placeholder="Repeat Password" name="psw-repeat" required>
         <br>
         <label>
             <input id="isAdmin" type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Admin?
         </label><br>
         <label id="secNum" for="sectionNum"><b>Section Number</b></label><br>
         <input id="secNumInput" type="text" placeholder="Enter Section Number" name="sectionNum" required><br>
-        <button>Sign Up</button>
+        <button id="signupButton">Sign Up</button>
     </p>
-    <script>
-        var sectionNum = document.getElementById("secNum");
-        var sectionNumInput = document.getElementById("secNumInput");
-        var isAdmin = document.getElementById("isAdmin");
-        sectionNum.style.visibility = 'hidden';
-        sectionNumInput.style.visibility = 'hidden';
-        isAdmin.onclick = function(){
-            if(isAdmin.checked == false){
-            sectionNum.style.visibility = 'visible';
-            sectionNumInput.style.visibility = 'visible';
-            }
-            else{
-            sectionNum.style.visibility = 'hidden';
-            sectionNumInput.style.visibility = 'hidden';
-            }
-        }
-    </script>
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-app.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
+    <script src="signup.js"></script>
+    
 </body>
 </html>

@@ -1,0 +1,81 @@
+.title{
+  font-family: sans-serif;
+  color: black;
+  text-align: center;
+}
+/*********************************** Admin Container *************************************/
+.tabContainer{
+   width: 80%;
+   height: 370px;
+   position: relative;
+   left: 10%;
+  top: 15%;
+}
+.tabContainer .buttonContainer{
+   height: 15%;
+}
+.tabContainer .buttonContainer button{
+   width: 25%;
+   height: 100%;
+   float: left;
+   border: none;
+   outline: none;
+   cursor: pointer;
+   padding: 10px;
+   font-family: sans-serif;
+   font-size: 18px;
+   background-color:#eee;  
+}
+.tabContainer .buttonContainer button:hover{
+   background-color: #d7d4d4
+}
+.tabContainer .tabPanel{
+  height: 85%;
+  background-color: gray;
+  color: white;
+  text-align: center;
+  padding-top: 105px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  font-size: 22px;
+  display: none;
+}
+
+/**********************************   Employee Container *******************************/
+
+.tabContainer2{
+   width: 70%;
+   height: 80%;
+   position: absolute;
+   left: 15%;
+   top: 17%;
+}
+.tabContainer2 .buttonContainer{
+   height: 8%;
+}
+.tabContainer2 .buttonContainer button{
+   width: 25%;
+   height: 100%;
+   float: left;
+   border: none;
+   outline: none;
+   cursor: pointer;
+   padding: 10px;
+   font-family: sans-serif;
+   font-size: 18px;
+   background-color:#eee;  
+}
+.tabContainer2 .buttonContainer button:hover{
+   background-color: #d7d4d4
+}
+.tabContainer2 .tabPanel{
+  height: 85%;
+  background-color: gray;
+  color: white;
+  text-align: center;
+  padding-top: 105px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  font-size: 22px;
+  display: none;
+}

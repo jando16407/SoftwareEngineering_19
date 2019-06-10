@@ -44,9 +44,10 @@ signup.onclick = function(){
         var errorCode = error.code;
         var errorMessage = error.message;
         // ...
+        console.log("createUserSuccess");
     });
     //creates new user in database & stores their info
-    var userId = email.value.match(/^(.+)@/)[1]
+    var userId = email.value.match(/^(.+)@/)[0]
     var secNum = 0
     var type = "Admin"
     if(isAdmin.checked == false){
@@ -60,5 +61,6 @@ signup.onclick = function(){
     });
       
       console.log("success!")
+      window.location.href = "index.html"
       //and send other info to db
 }

@@ -18,7 +18,7 @@ var firebaseConfig = {
   window.onload = function(){
     firebase.auth().signOut().then(function(){
       //successful
-      alert('logged out')
+//      alert('logged out')
     },function(error){
       alert('still logged in')
     })

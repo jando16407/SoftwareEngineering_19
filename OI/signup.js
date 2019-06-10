@@ -15,18 +15,14 @@ var firebaseConfig = {
 
 
   //If admin or not
-var sectionNum = document.getElementById("secNum");
 var sectionNumInput = document.getElementById("secNumInput");
 var isAdmin = document.getElementById("isAdmin");
-sectionNum.style.visibility = 'hidden';
 sectionNumInput.style.visibility = 'hidden';
 isAdmin.onclick = function(){
     if(isAdmin.checked == false){
-    sectionNum.style.visibility = 'visible';
     sectionNumInput.style.visibility = 'visible';
     }
     else{
-    sectionNum.style.visibility = 'hidden';
     sectionNumInput.style.visibility = 'hidden';
     }
 }

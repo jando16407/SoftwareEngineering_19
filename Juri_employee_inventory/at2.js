@@ -38,20 +38,3 @@ function openLink(evt, linkName) {
 }
 // Click on the first tablink on load
 document.getElementsByClassName("tablink")[0].click();
-
-
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }

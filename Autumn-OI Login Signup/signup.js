@@ -1,4 +1,3 @@
-
 //connect to firebase
 var firebaseConfig = {
     apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
@@ -12,17 +11,19 @@ var firebaseConfig = {
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
 
-
-
   //If admin or not
+var sectionNum = document.getElementById("secNum");
 var sectionNumInput = document.getElementById("secNumInput");
 var isAdmin = document.getElementById("isAdmin");
+sectionNum.style.visibility = 'hidden';
 sectionNumInput.style.visibility = 'hidden';
 isAdmin.onclick = function(){
     if(isAdmin.checked == false){
+    sectionNum.style.visibility = 'visible';
     sectionNumInput.style.visibility = 'visible';
     }
     else{
+    sectionNum.style.visibility = 'hidden';
     sectionNumInput.style.visibility = 'hidden';
     }
 }

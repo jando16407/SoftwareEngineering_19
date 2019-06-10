@@ -10,9 +10,12 @@ var ref2;
 var ref3;
 var listContainer1;
 var listContainer2;
+var mainListContainer1;
+var mainListContainer2;
 var first1 = true;
 var first2 = true;
-
+var first3 = true;
+var first4 = true;
 
 
 /* */
@@ -26,8 +29,8 @@ unitPath2 = 'Unit/Unit_002';
 //unitPath2 = 'Office_01';
 ref1 = database.ref(unitPath1);
 ref2 = database.ref(unitPath2);
-ref1.on("value", gotData1, gotErr);
-ref2.on("value", gotData2, gotErr);
+ref1.on("value", got1, gotErr);
+ref2.on("value", got2, gotErr);
 
 /* */
 function setup(){
@@ -46,19 +49,28 @@ function setup(){
     console.log(firebase);
 }
 
+function got1(data) {
+    gotData1(data);
+    mainData1(data);
+}
+function got2(data) {
+    gotData2(data);
+    mainData2(data);
+}
+
 /******** Main List ********************************/
-function gotData2(data){
+function mainData1(data){
     var items = data.val();
     var keys = Object.keys(items);
     console.log(keys);
-    if(first2){
-        listContainer2 = document.createElement('table');
-        document.getElementById("officeItemList2").appendChild(listContainer2);
-        listContainer2.setAttribute('name2', 'itemTable2');
+    if(first3){
+        mainListContainer1 = document.createElement('table');
+        document.getElementById("mainListUnit1").appendChild(mainListContainer1);
+        mainListContainer1.setAttribute('name3', 'itemTable3');
         var listRow = document.createElement('tr');
         var topRow = "<th>ID</th><th>Item Name</th><th>Item Description</th>";
         listRow.innerHTML = topRow;
-        listContainer2.appendChild(listRow);
+        mainListContainer1.appendChild(listRow);
         
         for( var i=0; i<keys.length; ++i ){
             var row = document.createElement('tr');
@@ -75,9 +87,9 @@ function gotData2(data){
             row.appendChild(name);
             row.appendChild(desc);
             console.log(row);
-            listContainer2.appendChild(row);
+            mainListContainer1.appendChild(row);
         }
-    first2 = false;
+    first3 = false;
     }
     else{
         var row = document.createElement('tr');
@@ -94,24 +106,24 @@ function gotData2(data){
             row.appendChild(name);
             row.appendChild(desc);
             console.log(row);
-            listContainer2.appendChild(row);
+            mainListContainer1.appendChild(row);
     }
-    console.log(document.getElementsByName('itemTable1'));
+    console.log(document.getElementsByName('itemTable3'));
 
 }
 
-function gotData2(data){
+function mainData2(data){
     var items = data.val();
     var keys = Object.keys(items);
     console.log(keys);
-    if(first2){
-        listContainer2 = document.createElement('table');
-        document.getElementById("officeItemList2").appendChild(listContainer2);
-        listContainer2.setAttribute('name2', 'itemTable2');
+    if(first4){
+        mainListContainer2 = document.createElement('table');
+        document.getElementById("mainListUnit2").appendChild(mainListContainer2);
+        mainListContainer2.setAttribute('name4', 'itemTable4');
         var listRow = document.createElement('tr');
         var topRow = "<th>ID</th><th>Item Name</th><th>Item Description</th>";
         listRow.innerHTML = topRow;
-        listContainer2.appendChild(listRow);
+        mainListContainer2.appendChild(listRow);
         
         for( var i=0; i<keys.length; ++i ){
             var row = document.createElement('tr');
@@ -128,9 +140,9 @@ function gotData2(data){
             row.appendChild(name);
             row.appendChild(desc);
             console.log(row);
-            listContainer2.appendChild(row);
+            mainListContainer2.appendChild(row);
         }
-    first2 = false;
+    first4 = false;
     }
     else{
         var row = document.createElement('tr');
@@ -147,9 +159,9 @@ function gotData2(data){
             row.appendChild(name);
             row.appendChild(desc);
             console.log(row);
-            listContainer2.appendChild(row);
+            mainListContainer2.appendChild(row);
     }
-    console.log(document.getElementsByName('itemTable1'));
+    console.log(document.getElementsByName('itemTable4'));
 
 }
 

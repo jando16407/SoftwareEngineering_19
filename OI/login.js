@@ -13,7 +13,16 @@ var firebaseConfig = {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-
+  var database = firebase.database();
+  //reset login on window load
+  window.onload = function(){
+    firebase.auth().signOut().then(function(){
+      //successful
+      alert('logged out')
+    },function(error){
+      alert('still logged in')
+    })
+  }
   //did user hit login?
   var login = document.getElementById("loginButton")
 
@@ -38,11 +47,28 @@ var firebaseConfig = {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       var email = user.email;
-      alert("LOGGED IN")
+      //alert("LOGGED IN")
       //sign in to appropriate page
-
+      identifyUser(email)
     } else {
       // User is signed out.
       // ...
     }
   });
+
+function identifyUser(email){
+  var userId = email.match(/^(.+)@/)[1]
+  //save userId to send to next page
+  localStorage.setItem('user', userId)
+
+  //check db for admin or employee
+  var userType = firebase.database().ref('users/' + userId + '/userType').once('value').then(function(snapshot){
+    var type = snapshot.val() 
+    //send user to their page based on userType
+    if(type == 'Admin')
+      window.location.href = "User/Admin/main.html"
+    else
+      window.location.href = "User/main.html"
+  })
+  
+}

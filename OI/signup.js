@@ -1,3 +1,4 @@
+
 //connect to firebase
 var firebaseConfig = {
     apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
@@ -10,6 +11,8 @@ var firebaseConfig = {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+
+
 
   //If admin or not
 var sectionNum = document.getElementById("secNum");

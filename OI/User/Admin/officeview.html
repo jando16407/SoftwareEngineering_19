@@ -1,6 +1,7 @@
+
 <!DOCTYPE html>
 <html>
-<title>OI - Admin Workspace</title>
+<title>OI - Admin Office View</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="temp.css">
@@ -26,6 +27,7 @@ table {
         background-color: #dddddd;
     }
 </style>
+<link rel="stylesheet" type="text/css" href="workspace.css">
 <body class="w3-light-grey">
 
 <!-- Top container -->
@@ -79,65 +81,12 @@ table {
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-<h2>Workspace</h2>
+<h2>Office View</h2>
   <header>
-      <div class="w3-display-top " style="width:70%">
-        <div class="w3-bar w3-black">
-          <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainList');">Main List</button>
-          <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');">Unit 1</button>
-          <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab2');">Unit 2</button>
-        </div>
-    
-        <!-- Tabs -->
-        <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
-          
-          <h3>Main Inventory Item List</h3>
-          <h4 id="mainListUnit1">Unit 1</h4>
-          <h4 id="mainListUnit2">Unit 2</h4>
-
-        </div>
-        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
-          
-          <h3>Unit 1</h3>
-          <h4>Add an item</h4>
-          <p>
-              <label for="item_id1"><b>Item ID</b></label><br>
-              <input id="id1" type="text" placeholder="Enter Item ID" name="id1" required>
-              <br>
-              <label for="item_name1"><b>Item Name</b></label><br>
-              <input id="name1" type="text" placeholder="Enter Item Name" name="name1" required>
-              <br>
-              <label for="item_description1"><b>Item Description</b></label><br>
-              <input id="description1" type="text" placeholder="Enter Item Description" name="description1" required>
-              <br>
-              <button id="submitButton1">Submit</button>
-          </p>
-          <br>
-          <h4>Item list</h4>
-          <p id="officeItemList1">
-          </p>
-        </div>
-        <div id="Tab2" class="w3-container w3-white w3-padding-16 myLink">
-        
-            <h3>Unit 2</h3>
-            <h4>Add an item</h4>
-            <p>
-                <label for="item_id2"><b>Item ID</b></label><br>
-                <input id="id2" type="text" placeholder="Enter Item ID" name="id2" required>
-                <br>
-                <label for="item_name2"><b>Item Name</b></label><br>
-                <input id="name2" type="text" placeholder="Enter Item Name" name="name2" required>
-                <br>
-                <label for="item_description2"><b>Item Description</b></label><br>
-                <input id="description2" type="text" placeholder="Enter Item Description" name="description2" required>
-                <br>
-                <button id="submitButton2">Submit</button>
-            </p>
-            <br>
-            <h4>Item list</h4>
-            <p id="officeItemList2">
-            </p>
-        </div>
+        <div class="officeView-container">
+                <canvas id="officeView" width="500px" height="500px"></canvas>
+                <input id="file" type="file" onchange="readURL(this)" />
+            </div>
 <!--
         <div id="Flight" class="w3-container w3-white w3-padding-16 myLink">
           <h3>Travel the world with us</h3>
@@ -169,7 +118,6 @@ table {
           <p><button class="w3-button w3-dark-grey">Search Availability</button></p>
         </div>
       -->
-      </div>
     </header>
   <!-- Header -->
 <!--
@@ -397,5 +345,6 @@ table {
 
 <script src="tp1.js"></script>
 <script src="tp2.js"></script>
+<script src="officeview.js"></script>
 </body>
 </html>

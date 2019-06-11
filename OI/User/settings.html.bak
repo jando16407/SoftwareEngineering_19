@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<Title>Settings</Title>
+</head>
+<body>
+    <h1>Settings page for employee users</h1>
+        <p> In this page, use javascript to send user authentication to firebase and display profile setting for a user.</p>
+    <p><br>
+        This is a settings page for normal employee users.<br>
+        In this page, an user can change various settgings.<br>
+        <br>
+        Pages:<br>
+        <a href="main.html"><button>Main Menu</button></a><br>
+        <a href="user_workspace.html"><button>User Workspace</button></a>
+    </p>
+</body>

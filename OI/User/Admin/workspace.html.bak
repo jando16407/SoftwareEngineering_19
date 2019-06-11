@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<Title>Workspace</Title>
+</head>
+
+<body>
+    <h1>Workspace for Admin</h1>
+    <p><br>
+        This is a workspace pagr for admins.<br>
+        In this page, it will show interactive map, tabs, lists, details, notifications, annoucements and all.<br>
+        <br>
+        Pages:<br>
+        <a href="main.html"><button>Main Menu</button></a><br>
+        <a href="settings.html"><button>Settings</button></a>
+    </p>
+</body>

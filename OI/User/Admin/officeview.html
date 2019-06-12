@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<Title>Workspace</Title>
+<link rel="stylesheet" type="text/css" href="workspace.css">
+</head>
+
+<body>
+    <h1>Workspace for Admin</h1>
+    <p>
+        <br>
+        This is a workspace page for admins.<br>
+        In this page, it will show interactive map, tabs, lists, details, notifications, annoucements and all.<br>
+        <br>
+        Pages:<br>
+        <a href="main.html"><button>Main Menu</button></a><br>
+        <a href="settings.html"><button>Settings</button></a><br>
+        <div class="officeView-container">
+            <canvas id="officeView" width="500px" height="500px"></canvas>
+            <input id="file" type="file" onchange="readURL(this)" />
+        </div>
+    </p>
+</body>
+<script src="officeView.js"></script>
+</html>

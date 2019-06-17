@@ -12,7 +12,8 @@ var firebaseConfig = {
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
 
-
+// global to see if signup is finished
+var isSignedUp = false
 
   //If admin or not
 var sectionNumInput = document.getElementById("secNumInput");
@@ -44,10 +45,9 @@ signup.onclick = function(){
         var errorCode = error.code;
         var errorMessage = error.message;
         // ...
-        console.log("createUserSuccess");
     });
     //creates new user in database & stores their info
-    var userId = email.value.match(/^(.+)@/)[0]
+    var userId = email.value.match(/^(.+)@/)[1]
     var secNum = 0
     var type = "Admin"
     if(isAdmin.checked == false){
@@ -60,7 +60,6 @@ signup.onclick = function(){
         userType: type
     });
       
-      console.log("success!")
-      window.location.href = "index.html"
-      //and send other info to db
+      alert("You have successfully signed up!")
+      document.location.href = "index.html"
 }

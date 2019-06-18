@@ -1,39 +1,36 @@
 <html lang="en">
-    <head>
-        <link rel="stylesheet" href="main.css">
-        <!-- The core Firebase JS SDK is always required and must be listed first -->
-        <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
-    </head>
-    <body>
+  <head>
+      <link rel="stylesheet" href="main.css">
+      <!-- The core Firebase JS SDK is always required and must be listed first -->
+      <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>
 
-        <h1>Office Inventory</h1>
-
-        <div class="content">
-            <form id="add-item-form">
-              <input type="text" name="" placeholder="itemsName">
-              <input type="text" name="condition" placeholder="condition">
-              <input type="text" name="itemsCatagory" placeholder="Office supply">
-              <input type="number" name="amount" placeholder="Amount">
-              <button>Add items</button>
-            </form>
-            <ul id="item-list"></ul>
-        </div>
-        <div class="content">
-          <form id="update-office-form">
-            <input type="text" name="itemsName" placeholder="itemsName">
-            <input type="number" anme="amount" placeholder="Amount">
-            <button>Update items</button>
-          </form>
-          <ul id="office-list"></ul>
+  </head>
+  <body>
+    <h1>Office Inventory Management</h1>
+      <div class="content">
+        <form id="add-item-form">
+          <input type="text" name="itemName" placeholder="Item's name">
+          <input type="text" name="condition" placeholder="Condition">
+          <input type="text" name="itemCatagory" placeholder="Item's catagory">
+          <input type="text" name="make" placeholder="make">
+          <input type="text" name="model" placeholder="model">
+          <input type="number" name="amount" placeholder="Amount">
+          <button>Add items</button>
+        </form>
+        <ul id="item-list"></ul>
       </div>
-
-<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
-
+      <div class="content">
+        <form id="update-office-form">
+          <input type="text" name="itemName" placeholder="itemName">
+          <input type="number" anme="amount" placeholder="Amount">
+          <button>Update items</button>
+        </form>
+        <ul id="office-list"></ul>
+      </div>
+      
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#config-web-app -->
-
 <script>
   // Your web app's Firebase configuration
   var firebaseConfig = {

@@ -1,3 +1,4 @@
+// make auth and firestore references
 const db = firebase.firestore();
 const itemList = document.querySelector('#item-list');
 const form = document.querySelector('#add-item-form');
@@ -7,9 +8,9 @@ const form = document.querySelector('#add-item-form');
 function renderitem(doc){
     // element
     let li = document.createElement('li');
-    let itemsName = document.createElement('span');
+    let itemName = document.createElement('span');
     let condition = document.createElement('span');
-    let itemsCatagory = document.createElement('span');
+    let itemCatagory = document.createElement('span');
     let make = document.createElement('span');
     let model = document.createElement('span');
     let amount = document.createElement('span');
@@ -17,18 +18,18 @@ function renderitem(doc){
     
     // set attributes and contents
     li.setAttribute('data-id', doc.id);
-    itemsName.textContent = doc.data().itemsName;
+    itemName.textContent = doc.data().itemName;
     condition.textContent = doc.data().condition;
-    itemsCatagory.textContent = doc.data().itemsCatagory;
+    itemCatagory.textContent = doc.data().itemCatagory;
     model.textContent = doc.data().model;
     make.textContent = doc.data().make;
     amount.textContent = doc.data().amount;
     cross.textContent = 'x';
 
     // append it to the list tags
-    li.appendChild(itemsName);
+    li.appendChild(itemName);
     li.appendChild(condition);
-    li.appendChild(itemsCatagory);
+    li.appendChild(itemCatagory);
     li.appendChild(make);
     li.appendChild(model);
     li.appendChild(amount);
@@ -51,10 +52,10 @@ function renderitem(doc){
 }
 // querying data
 // where field == to what we are looking for.
-// db.collection('item').where('itemsName', '==', 'laptop').get().then((snapshot) =>{ ....
+// db.collection('item').where('itemName', '==', 'laptop').get().then((snapshot) =>{ ....
 
 // // getting data
-// db.collection('item').orderBy('itemsName').get().then((snapshot) =>{
+// db.collection('item').orderBy('itemName').get().then((snapshot) =>{
 //     console.log(snapshot.docs);
 //     snapshot.docs.forEach(doc => {
 //         console.log(doc.data());
@@ -66,19 +67,23 @@ function renderitem(doc){
 form.addEventListener('submit', (entry)=>{
     entry.preventDefault();
     db.collection('item').add({
-        itemsName: form.itemsName.value,
+        itemName: form.itemName.value,
         condition: form.condition.value,
-        itemsCatagory: form.itemsCatagory.value,
+        itemCatagory: form.itemCatagory.value,
+        make: form.make.value,
+        model: form.model.value,
         amount: form.amount.value
     })
-    form.itemsName.value = '';
+    form.itemName.value = '';
     form.condition.value = '';
-    form.itemsCatagory.value = '';
+    form.itemCatagory.value = '';
+    form.make.value = '';
+    form.model.value = '';
     form.amount.value = '';
 });
 
 // real-time listener
-db.collection('item').orderBy('itemsName').onSnapshot(snapshot =>{
+db.collection('item').orderBy('itemName').onSnapshot(snapshot =>{
     let changes = snapshot.docChanges();
     console.log(changes);
     changes.forEach(change => {
@@ -99,10 +104,10 @@ db.collection('item').orderBy('itemsName').onSnapshot(snapshot =>{
 // saving data
 form.addEventListener('submit', (entry)=>{
     entry.preventDefault();
-    db.collection('item').where('itemsName', '==', 'form.itemsName.value').update({
-        itemsName: form.itemsName.value,
+    db.collection('item').where('form.itemName.value', '==', 'itemName').update({
+        itemName: form.itemName.value,
         amount: form.amount.value
     })
-    form.itemsName.value = '';
+    form.itemName.value = '';
     form.amount.value = '';
 });

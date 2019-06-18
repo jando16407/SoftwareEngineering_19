@@ -1,66 +1,59 @@
+ // Changed by Watis to make it realtime responds and able to log user's activity.
+let timelog = new Date();
 
-//connect to firebase
-var firebaseConfig = {
-    apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
-    authDomain: "office-inventory-12f99.firebaseapp.com",
-    databaseURL: "https://office-inventory-12f99.firebaseio.com",
-    projectId: "office-inventory-12f99",
-    storageBucket: "office-inventory-12f99.appspot.com",
-    messagingSenderId: "147848186588",
-    appId: "1:147848186588:web:33dbc8d727af1de4"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+ //If admin or not
+// var sectionNumInput = document.getElementById("secNumInput");
+// var isAdmin = document.getElementById("isAdmin");
+// sectionNumInput.style.visibility = 'hidden';
+// isAdmin.onclick = function(){
+//     if(isAdmin.checked == false){
+//     sectionNumInput.style.visibility = 'visible';
+//     }
+//     else{
+//     sectionNumInput.style.visibility = 'hidden';
+//     }
+// }
 
-
-
-  //If admin or not
-var sectionNumInput = document.getElementById("secNumInput");
-var isAdmin = document.getElementById("isAdmin");
-sectionNumInput.style.visibility = 'hidden';
-isAdmin.onclick = function(){
-    if(isAdmin.checked == false){
-    sectionNumInput.style.visibility = 'visible';
-    }
-    else{
-    sectionNumInput.style.visibility = 'hidden';
-    }
-}
 //signup button
-var signup = document.getElementById("signupButton")
-signup.onclick = function(){
+var signup = document.getElementById("signupButton");
+signup.addEventListener('submit', (entry)=>{
+    entry.preventDefault();
     //get other necessary variables
-    var nameInput = document.getElementById("name")
-    var email = document.getElementById("email")
-    var pw1 = document.getElementById("password1")
-    var pw2 = document.getElementById("password2")
-    if(pw1.value !== pw2.value){
-        alert("Passwords not the sameeeee")
-        return
-    }
-    //creates new user in firebase authentication
-    firebase.auth().createUserWithEmailAndPassword(email.value, pw1.value).catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-        console.log("createUserSuccess");
-    });
-    //creates new user in database & stores their info
+    var nameInput = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var pw1 = document.getElementById("password1").value;
+    var pw2 = document.getElementById("password2").value;
     var userId = email.value.match(/^(.+)@/)[0]
     var secNum = 0
     var type = "Admin"
-    if(isAdmin.checked == false){
-        secNum = sectionNumInput.value
-        type = "Employee"
+
+    if(pw1.value !== pw2.value){
+        alert("Passwords are not matching...");
+        return;
     }
-    firebase.database().ref('users/' + userId).set({
-        name: nameInput.value,
-        sectionNum: secNum,
-        userType: type
-    });
-      
-      console.log("success!")
-      window.location.href = "index.html"
-      //and send other info to db
-}
+        //creates new user in database & stores their info
+
+        if(isAdmin.checked == false){
+            secNum = sectionNum.value
+            type = "Employee"
+        }
+        firebase.database().ref('users/' + userId).set({
+            name: nameInput.value,
+            sectionNum: secNum,
+            userType: type
+        });
+          
+          console.log("success!")
+          window.location.href = "index.html"
+          //and send other info to db
+    //creates new user in firebase authentication
+    firebase.auth().createUserWithEmailAndPassword(email.value, pw1.value).then(function(){ alert('Account created...'); 
+        }).catch(function(error){
+            if(error != null){
+                console.log(error.message);
+                alert('Something is Wrong.  Sign-up failed.');
+                return;
+            }
+        });
+    
+});

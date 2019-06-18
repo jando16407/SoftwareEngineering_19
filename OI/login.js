@@ -1,8 +1,8 @@
 //var firebase = require("firebase")
 //require("firebase/auth")
 //require("firebase/database")
-
-var firebaseConfig = {
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
     apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
     authDomain: "office-inventory-12f99.firebaseapp.com",
     databaseURL: "https://office-inventory-12f99.firebaseio.com",

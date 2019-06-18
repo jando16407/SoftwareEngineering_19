@@ -3,18 +3,24 @@
 <head>
 <title>Sign up!</title>
 <link rel="stylesheet" type="text/css" href="css/lstyles.css">
+<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-app.js"></script>
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
 </head>
 
 <body style="padding: 20px">
-        <h1 class="title"> OI Inventory System</h1>
-        <style>
-            body {
-                background-color:#3e6714;
-            }
-        </style>
-    <p>
-        <div class="login-page">
-            <div class="form">
+    <h1 class="title"> OI Inventory System</h1>
+    <style>
+        body {
+            background-color:#3e6714;
+        }
+    </style>
+    <div class="login-page">
+        <div class="form">
+            <form id="signup-form">
                 <input id="name" type="text" placeholder="Enter Full Name" name="name" required>
                 <br>
                 
@@ -29,19 +35,33 @@
             
                 <input id="isAdmin" type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Admin?
                 <br>
-                
+                <!----
                 <input id="secNumInput" type="text" placeholder="Enter Section Number" name="sectionNum" required><br>
+                ---->
                 <button id="signupButton">Sign Up</button>
-            </div>
+            </form>
         </div>
-    </p>
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-app.js"></script>
+    </div>
 
-    <!-- Add Firebase products that you want to use -->
-    <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
     <script src="signup.js"></script>
-    
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+<script>
+// Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
+        authDomain: "office-inventory-12f99.firebaseapp.com",
+        databaseURL: "https://office-inventory-12f99.firebaseio.com",
+        projectId: "office-inventory-12f99",
+        storageBucket: "office-inventory-12f99.appspot.com",
+        messagingSenderId: "147848186588",
+        appId: "1:147848186588:web:33dbc8d727af1de4"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+</script>
 </body>
 </html>

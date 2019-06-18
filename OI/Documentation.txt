@@ -1,9 +1,0 @@
-Watis:
- 15 Jun 2019
-  - Change the signup page to fix the inability to sign in
-  - Took out the <p></p> covered the <div></div>
-  - prevented default function to refresh
-  - changed <div class="form"> to <form id="signup-form">
-  - deleted onAuthChanged() because it is not necessary for sign up
-  - commented out sectionNumInput portion for giving error "not focusable..."
-  - commented out sectionNumInput in signup.html because statement has no effect. (see line 8)

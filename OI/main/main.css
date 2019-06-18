@@ -32,7 +32,7 @@ li{
     color: rgb(9, 29, 8);
     position: relative;
     border-bottom: 1px solid #e6e6e6;
-    height: 150px;
+    height: 80px;
 }
 
 li:nth-child(even){
@@ -99,11 +99,4 @@ button{
     font-family: ubuntu;
     letter-spacing: 1px;
     color: #999;
-}
-nav {
-    border: 0;
-    background: #03f137;
-    width: 150px;
-    height: 150px;
-
 }

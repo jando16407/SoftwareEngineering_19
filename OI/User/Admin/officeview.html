@@ -56,13 +56,30 @@ table {
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
+
+
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
 <h2>Office View</h2>
   <header>
-        <div class="officeView-container">
-                <canvas id="officeView" width="500px" height="500px"></canvas>
-                <input id="file" type="file" onchange="readURL(this)" />
+      <div class="w3-display-top " style="width:100%">
+          <div class="w3-bar w3-black">
+            <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainList');">Office View</button>
+            <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');">Fault Reports</button>
+          </div>
+          <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
+                <div style="display: inline-block">
+                <canvas id="officeView" width="1000px" height="500px"></canvas>
+                </div>
+                <div style ="display: inline-block; vertical-align: top">
+                  <button class="w3-bar-item w3-button tablink">Edit :p</button><br><br>
+                  <button class="w3-bar-item w3-button tablink">Save</button><br><br>
+                  <button class="w3-bar-item w3-button tablink">Delete</button><br><br>
+                </div>
+                <br>
+                <input id="file" class="custom-file-input" type="file" title=" "onchange="readURL(this)" />
             </div>
+    </div>
+  </header>
 
 </div>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-app.js"></script>

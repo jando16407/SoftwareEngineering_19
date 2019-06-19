@@ -11,14 +11,17 @@ var firebaseConfig = {
   };
   
   var storage = firebase.storage();
-  var storageRef = storage.ref();
-  
-var file = document.getElementById('file')
+  var storageRef = storage.ref();  
+  var file = document.getElementById('file')
+
+  window.onload = function(){
+      loadImg()
+  }
 //IF IMAGE IS NOT IN FB DO SHOW FILE INPUT
+async function loadImg() {
+    console.log('bloop')
 imageDownloadRef = storageRef.child('officeView/officeView')
-imageDownloadRef.getDownloadURL().then(function(url) {
-    // `url` is the download URL for 'images/stars.jpg'
-  
+await imageDownloadRef.getDownloadURL().then( function(url) {
     // This can be downloaded directly:
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'blob';
@@ -26,33 +29,27 @@ imageDownloadRef.getDownloadURL().then(function(url) {
       var blob = xhr.response;
     };
     xhr.open('GET', url);
-    xhr.send();
-  
-    // Or inserted into an <img> element:
+    //xhr.send();
+    //display in the bkgd of canvas
     var canvas = document.getElementById("officeView")
-    var context = canvas.getContext('2d')
     var background = new Image()
     background.src = url
-    background.onload = function(){
-        //canvas.appendChild(background)
-        if(background.height > canvas.height || background.width > canvas.width)
-            if(background.height - canvas.height > background.width - canvas.width)
-                var ratio = canvas.height/background.height
-            else   
-                var ratio = canvas.width/background.width
-        context.imageSmoothingEnabled = false
-        context.scale(ratio, ratio)
-        context.drawImage(background,0,0)
+    background.onload = async function(){
+        canvas.style.backgroundRepeat ="no-repeat"
+        canvas.style.backgroundImage = "url('" + url + "')"
+        canvas.style.backgroundSize = "contain"
     }
   }).catch(function(error) {
     // image is not there so get one!!!
+    console.log("error")
   });
-
-function readURL(input){
+}
+async function readURL(input){
     var file = input.files[0]
-            imageRef = storageRef.child('officeView/officeView')
-            imageRef.put(file).then(function(snapshot) {
-                console.log('Uploaded a blob or file!');
-              });
-        reader.readAsDataURL(input.files[0]);
+    imageRef = storageRef.child('officeView/officeView')
+    await imageRef.put(file).then(function(snapshot) {
+        console.log('Uploaded a blob or file!');
+      });
+     loadImg()
+
 }

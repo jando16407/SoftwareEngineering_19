@@ -2,6 +2,7 @@ var database;
 var submitButton1, submitButton2;
 var unitPath1, unitPath2;
 var ref1, ref2;
+var ref1_L, ref2_L;
 var listContainer1, listContainer2;
 var tableUnit1, tableUnit2;
 var detailViewPath, detailViewKey, detailView_itemId;
@@ -17,8 +18,8 @@ firebase_setup();
 page_setup();
 detailView_setting();
 init_tables();
-//renderTableContents();
 renderListen();
+
 
 
 
@@ -107,10 +108,10 @@ function init_tables(){
     }, gotErr);
 */
     //Unit 1 first rendering
-    renderUnit1();
+    //renderUnit1();
 
     //Unit 2 first rendering
-    renderUnit2();
+    //renderUnit2();
 //done = true;
 }
 
@@ -284,62 +285,64 @@ submitButton2.onclick = function(){
 
 
 /* Database modify handling start */
+
 function renderListen(){
-    if(done == true){
-        //when item is added to unit 1
-        ref1.on("child_added", function(snapshot){
-            if(done == true){
-            console.log("child changed key : "+snapshot.key);
-        //   console.log(Object.keys(snapshot.val()));
-            renderTableContents(unitPath1);
-            }
-        }, gotErr);
-
-        //when item is added to unit 2
-        ref2.on("child_added", function(snapshot){
-            if(done == true){
-//            console.log("child changed key : "+snapshot.key);
-        //   console.log(Object.keys(snapshot.val()));
-            renderTableContents(unitPath2);
-            }
-        }, gotErr);
-
-        //when item is modified in unit 1
-        ref1.on("child_changed", function(snapshot){
-            if(done == true){
-            console.log("child changed key : "+snapshot.key);
-//            console.log(Object.keys(snapshot.val()));
-            renderTableContents(unitPath1);
-            }
-        }, gotErr);
-
-        //when item is modified in unit 2
-        ref2.on("child_changed", function(snapshot){
-            if(done == true){
-            console.log("child changed key : "+snapshot.key);
-        //    console.log(Object.keys(snapshot.val()));
-            renderTableContents(unitPath2);
-            }
-        }, gotErr);
-
-
-        //when item is removed in unit 1
-        ref1.on("child_removed", function(snapshot){
-            if(done == true){
-            console.log("child removed key : "+snapshot.key);
-//            console.log(Object.keys(snapshot.val()));
-            renderTableContents(unitPath1);
-            }
-        }, gotErr);
-
-        //when item is removed in unit 2
-        ref2.on("child_removed", function(snapshot){
-            if(done == true){
-//            console.log("child removed key : "+snapshot.key);
- //           console.log(Object.keys(snapshot.val()));
-            renderTableContents(unitPath2);
-            }
-        }, gotErr);
-    }
+    ref1.on("value", function(snapshot){
+        renderTableContents(unitPath1);
+    }, gotErr);
 }
+    /*
+    if(ref1_L!=null && ref2_L!=null){
+//when item is added to unit 1
+ref1_L.on("child_added", function(snapshot){
+    console.log("child changed key : "+snapshot.key);
+    //   console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath1);
+}, gotErr);
+
+//when item is added to unit 2
+ref2_L.on("child_added", function(snapshot){
+    //            console.log("child changed key : "+snapshot.key);
+    //   console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath2);
+}, gotErr);
+
+//when item is modified in unit 1
+ref1_L.on("child_changed", function(snapshot){
+    console.log("child changed key : "+snapshot.key);
+    //            console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath1);
+}, gotErr);
+
+//when item is modified in unit 2
+ref2_L.on("child_changed", function(snapshot){
+    //      console.log("child changed key : "+snapshot.key);
+    //    console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath2);
+}, gotErr);
+
+
+//when item is removed in unit 1
+ref1_L.on("child_removed", function(snapshot){
+    console.log("child removed key : "+snapshot.key);
+    //            console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath1);
+}, gotErr);
+
+//when item is removed in unit 2
+ref2_L.on("child_removed", function(snapshot){
+    //            console.log("child removed key : "+snapshot.key);
+    //           console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath2);
+}, gotErr);
+    }
+
+        
+    //        done = true;
+            ref1_L = database.ref(unitPath1);
+            ref2_L = database.ref(unitPath2);
+            console.log("ref1_L: "+ref1_L);
+    }
+*/
+
 /* Database modify handling end */

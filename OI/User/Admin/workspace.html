@@ -8,21 +8,7 @@
 <link rel="stylesheet" href="temp3.css">
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
-<script>
-div.detailViewTableLeft {
-    left: -10px;    
-    width: 100px;
-    height: 120px;
-    border: 3px solid blue;
 
-}
-
-div.detailViewTableRight {
-    left: 150px;
-    width: 100px;
-    height: 120px;
-    border: 3px solid blue;
-}</script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -109,7 +95,6 @@ table {
           
           <h3>Main Inventory Item List</h3>
           <h4 id="mainListUnit1">Unit 1</h4>
-          <h4 id="mainListUnit2">Unit 2</h4>
 
         </div>
 
@@ -172,6 +157,7 @@ table {
         <div id="DetailView" class="w3-container w3-white w3-padding-16 secondmyLink" style="overflow-y: scroll; height:300px;">
           
           <h4 >Detail View of Selected Item</h4>
+          <button id="deleteButton">Delete</button>
           <div class="detailViewTableLeft">
           <table>
             <tr>
@@ -209,7 +195,9 @@ table {
     </header>
 </div>
 
-<script src="tp1.js"></script>
+<!--<script src="tp1.js"></script>-->
+<script src="workspace.js"></script>
 <script src="tp2.js"></script>
+
 </body>
 </html>

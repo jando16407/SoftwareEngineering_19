@@ -280,16 +280,43 @@ submitButton2.onclick = function(){
 
 /* Database modify handling start */
 
-ref1.on("child_changed", function(snapshot){
-
+//when item is added to unit 1
+ref1.on("child_added", function(snapshot){
+    console.log("child changed key : "+snapshot.key);
+    console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath1);
 }, gotErr);
 
+//when item is added to unit 2
+ref1.on("child_added", function(snapshot){
+    console.log("child changed key : "+snapshot.key);
+    console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath2);
+}, gotErr);
+
+//when item is modified in unit 1
+ref1.on("child_changed", function(snapshot){
+    console.log("child changed key : "+snapshot.key);
+    console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath1);
+}, gotErr);
+
+//when item is modified in unit 2
+ref1.on("child_changed", function(snapshot){
+    console.log("child changed key : "+snapshot.key);
+    console.log(Object.keys(snapshot.val()));
+    renderTableContents(unitPath2);
+}, gotErr);
+
+
+//when item is removed in unit 1
 ref1.on("child_removed", function(snapshot){
     console.log("child removed key : "+snapshot.key);
     console.log(Object.keys(snapshot.val()));
     renderTableContents(unitPath1);
 }, gotErr);
 
+//when item is removed in unit 2
 ref2.on("child_removed", function(snapshot){
     console.log("child removed key : "+snapshot.key);
     console.log(Object.keys(snapshot.val()));

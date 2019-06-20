@@ -8,7 +8,7 @@ var tableUnit1, tableUnit2;
 var detailViewPath, detailViewKey, detailView_itemId;
 var detailView_itemName, detailView_itemDescription;
 var childNodeIndex, childNodePath;
-var done = false;
+//var done = false;
 
 var mainListContainer1;
 var mainListContainer2;
@@ -287,11 +287,19 @@ submitButton2.onclick = function(){
 /* Database modify handling start */
 
 function renderListen(){
+    //Any item modification, adding, deleting will update the 
+    //list in unit 1
     ref1.on("value", function(snapshot){
         renderTableContents(unitPath1);
     }, gotErr);
+
+    //Any item modification, adding, deleting will update the 
+    //list in unit 1
+    ref2.on("value", function(snapshot){
+        renderTableContents(unitPath2);
+    }, gotErr);
 }
-    /*
+/*
     if(ref1_L!=null && ref2_L!=null){
 //when item is added to unit 1
 ref1_L.on("child_added", function(snapshot){

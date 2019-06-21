@@ -1,18 +1,14 @@
 var database;
 var submitButton1, submitButton2;
-var unitPath1, unitPath2;
-var ref1, ref2;
+var unitPath1, unitPath2, masterPath;
+var ref1, ref2, refAdmin;
 var ref1_L, ref2_L;
-var listContainer1, listContainer2;
-var tableUnit1, tableUnit2;
+var masterListContainer, listContainer1, listContainer2;
+var tableMaster, tableUnit1, tableUnit2;
 var detailViewPath, detailViewKey, detailView_itemId;
 var detailView_itemName, detailView_itemDescription;
 var childNodeIndex, childNodePath;
-//var done = false;
-
-var mainListContainer1;
-var mainListContainer2;
-
+var newItemKey, detailViewDeleteItemPath;
 
 firebase_setup();
 page_setup();
@@ -47,20 +43,24 @@ function page_setup(){
     submitButton2 = document.getElementById("submitButton2");
     unitPath1 = 'Unit/Unit_001';
     unitPath2 = 'Unit/Unit_002';
+    masterPath = 'MasterList';
     ref1 = database.ref(unitPath1);
     ref2 = database.ref(unitPath2);
+    refAdmin = database.ref(masterPath);
 }
 
 //Initial rendering of tables
 function init_tables(){ 
     //Main Tab setup
-    mainListContainer1 = document.createElement('table');
-    document.getElementById("mainListUnit1").appendChild(mainListContainer1);
-    mainListContainer1.setAttribute('name3', 'itemTable3');
+    masterListContainer = document.createElement('table');
+    document.getElementById("masterItemList").appendChild(masterListContainer);
+    masterListContainer.setAttribute('name0', 'itemTable0');
+    masterListContainer.setAttribute("id", "masterTable");
+    tableMaster = document.getElementById("masterTable");
     var listRow_0 = document.createElement('tr');
-    var topRow_0 = "<th>ID</th><th>Item Name</th><th>Item Description</th>";
+    var topRow_0 = "<th>Unit</th><th>ID</th><th>Item Name</th><th>Item Description</th>";
     listRow_0.innerHTML = topRow_0;
-    mainListContainer1.appendChild(listRow_0);
+    masterListContainer.appendChild(listRow_0);
     
     //Unit 1 tab setup
     //Create a table for Unit 1
@@ -126,22 +126,29 @@ function detailView_setting(){
     //Delete button funciton setup
     let deleteButton = document.getElementById("deleteButton");
     deleteButton.onclick = function() {
-        let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
-        deleteRef.remove();
-        console.log("Deleted item path is: "+detailViewPath+'/'+childNodePath);
-        //Clear path of DetailView Table and others
-        document.getElementById("detailViewTable").setAttribute("path", "");
-        detailViewPath = "";
-        childNodePath = "";
-        //Clear childnode values
-        childNodeIndex = 0;
+        if(detailViewPath != ""){
+            if(detailViewPath == masterPath){
+                //Delete items in each unit as well
+                //let deleteRefUnit = database.ref()
+                let a = masterPath+"/"+childNodePath;
+                console.log("delete path : "+a);
+            }
+            let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
+            deleteRef.remove();
+            console.log("Deleted item path is: "+detailViewPath+'/'+childNodePath);
+            //Clear path of DetailView Table and others
+            document.getElementById("detailViewTable").setAttribute("path", "");
+            detailViewPath = "";
+            childNodePath = "";
+            //Clear childnode values
+            childNodeIndex = 0;
 
-        //Clear values of detailView elements
-        document.getElementById("detailViewId").value = "";
-        document.getElementById("detailViewName").value = "";
-        document.getElementById("detailViewDescription").value = "";
-        
-
+            //Clear values of detailView elements
+            document.getElementById("detailViewId").value = "";
+            document.getElementById("detailViewName").value = "";
+            document.getElementById("detailViewDescription").value = "";
+            detailViewDeleteItemKey = "";
+        }
     };
     //Edit Id setup
     /*
@@ -161,8 +168,16 @@ function detailView_setting(){
 
 //Render table, clear the table everytime it's called and display new data
 function renderTableContents(path){
-    //Renderig for Unit 1
-    if(path == unitPath1){
+    //Rendering for MasterList
+    if(path == masterPath){
+        console.log("master path = "+masterPath);
+        while(masterListContainer.children.length > 1){
+            masterListContainer.removeChild(masterListContainer.childNodes[1]);
+        }
+        renderMasterList();
+    }
+    //Rendering for Unit 1
+    else if(path == unitPath1){
  //       console.log("Child size = "+listContainer1.children.length);
         while(listContainer1.children.length > 1){
             listContainer1.removeChild(listContainer1.childNodes[1]);
@@ -170,6 +185,7 @@ function renderTableContents(path){
 //        console.log("Child size = "+listContainer1.children.length);
         renderUnit1();
     }
+    //Rendering for Unit 1
     else  if(path == unitPath2){
         console.log("Child size = "+listContainer2.children.length);
         while(listContainer2.children.length > 1){
@@ -178,6 +194,38 @@ function renderTableContents(path){
         console.log("Child size = "+listContainer1.children.length);
         renderUnit2();
     }
+}
+
+//Update the table for masterList
+function renderMasterList(){
+    refAdmin.once("value", function(snapshot){
+        console.log("Renderinng master");
+        let items = snapshot.val();
+        let keys = Object.keys(items);
+        for( let i=0; i<keys.length; ++i ){
+            let row = document.createElement('tr');
+            let k = keys[i];
+            let childNodeId = masterListContainer.children.length;
+            row.setAttribute("onclick", "itemSelected("+childNodeId+")");
+            //row.setAttribute("unitItemDeletePath", items[k].UnitPath+items[k].ItemKey);
+            row.setAttribute("key", keys[i]);
+            let unit = document.createElement('th');
+            let id = document.createElement('th');
+            let name = document.createElement('th');
+            let desc = document.createElement('th');
+            unit.innerHTML = items[k].UnitNum;
+            console.log(items[k].UnitNum);
+            id.innerHTML = items[k].itemId;
+            name.innerHTML = items[k].itemName;
+            desc.innerHTML = items[k].itemDescription;
+            row.appendChild(unit);
+            row.appendChild(id);
+            row.appendChild(name);
+            row.appendChild(desc);
+            masterListContainer.appendChild(row);
+            //console.log("node# "+childNodeId);
+        }
+    }, gotErr);
 }
 
 //Update the table for Unit 1
@@ -192,6 +240,7 @@ function renderUnit1(){
             childNodeId += 100000;
             row.setAttribute("onclick", "itemSelected("+childNodeId+")");
             row.setAttribute("key", keys[i]);
+//            console.log("KEY?"+row.getAttribute("key"));
             let id = document.createElement('th');
             let name = document.createElement('th');
             let desc = document.createElement('th');
@@ -242,9 +291,36 @@ function renderUnit2(){
 
 //Handle when item in a list is clicked
 function itemSelected(id){
-    done = true;
+    //console.log("KEY?"+key);
     childNodeIndex = id;
-    if(100000<=id && id < 200000){
+    if(0<=id && id < 100000){
+        detailViewPath = masterPath;
+        childNodePath = document.getElementById("masterTable").childNodes[childNodeIndex].getAttribute("key");
+        let detailId = document.getElementById("masterTable").childNodes[childNodeIndex].cells[1];
+        let detailName = document.getElementById("masterTable").childNodes[childNodeIndex].cells[2];
+        let detailDescription = document.getElementById("masterTable").childNodes[childNodeIndex].cells[3];
+////////////        
+        console.log(detailId);
+        console.log(detailName);
+        console.log(detailDescription);
+        console.log("Key: "+childNodePath);
+        console.log("Clicked childNode#"+childNodeIndex);
+////////////
+        //Set the path of detail view
+        document.getElementById("detailViewTable").setAttribute("path", detailViewPath);
+        //Set values
+        document.getElementById("detailViewId").value = detailId.textContent;
+        document.getElementById("detailViewName").value = detailName.textContent;
+        document.getElementById("detailViewDescription").value = detailDescription.textContent;
+        //Detect Changes
+        document.getElementById("detailViewId").onchange = detailViewItemChanged;
+        document.getElementById("detailViewName").onchange = detailViewItemChanged;
+        document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
+        //set delete path of the item
+        detailViewDeleteItemPath = (detailViewPath+"/"+childNodePath).ItemKey;
+        console.log("item key : "+detailViewDeleteItemPath);
+    }
+    else if(100000<=id && id < 200000){
         detailViewPath = 'Unit/Unit_001';
         childNodeIndex -= 100000;
         childNodePath = document.getElementById("unit1Table").childNodes[childNodeIndex].getAttribute("key");
@@ -302,20 +378,46 @@ function itemSelected(id){
 
 //Submit button handling, push data to firebase
 submitButton1.onclick = function(){
+    console.log("pushing to unit1");
+    //Push data to Unit
     let data = {
         itemId: document.getElementById("id1").value,
         itemName: document.getElementById("name1").value,
-        itemDescription: document.getElementById("description1").value
+        itemDescription: document.getElementById("description1").value,
     }
     ref1.push(data)
+    console.log("fisnied pushing to unit1");
+    console.log("pushing to master");
+    //Push data to MasterList
+    let masterData = {
+        itemId: document.getElementById("id1").value,
+        itemName: document.getElementById("name1").value,
+        itemDescription: document.getElementById("description1").value,
+        UnitNum : "001",
+        UnitPath : unitPath1,
+        ItemKey : newItemKey
+    }
+    refAdmin.push(masterData);
+    console.log("finished pushing to master");
 }
 submitButton2.onclick = function(){
+    //Push data to Unit
     let data = {
         itemId: document.getElementById("id2").value,
         itemName: document.getElementById("name2").value,
-        itemDescription: document.getElementById("description2").value
+        itemDescription: document.getElementById("description2").value,
     }
     ref2.push(data)
+    //Push data to MasterList
+    let masterData = {
+        itemId: document.getElementById("id2").value,
+        itemName: document.getElementById("name2").value,
+        itemDescription: document.getElementById("description2").value,
+        UnitNum : "002",
+        UnitPath : unitPath2,
+        ItemKey : newItemKey
+    }
+    refAdmin.push(masterData);
 }
 
 /* onClick handlings End */
@@ -325,15 +427,31 @@ submitButton2.onclick = function(){
 
 function renderListen(){
     //Any item modification, adding, deleting will update the 
+    //list in MasterList
+    refAdmin.on("value", function(snapshot){
+        renderTableContents(masterPath);
+    }, gotErr);
+    //Any item modification, adding, deleting will update the 
     //list in unit 1
     ref1.on("value", function(snapshot){
         renderTableContents(unitPath1);
+        console.log("Unit1 change detected");
     }, gotErr);
 
     //Any item modification, adding, deleting will update the 
     //list in unit 2
     ref2.on("value", function(snapshot){
         renderTableContents(unitPath2);
+    }, gotErr);
+    //when item is added to unit 1
+    ref1.on("child_added", function(snapshot){
+        console.log("child changed key : "+snapshot.key);
+        newItemKey = snapshot.key;
+    }, gotErr);
+    //when item is added to unit 2
+    ref2.on("child_added", function(snapshot){
+        console.log("child changed key : "+snapshot.key);
+        newItemKey = snapshot.key;
     }, gotErr);
 }
 /*

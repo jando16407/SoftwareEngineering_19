@@ -8,7 +8,7 @@ var tableMaster, tableUnit1, tableUnit2;
 var detailViewPath, detailViewKey, detailView_itemId;
 var detailView_itemName, detailView_itemDescription;
 var childNodeIndex, childNodePath;
-var newItemKey, detailViewDeleteItemPath;
+var newItemKey, newItemKey2, detailViewDeleteItemPath;
 
 firebase_setup();
 page_setup();
@@ -130,8 +130,8 @@ function detailView_setting(){
             if(detailViewPath == masterPath){
                 //Delete items in each unit as well
                 //let deleteRefUnit = database.ref()
-                let a = masterPath+"/"+childNodePath;
-                console.log("delete path : "+a);
+                console.log("delete path : "+detailViewDeleteItemPath);
+                database.ref(detailViewDeleteItemPath).remove();
             }
             let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
             deleteRef.remove();
@@ -142,7 +142,9 @@ function detailView_setting(){
             childNodePath = "";
             //Clear childnode values
             childNodeIndex = 0;
-
+            //clear itemkeys
+            newItemKey = "";
+            newItemKey2 = "";
             //Clear values of detailView elements
             document.getElementById("detailViewId").value = "";
             document.getElementById("detailViewName").value = "";
@@ -199,22 +201,31 @@ function renderTableContents(path){
 //Update the table for masterList
 function renderMasterList(){
     refAdmin.once("value", function(snapshot){
-        console.log("Renderinng master");
+      //  console.log("Renderinng master");
         let items = snapshot.val();
         let keys = Object.keys(items);
         for( let i=0; i<keys.length; ++i ){
             let row = document.createElement('tr');
             let k = keys[i];
             let childNodeId = masterListContainer.children.length;
-            row.setAttribute("onclick", "itemSelected("+childNodeId+")");
-            //row.setAttribute("unitItemDeletePath", items[k].UnitPath+items[k].ItemKey);
+            //row.setAttribute("onclick", "itemSelected("+childNodeId+")");
+            let deletePath = items[k].UnitPath+"/"+items[k].ItemKey;
+       //     console.log("Delete path : "+deletePath);
+           // row.setAttribute("onclick", function(){
+             //   itemSelected(childNodeId, deletePath);
+            //});
+           // row.setAttribute("onclick", "itemSelected(\''+childNodeId+","+""+")");
+           row.addEventListener("click", function(){
+                itemSelected(childNodeId, deletePath);
+           });
+            ///row.onclick = itemSelected(childNodeId, deletePath);
             row.setAttribute("key", keys[i]);
             let unit = document.createElement('th');
             let id = document.createElement('th');
             let name = document.createElement('th');
             let desc = document.createElement('th');
             unit.innerHTML = items[k].UnitNum;
-            console.log(items[k].UnitNum);
+            //console.log(items[k].UnitNum);
             id.innerHTML = items[k].itemId;
             name.innerHTML = items[k].itemName;
             desc.innerHTML = items[k].itemDescription;
@@ -238,7 +249,15 @@ function renderUnit1(){
             let k = keys[i];
             let childNodeId = listContainer1.children.length;
             childNodeId += 100000;
-            row.setAttribute("onclick", "itemSelected("+childNodeId+")");
+            //row.setAttribute("onclick", "itemSelected("+childNodeId+")");
+            //row.onclick = itemSelected(childNodeId, "");
+          //  row.setAttribute("onclick", function(){
+            //    itemSelected(childNodeId, "");
+            //});
+            //row.setAttribute("onclick", "itemSelected("+childNodeId+","+""+")");
+            row.addEventListener("click", function(){
+                itemSelected(childNodeId, "");
+           });
             row.setAttribute("key", keys[i]);
 //            console.log("KEY?"+row.getAttribute("key"));
             let id = document.createElement('th');
@@ -266,7 +285,14 @@ function renderUnit2(){
             let k = keys[i];
             let childNodeId = listContainer2.children.length;
             childNodeId += 200000;
-            row.setAttribute("onclick", "itemSelected("+childNodeId+")");
+            //row.setAttribute("onclick", "itemSelected("+childNodeId+","+""+")");
+            row.addEventListener("click", function(){
+                itemSelected(childNodeId, "");
+           });
+            //row.onclick = itemSelected(childNodeId, "");
+            //row.setAttribute("onclick", function(){
+             //   itemSelected(childNodeId, "");
+            //});
             row.setAttribute("key", keys[i]);
             let id = document.createElement('th');
             let name = document.createElement('th');
@@ -290,11 +316,13 @@ function renderUnit2(){
 /* Onclick function start */
 
 //Handle when item in a list is clicked
-function itemSelected(id){
-    //console.log("KEY?"+key);
+function itemSelected(id, deletePath){
+    console.log("ID?"+id);
+    console.log("deletPaht? : "+deletePath);
     childNodeIndex = id;
     if(0<=id && id < 100000){
         detailViewPath = masterPath;
+        //console.log("ggg"+document.getElementById("masterTable").childNodes[childNodeIndex]);
         childNodePath = document.getElementById("masterTable").childNodes[childNodeIndex].getAttribute("key");
         let detailId = document.getElementById("masterTable").childNodes[childNodeIndex].cells[1];
         let detailName = document.getElementById("masterTable").childNodes[childNodeIndex].cells[2];
@@ -317,8 +345,8 @@ function itemSelected(id){
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
         //set delete path of the item
-        detailViewDeleteItemPath = (detailViewPath+"/"+childNodePath).ItemKey;
-        console.log("item key : "+detailViewDeleteItemPath);
+        detailViewDeleteItemPath = deletePath;
+        console.log("delete path : "+detailViewDeleteItemPath);
     }
     else if(100000<=id && id < 200000){
         detailViewPath = 'Unit/Unit_001';
@@ -372,6 +400,7 @@ function itemSelected(id){
     }
 }
 
+
 /* Onclick function end */
 
 /* onClick handlings Start */
@@ -399,6 +428,12 @@ submitButton1.onclick = function(){
     }
     refAdmin.push(masterData);
     console.log("finished pushing to master");
+    database.ref(unitPath1+"/"+newItemKey).set({
+        itemId: document.getElementById("id1").value,
+        itemName: document.getElementById("name1").value,
+        itemDescription: document.getElementById("description1").value,
+        masterKey : newItemKey2
+    });
 }
 submitButton2.onclick = function(){
     //Push data to Unit
@@ -418,6 +453,12 @@ submitButton2.onclick = function(){
         ItemKey : newItemKey
     }
     refAdmin.push(masterData);
+    database.ref(unitPath2+"/"+newItemKey).set({
+        itemId: document.getElementById("id2").value,
+        itemName: document.getElementById("name2").value,
+        itemDescription: document.getElementById("description2").value,
+        masterKey : newItemKey2
+    });
 }
 
 /* onClick handlings End */
@@ -443,16 +484,28 @@ function renderListen(){
     ref2.on("value", function(snapshot){
         renderTableContents(unitPath2);
     }, gotErr);
+    //when item is added to masterlist
+    refAdmin.on("child_added", function(snapshot){
+        //console.log("child changed key : "+snapshot.key);
+        newItemKey2 = snapshot.key;
+        console.log("itemkey2 : "+newItemKey2);
+    }, gotErr);
     //when item is added to unit 1
     ref1.on("child_added", function(snapshot){
-        console.log("child changed key : "+snapshot.key);
+        //console.log("child changed key : "+snapshot.key);
         newItemKey = snapshot.key;
     }, gotErr);
     //when item is added to unit 2
     ref2.on("child_added", function(snapshot){
-        console.log("child changed key : "+snapshot.key);
+        //onsole.log("child changed key : "+snapshot.key);
         newItemKey = snapshot.key;
     }, gotErr);
+    //when item is removed in unit 1
+ref1.on("child_removed", function(snapshot){
+    console.log("child removed key : "+snapshot.key);
+    //            console.log(Object.keys(snapshot.val()));
+    //renderTableContents(unitPath1);
+}, gotErr);
 }
 /*
     if(ref1_L!=null && ref2_L!=null){

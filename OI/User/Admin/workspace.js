@@ -99,12 +99,23 @@ function detailView_setting(){
     let deleteButton = document.getElementById("deleteButton");
     deleteButton.onclick = function() {
         if(detailViewPath != ""){
+            //Delete for masterlist
             if(detailViewPath == masterPath){
+                console.log("Master");
                 //Delete items in each unit as well
                 database.ref(detailViewDeleteItemPath).remove();
-            }
-            let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
+                let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
             deleteRef.remove();
+            }
+            //Delete for all other unit
+            else {
+                console.log("Other");
+                database.ref(detailViewDeleteItemPath).remove();
+                let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
+            deleteRef.remove();
+            }
+            //let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
+            //deleteRef.remove();
             //Clear path of DetailView Table and others
             document.getElementById("detailViewTable").setAttribute("path", "");
             detailViewPath = "";
@@ -249,6 +260,7 @@ function renderUnit2(){
 //Handle when item in a list is clicked
 function itemSelected(id, deletePath){
     childNodeIndex = id;
+    detailViewDeleteItemPath = deletePath;
     //when item is in masterlist
     if(0<=id && id < 100000){
         detailViewPath = masterPath;
@@ -274,7 +286,7 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
         //set delete path of the item
-        detailViewDeleteItemPath = deletePath;
+        //detailViewDeleteItemPath = deletePath;
     }
     //when item is in unit 1
     else if(100000<=id && id < 200000){

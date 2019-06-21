@@ -85,34 +85,6 @@ function init_tables(){
     let topRow_2 = "<th>ID</th><th>Item Name</th><th>Item Description</th>";
     listRow_2.innerHTML = topRow_2;
     listContainer2.appendChild(listRow_2);
-
-    //Main tab first rendering
-    /*
-    ref1.once("value", function(snapshot){
-        let items = snapshot.val();
-        let keys = Object.keys(items);
-        for( let i=0; i<keys.length; ++i ){
-            let row = document.createElement('tr');
-            let k = keys[i];
-            let id = document.createElement('th');
-            let name = document.createElement('th');
-            let desc = document.createElement('th');
-            id.innerHTML = items[k].itemId;
-            name.innerHTML = items[k].itemName;
-            desc.innerHTML = items[k].itemDescription;
-            row.appendChild(id);
-            row.appendChild(name);
-            row.appendChild(desc);
-            listContainer1.appendChild(row);
-        }
-    }, gotErr);
-*/
-    //Unit 1 first rendering
-    //renderUnit1();
-
-    //Unit 2 first rendering
-    //renderUnit2();
-//done = true;
 }
 
 //Error handling
@@ -129,13 +101,10 @@ function detailView_setting(){
         if(detailViewPath != ""){
             if(detailViewPath == masterPath){
                 //Delete items in each unit as well
-                //let deleteRefUnit = database.ref()
-                console.log("delete path : "+detailViewDeleteItemPath);
                 database.ref(detailViewDeleteItemPath).remove();
             }
             let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
             deleteRef.remove();
-            console.log("Deleted item path is: "+detailViewPath+'/'+childNodePath);
             //Clear path of DetailView Table and others
             document.getElementById("detailViewTable").setAttribute("path", "");
             detailViewPath = "";
@@ -152,15 +121,6 @@ function detailView_setting(){
             detailViewDeleteItemKey = "";
         }
     };
-    //Edit Id setup
-    /*
-    let editId = document.getElementById("detailViewId");
-    editId.onclick = function(){
-        if(detailViewPath != null && child != null){
-
-        }
-    };
-    */
 }
 
 /* Initialize Functions End */
@@ -172,7 +132,6 @@ function detailView_setting(){
 function renderTableContents(path){
     //Rendering for MasterList
     if(path == masterPath){
-        console.log("master path = "+masterPath);
         while(masterListContainer.children.length > 1){
             masterListContainer.removeChild(masterListContainer.childNodes[1]);
         }
@@ -180,20 +139,16 @@ function renderTableContents(path){
     }
     //Rendering for Unit 1
     else if(path == unitPath1){
- //       console.log("Child size = "+listContainer1.children.length);
         while(listContainer1.children.length > 1){
             listContainer1.removeChild(listContainer1.childNodes[1]);
         }
-//        console.log("Child size = "+listContainer1.children.length);
         renderUnit1();
     }
-    //Rendering for Unit 1
+    //Rendering for Unit 2
     else  if(path == unitPath2){
-        console.log("Child size = "+listContainer2.children.length);
         while(listContainer2.children.length > 1){
             listContainer2.removeChild(listContainer2.childNodes[1]);
         }
-        console.log("Child size = "+listContainer1.children.length);
         renderUnit2();
     }
 }
@@ -201,31 +156,22 @@ function renderTableContents(path){
 //Update the table for masterList
 function renderMasterList(){
     refAdmin.once("value", function(snapshot){
-      //  console.log("Renderinng master");
         let items = snapshot.val();
         let keys = Object.keys(items);
         for( let i=0; i<keys.length; ++i ){
             let row = document.createElement('tr');
             let k = keys[i];
             let childNodeId = masterListContainer.children.length;
-            //row.setAttribute("onclick", "itemSelected("+childNodeId+")");
             let deletePath = items[k].UnitPath+"/"+items[k].ItemKey;
-       //     console.log("Delete path : "+deletePath);
-           // row.setAttribute("onclick", function(){
-             //   itemSelected(childNodeId, deletePath);
-            //});
-           // row.setAttribute("onclick", "itemSelected(\''+childNodeId+","+""+")");
-           row.addEventListener("click", function(){
+            row.addEventListener("click", function(){
                 itemSelected(childNodeId, deletePath);
-           });
-            ///row.onclick = itemSelected(childNodeId, deletePath);
+            });
             row.setAttribute("key", keys[i]);
             let unit = document.createElement('th');
             let id = document.createElement('th');
             let name = document.createElement('th');
             let desc = document.createElement('th');
             unit.innerHTML = items[k].UnitNum;
-            //console.log(items[k].UnitNum);
             id.innerHTML = items[k].itemId;
             name.innerHTML = items[k].itemName;
             desc.innerHTML = items[k].itemDescription;
@@ -234,7 +180,6 @@ function renderMasterList(){
             row.appendChild(name);
             row.appendChild(desc);
             masterListContainer.appendChild(row);
-            //console.log("node# "+childNodeId);
         }
     }, gotErr);
 }
@@ -249,17 +194,10 @@ function renderUnit1(){
             let k = keys[i];
             let childNodeId = listContainer1.children.length;
             childNodeId += 100000;
-            //row.setAttribute("onclick", "itemSelected("+childNodeId+")");
-            //row.onclick = itemSelected(childNodeId, "");
-          //  row.setAttribute("onclick", function(){
-            //    itemSelected(childNodeId, "");
-            //});
-            //row.setAttribute("onclick", "itemSelected("+childNodeId+","+""+")");
             row.addEventListener("click", function(){
                 itemSelected(childNodeId, "");
-           });
+            });
             row.setAttribute("key", keys[i]);
-//            console.log("KEY?"+row.getAttribute("key"));
             let id = document.createElement('th');
             let name = document.createElement('th');
             let desc = document.createElement('th');
@@ -270,7 +208,6 @@ function renderUnit1(){
             row.appendChild(name);
             row.appendChild(desc);
             listContainer1.appendChild(row);
-            //console.log("node# "+childNodeId);
         }
     }, gotErr);
 }
@@ -285,14 +222,9 @@ function renderUnit2(){
             let k = keys[i];
             let childNodeId = listContainer2.children.length;
             childNodeId += 200000;
-            //row.setAttribute("onclick", "itemSelected("+childNodeId+","+""+")");
             row.addEventListener("click", function(){
                 itemSelected(childNodeId, "");
-           });
-            //row.onclick = itemSelected(childNodeId, "");
-            //row.setAttribute("onclick", function(){
-             //   itemSelected(childNodeId, "");
-            //});
+            });
             row.setAttribute("key", keys[i]);
             let id = document.createElement('th');
             let name = document.createElement('th');
@@ -304,7 +236,6 @@ function renderUnit2(){
             row.appendChild(name);
             row.appendChild(desc);
             listContainer2.appendChild(row);
-            console.log("node# "+childNodeId);
         }
     }, gotErr);
 }
@@ -317,12 +248,10 @@ function renderUnit2(){
 
 //Handle when item in a list is clicked
 function itemSelected(id, deletePath){
-    console.log("ID?"+id);
-    console.log("deletPaht? : "+deletePath);
     childNodeIndex = id;
+    //when item is in masterlist
     if(0<=id && id < 100000){
         detailViewPath = masterPath;
-        //console.log("ggg"+document.getElementById("masterTable").childNodes[childNodeIndex]);
         childNodePath = document.getElementById("masterTable").childNodes[childNodeIndex].getAttribute("key");
         let detailId = document.getElementById("masterTable").childNodes[childNodeIndex].cells[1];
         let detailName = document.getElementById("masterTable").childNodes[childNodeIndex].cells[2];
@@ -346,8 +275,8 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
         //set delete path of the item
         detailViewDeleteItemPath = deletePath;
-        console.log("delete path : "+detailViewDeleteItemPath);
     }
+    //when item is in unit 1
     else if(100000<=id && id < 200000){
         detailViewPath = 'Unit/Unit_001';
         childNodeIndex -= 100000;
@@ -373,6 +302,7 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
     } 
+    //when item is in unit 2
     else if(200000<=id && id < 300000){
         detailViewPath = 'Unit/Unit_002'
         childNodeIndex -= 200000;
@@ -407,7 +337,6 @@ function itemSelected(id, deletePath){
 
 //Submit button handling, push data to firebase
 submitButton1.onclick = function(){
-    console.log("pushing to unit1");
     //Push data to Unit
     let data = {
         itemId: document.getElementById("id1").value,
@@ -415,8 +344,6 @@ submitButton1.onclick = function(){
         itemDescription: document.getElementById("description1").value,
     }
     ref1.push(data)
-    console.log("fisnied pushing to unit1");
-    console.log("pushing to master");
     //Push data to MasterList
     let masterData = {
         itemId: document.getElementById("id1").value,
@@ -427,7 +354,7 @@ submitButton1.onclick = function(){
         ItemKey : newItemKey
     }
     refAdmin.push(masterData);
-    console.log("finished pushing to master");
+    //update unit with master key
     database.ref(unitPath1+"/"+newItemKey).set({
         itemId: document.getElementById("id1").value,
         itemName: document.getElementById("name1").value,
@@ -453,6 +380,7 @@ submitButton2.onclick = function(){
         ItemKey : newItemKey
     }
     refAdmin.push(masterData);
+    //update unit with master key
     database.ref(unitPath2+"/"+newItemKey).set({
         itemId: document.getElementById("id2").value,
         itemName: document.getElementById("name2").value,
@@ -476,9 +404,7 @@ function renderListen(){
     //list in unit 1
     ref1.on("value", function(snapshot){
         renderTableContents(unitPath1);
-        console.log("Unit1 change detected");
     }, gotErr);
-
     //Any item modification, adding, deleting will update the 
     //list in unit 2
     ref2.on("value", function(snapshot){
@@ -486,80 +412,17 @@ function renderListen(){
     }, gotErr);
     //when item is added to masterlist
     refAdmin.on("child_added", function(snapshot){
-        //console.log("child changed key : "+snapshot.key);
         newItemKey2 = snapshot.key;
-        console.log("itemkey2 : "+newItemKey2);
     }, gotErr);
     //when item is added to unit 1
     ref1.on("child_added", function(snapshot){
-        //console.log("child changed key : "+snapshot.key);
         newItemKey = snapshot.key;
     }, gotErr);
     //when item is added to unit 2
     ref2.on("child_added", function(snapshot){
-        //onsole.log("child changed key : "+snapshot.key);
         newItemKey = snapshot.key;
     }, gotErr);
-    //when item is removed in unit 1
-ref1.on("child_removed", function(snapshot){
-    console.log("child removed key : "+snapshot.key);
-    //            console.log(Object.keys(snapshot.val()));
-    //renderTableContents(unitPath1);
-}, gotErr);
 }
-/*
-    if(ref1_L!=null && ref2_L!=null){
-//when item is added to unit 1
-ref1_L.on("child_added", function(snapshot){
-    console.log("child changed key : "+snapshot.key);
-    //   console.log(Object.keys(snapshot.val()));
-    renderTableContents(unitPath1);
-}, gotErr);
-
-//when item is added to unit 2
-ref2_L.on("child_added", function(snapshot){
-    //            console.log("child changed key : "+snapshot.key);
-    //   console.log(Object.keys(snapshot.val()));
-    renderTableContents(unitPath2);
-}, gotErr);
-
-//when item is modified in unit 1
-ref1_L.on("child_changed", function(snapshot){
-    console.log("child changed key : "+snapshot.key);
-    //            console.log(Object.keys(snapshot.val()));
-    renderTableContents(unitPath1);
-}, gotErr);
-
-//when item is modified in unit 2
-ref2_L.on("child_changed", function(snapshot){
-    //      console.log("child changed key : "+snapshot.key);
-    //    console.log(Object.keys(snapshot.val()));
-    renderTableContents(unitPath2);
-}, gotErr);
-
-
-//when item is removed in unit 1
-ref1_L.on("child_removed", function(snapshot){
-    console.log("child removed key : "+snapshot.key);
-    //            console.log(Object.keys(snapshot.val()));
-    renderTableContents(unitPath1);
-}, gotErr);
-
-//when item is removed in unit 2
-ref2_L.on("child_removed", function(snapshot){
-    //            console.log("child removed key : "+snapshot.key);
-    //           console.log(Object.keys(snapshot.val()));
-    renderTableContents(unitPath2);
-}, gotErr);
-    }
-
-        
-    //        done = true;
-            ref1_L = database.ref(unitPath1);
-            ref2_L = database.ref(unitPath2);
-            console.log("ref1_L: "+ref1_L);
-    }
-*/
 
 function detailViewItemChanged(){
     if(document.getElementById("detailViewTable").getAttribute("path") != ""){

@@ -79,11 +79,44 @@ table {
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-<h2>Main Panel</h2>
-* Show stats and other information
- 
-  <!-- End page content -->
-</div>
+    <h2>Main Panel</h2>
+      <header>
+          <div class="w3-display-top " style="width:100%">
+              <div class="w3-bar w3-black">
+                <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');"></button>
+              </div>
+              <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+                    <div style="display: inline-block">
+                      <div style="height: 200px; overflow: scroll;">
+                        <h3>Low Items</h3>
+                        <p>Display list of low items through item id, name, and quanity</p><br><br>
+                      </div>
+                      <div style="height: 200px; overflow: scroll;">
+                        <h3>Equipment Faults</h3>
+                        <p>Displays list of unit # where the fault is, the item id and name, and level of severity</p><br><br>
+                      </div>
+                      <div style="height: 200px; overflow: scroll;">
+                        <h3>New Item Type Requests</h3>
+                        <p>Tells Admin # of item type requests, then reference the workspace to handle faults</p><br><br>
+                      </div>
+                    </div>
+                    <div style ="display: inline-block; vertical-align: top">
+                      <div  style="height: 400px; overflow: scroll;">
+                      <h2>Announcements</h2>
+                      </div>
+                      <div style="height: 400px;"> 
+                        <h3>Send Messages</h3>
+                        <p>(does not need to or from just text input field and send button)</p>
+                        <input type="text"/>
+                        <button>Send</button>
+                      </div>
+                    </div>
+                    <br>
+                </div>
+        </div>
+      </header>
+    
+    </div>
 
 <script src="tp1.js"></script>
 <script src="tp2.js"></script>

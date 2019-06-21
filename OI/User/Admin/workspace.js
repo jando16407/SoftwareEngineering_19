@@ -123,12 +123,35 @@ function gotErr(err){
 
 //Detail view setup
 function detailView_setting(){
-    deleteButton = document.getElementById("deleteButton");
+    //Delete button funciton setup
+    let deleteButton = document.getElementById("deleteButton");
     deleteButton.onclick = function() {
         let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
         deleteRef.remove();
         console.log("Deleted item path is: "+detailViewPath+'/'+childNodePath);
+        //Clear path of DetailView Table and others
+        document.getElementById("detailViewTable").setAttribute("path", "");
+        detailViewPath = "";
+        childNodePath = "";
+        //Clear childnode values
+        childNodeIndex = 0;
+
+        //Clear values of detailView elements
+        document.getElementById("detailViewId").value = "";
+        document.getElementById("detailViewName").value = "";
+        document.getElementById("detailViewDescription").value = "";
+        
+
     };
+    //Edit Id setup
+    /*
+    let editId = document.getElementById("detailViewId");
+    editId.onclick = function(){
+        if(detailViewPath != null && child != null){
+
+        }
+    };
+    */
 }
 
 /* Initialize Functions End */
@@ -235,9 +258,16 @@ function itemSelected(id){
         console.log("Key: "+childNodePath);
         console.log("Clicked childNode#"+childNodeIndex);
 ////////////
-        document.getElementById("detailViewId").textContent = detailId.textContent;
-        document.getElementById("detailViewName").textContent = detailName.textContent;
-        document.getElementById("detailViewDescription").textContent = detailDescription.textContent;
+        //Set the path of detail view
+        document.getElementById("detailViewTable").setAttribute("path", detailViewPath+"/"+childNodePath);
+        //Set values
+        document.getElementById("detailViewId").value = detailId.textContent;
+        document.getElementById("detailViewName").value = detailName.textContent;
+        document.getElementById("detailViewDescription").value = detailDescription.textContent;
+        //Detect Changes
+        document.getElementById("detailViewId").onchange = detailViewItemChanged;
+        document.getElementById("detailViewName").onchange = detailViewItemChanged;
+        document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
     } 
     else if(200000<=id && id < 300000){
         detailViewPath = 'Unit/Unit_002'
@@ -253,9 +283,16 @@ function itemSelected(id){
         console.log("Key: "+childNodePath);
         console.log("Clicked childNode#"+childNodeIndex);
 ////////////
-        document.getElementById("detailViewId").textContent = detailId.textContent;
-        document.getElementById("detailViewName").textContent = detailName.textContent;
-        document.getElementById("detailViewDescription").textContent = detailDescription.textContent;
+        //Set the path of detail view
+        document.getElementById("detailViewTable").setAttribute("path", detailViewPath+"/"+childNodePath);
+        //Set values
+        document.getElementById("detailViewId").value = detailId.textContent;
+        document.getElementById("detailViewName").value = detailName.textContent;
+        document.getElementById("detailViewDescription").value = detailDescription.textContent;
+        //Detect Changes
+        document.getElementById("detailViewId").onchange = detailViewItemChanged;
+        document.getElementById("detailViewName").onchange = detailViewItemChanged;
+        document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
     }
 }
 
@@ -294,7 +331,7 @@ function renderListen(){
     }, gotErr);
 
     //Any item modification, adding, deleting will update the 
-    //list in unit 1
+    //list in unit 2
     ref2.on("value", function(snapshot){
         renderTableContents(unitPath2);
     }, gotErr);
@@ -352,5 +389,19 @@ ref2_L.on("child_removed", function(snapshot){
             console.log("ref1_L: "+ref1_L);
     }
 */
+
+function detailViewItemChanged(){
+    if(document.getElementById("detailViewTable").getAttribute("path") != ""){
+        console.log("Change detected");
+        let path = document.getElementById("detailViewTable").getAttribute("path");
+        console.log("Path = "+path);
+        database.ref(path).set({
+            itemId : document.getElementById("detailViewId").value,
+            itemName : document.getElementById("detailViewName").value,
+            itemDescription : document.getElementById("detailViewDescription").value,
+        });
+    }
+}
+
 
 /* Database modify handling end */

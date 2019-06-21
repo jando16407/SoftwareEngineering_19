@@ -158,22 +158,23 @@ table {
           
           <h4 >Detail View of Selected Item</h4>
           <button id="deleteButton">Delete</button>
-          <div class="detailViewTableLeft">
+          <div id="detailViewTable">
           <table>
             <tr>
               <th>Item Id</th>
-              <th id="detailViewId"></th>              
+              <th><input id="detailViewId" type="text" value="" onchange=""></th>              
             </tr>
             <tr>
               <th>Item Name</th>
-              <th id="detailViewName"></th>
+              <th><input id="detailViewName" type="text" value=""></th>
             </tr>
             <tr>
               <th>Item Description</th>
-              <th id="detailViewDescription"></th>
+              <th><input id="detailViewDescription" type="text" value=""></th>
             </tr>
           </table>
         </div>
+        <!--
         <div class="detailViewTableRight">
           <table>
             <tr>
@@ -190,10 +191,12 @@ table {
             </tr>
           </table>
         </div>
+        -->
         </div>
       </div>
     </header>
 </div>
+
 
 <!--<script src="tp1.js"></script>-->
 <script src="workspace.js"></script>

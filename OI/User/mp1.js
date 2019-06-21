@@ -3,6 +3,7 @@ var database;
 var submitButton1;
 
 var unitPath1;
+var messagePath;
 
 var ref1;
 var ref2;
@@ -20,9 +21,7 @@ submitButton1 = document.getElementById("submitButton1");
 
 //unitPath1 = 'notification/Messages';
 unitPath1 = 'users/as/messages';
-unitPath1 = 'users + "/" + user + "/" + messages';
 
-ref1 = database.ref(unitPath1);
 
 ref1.on("value", got1, gotErr);
 

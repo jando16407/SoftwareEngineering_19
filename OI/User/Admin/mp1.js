@@ -2,7 +2,7 @@ var database;
 //var initialInput;
 var submitButton1;
 
-var unitPath1;
+//var unitPath1;
 var messagePath;
 
 var ref1;
@@ -20,12 +20,14 @@ setup();
 submitButton1 = document.getElementById("submitButton1");
 
 //unitPath1 = 'notification/Messages';
-unitPath1 = 'users/as/messages';
+//unitPath1 = 'users/as/messages';
+//messagePath = 'users + "/" + user + "/" + messages';
+messagePath = "Message";
+console.log("HELLOO");
 
+ref1 = database.ref(messagePath);
 
 ref1.on("value", got1, gotErr);
-
-
 /* */
 function setup(){
     var firebaseConfig = {

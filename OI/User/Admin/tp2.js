@@ -37,7 +37,7 @@ function openLink(evt, linkName) {
   evt.currentTarget.className += " w3-red";
 }
 // Click on the first tablink on load
-document.getElementsByClassName("tablink")[0].click();
+//document.getElementsByClassName("tablink")[0].click();
 
 /* For the tabs on bottom */
 // Tabs

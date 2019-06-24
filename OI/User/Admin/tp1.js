@@ -345,7 +345,7 @@ function gotData2(data){
 
             var k = keys[keys.length-1];
             var id = document.createElement('th');
-            id.innerHTML = items[k].itemId;
+//            id.innerHTML = items[k].itemId;
             var name = document.createElement('th');
             name.innerHTML = items[k].itemName;
             var desc = document.createElement('th');
@@ -381,7 +381,7 @@ if( tableUnit1 != null ){
 function listSetup(){
     //Create a table for Unit 1
     listContainer1 = document.createElement('table');
-    document.getElementById("officeItemList1").appendChild(listContainer1);
+//    document.getElementById("officeItemList1").appendChild(listContainer1);
     listContainer1.setAttribute('name1', 'itemTable1');
     listContainer1.setAttribute("id", "unit1Table");
     tableUnit1 = document.getElementById("unit1Table");

@@ -55,4 +55,4 @@ function secondopenLink(evt, linkName) {
   evt.currentTarget.className += " w3-red";
 }
 // Click on the first tablink on load
-document.getElementsByClassName("secondtablink")[0].click();
+//document.getElementsByClassName("secondtablink")[0].click();

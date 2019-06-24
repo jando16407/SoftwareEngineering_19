@@ -91,11 +91,12 @@ table {
                     <div style="display: inline-block">
                       <div style="height: 200px; overflow: scroll;">
                         <h3>Low Items</h3>
-                        <p>Display list of low items through item id, name, and quanity</p><br><br>
+                        <p>Display list of low items through item id, name, and quanity</p>
+                        <ul id="lowItms"></ul>
                       </div>
                       <div style="height: 200px; overflow: scroll;">
-                        <h3>Equipment Faults</h3>
-                        <p>Displays list of unit # where the fault is, the item id and name, and level of severity</p><br><br>
+                        <h3>Faulty Equipment</h3>
+                        <ul id="faultyItms"></ul>
                       </div>
                       <div style="height: 200px; overflow: scroll;">
                         <h3>New Item Type Requests</h3>
@@ -119,9 +120,13 @@ table {
       </header>
     
     </div>
+  <pre id="object">
+
+  </pre>
 
 <script src="tp1.js"></script>
 <script src="tp2.js"></script>
 <script src="workorder.js"></script>
+
 </body>
 </html>

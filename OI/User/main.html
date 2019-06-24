@@ -51,23 +51,40 @@ table {
     <a href="user_workspace.html" class="w3-bar-item w3-button w3-padding">Employee Workspace</a>
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Employee Settings</a>
     <a href="messages.html" class="w3-bar-item w3-button w3-padding">Employee Messages</a>
-    <a href="../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
+    <a href="../logout.html" class="w3-bar-item w3-button w3-padding" id="logout">Log Out</a>
 
   </div>
 </nav>
-
-
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay">Hello World</div>
-<div class="tablink">Hello</div>
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
 <h2>Main Panel</h2>
-* show stats and other information
+  <div class="container">
+    <form id="requestForm" class="w3-btn dark-gray">
+      <h6 class="formTitle w3-black" style="font-weight: 600">Request Form</h6>
+      <label class="label ">First Name</label>
+      <input type="textfield" id="firstName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" />
+      <label class="label">Last Name</label>
+      <input class="w3-hover-dark-gray" type="textfield" id="lastName" style="height: 30px" /><br>
+      <label class="label">Section</label>
+      <input class="w3-hover-dark-gray" type="textfield" style="height: 30px; padding: 2px" />
+      <label class="label">Nature of request</label>
+      <select class="requestTypes w3-hover-dark-gray" style="height: 30px">
+        <option value="electrical">Electrical</option>
+        <option value="furniture">Furniture</option>
+        <option value="officeSupply">Office Supply</option>
+      </select><br><br>
+<br>
+<textarea rows="4" cols="50" name="comment" form="usrform">
+    Enter text here...</textarea>
+      <button id="submitButton">Submit</button>
+    </form>
+  </div>
+  <div class="collapsible">
+    <ul class="w3-animate-left z-depth-0 lists" style="border: none" id="itemList"></ul>
+  </div>
 </div>
-
-
-<script src="tp2.js"></script>
+<script src="../User/tp2.js"></script>
 <script src="../User/request.js"></script>
+<script src="../logout.js"></script>
 </body>
 </html>

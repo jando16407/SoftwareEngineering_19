@@ -13,6 +13,14 @@ var firebaseConfig = {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+  firebase.auth().onAuthStateChanged(user =>{
+    console.log(user);
+    if(user){
+      console.log('user logged in...', user);
+    } else {
+      console.log('user logged out...');
+    }
+  })
   var database = firebase.database();
   //reset login on window load
   window.onload = function(){

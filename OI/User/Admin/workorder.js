@@ -32,6 +32,10 @@ dbRefFaultyItems.on('child_changed', snapshot => {
     const liChanged = document.getElementById(snapshot.key);    // key is the sub items within the val();
     liChanged.innerText = snapshot.val();
 });
+dbRefFaultyItems.on('child_removed', snapshot => {
+    const liRemoved = document.getElementById(snapshot.key);    // key is the sub items within the val();
+    liRemoved.innerText = snapshot.val();
+});
 /** Endo of Faulty items */
 /** Low items list **/
 const lowItems = document.getElementById('lowItms');
@@ -51,7 +55,7 @@ dbRefLowItems.on('child_changed', snapshot => {
     const liChanged = document.getElementById(snapshot.key);    // key is the sub items within the val();
     liChanged.innerText = snapshot.val();
 });
-dbRefLowItems.on('child_remove', snapshot => {
+dbRefLowItems.on('child_removed', snapshot => {
     const liRemoved = document.getElementById(snapshot.key);    // key is the sub items within the val();
     liRemoved.innerText = snapshot.val();
 });

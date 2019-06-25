@@ -105,14 +105,16 @@ function detailView_setting(){
                 //Delete items in each unit as well
                 database.ref(detailViewDeleteItemPath).remove();
                 let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
-            deleteRef.remove();
+                deleteRef.remove();
             }
             //Delete for all other unit
             else {
                 console.log("Other");
                 database.ref(detailViewDeleteItemPath).remove();
                 let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
-            deleteRef.remove();
+                deleteRef.remove();
+                console.log("deleteRef = "+deleteRef);
+                console.log("detailViewDeletePath = "+detailViewDeleteItemPath);
             }
             //let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
             //deleteRef.remove();
@@ -205,8 +207,9 @@ function renderUnit1(){
             let k = keys[i];
             let childNodeId = listContainer1.children.length;
             childNodeId += 100000;
+            let deletePath = masterPath+'/'+items[k].masterKey;
             row.addEventListener("click", function(){
-                itemSelected(childNodeId, "");
+                itemSelected(childNodeId, deletePath);
             });
             row.setAttribute("key", keys[i]);
             let id = document.createElement('th');
@@ -233,8 +236,9 @@ function renderUnit2(){
             let k = keys[i];
             let childNodeId = listContainer2.children.length;
             childNodeId += 200000;
+            let deletePath = masterPath+'/'+items[k].masterKey;
             row.addEventListener("click", function(){
-                itemSelected(childNodeId, "");
+                itemSelected(childNodeId, deletePath);
             });
             row.setAttribute("key", keys[i]);
             let id = document.createElement('th');

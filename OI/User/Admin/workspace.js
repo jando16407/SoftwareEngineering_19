@@ -7,6 +7,7 @@ var masterListContainer, listContainer1, listContainer2;
 var tableMaster, tableUnit1, tableUnit2;
 var detailViewPath, detailViewKey, detailView_itemId;
 var detailView_itemName, detailView_itemDescription;
+var detailView_UnitPath;
 var childNodeIndex, childNodePath;
 var newItemKey, newItemKey2, detailViewDeleteItemPath;
 
@@ -286,9 +287,9 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewName").value = detailName.textContent;
         document.getElementById("detailViewDescription").value = detailDescription.textContent;
         //Detect Changes
-        document.getElementById("detailViewId").onchange = detailViewItemChanged;
-        document.getElementById("detailViewName").onchange = detailViewItemChanged;
-        document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
+        document.getElementById("detailViewId").onchange = detailViewItemChangedMaster;
+        document.getElementById("detailViewName").onchange = detailViewItemChangedMaster;
+        document.getElementById("detailViewDescription").onchange = detailViewItemChangedMaster;
         //set delete path of the item
         //detailViewDeleteItemPath = deletePath;
     }
@@ -440,6 +441,19 @@ function renderListen(){
     }, gotErr);
 }
 
+function detailViewItemChangedMaster(){
+    if(document.getElementById("detailViewTable").getAttribute("path") != ""){
+        let unitNodePath;
+        //Modify master list and it'll return the unit's unique ID
+        unitNodePath = modifyMasterList(masterPath, childNodePath);
+        console.log("ItemKey: "+unitNodePath);
+        console.log("Path: "+detailView_UnitPath);
+        
+        //Then modify unit list
+        modifyUnitList(detailView_UnitPath, unitNodePath);
+    }
+}
+
 function detailViewItemChanged(){
     if(document.getElementById("detailViewTable").getAttribute("path") != ""){
         console.log("Change detected");
@@ -451,6 +465,84 @@ function detailViewItemChanged(){
             itemDescription : document.getElementById("detailViewDescription").value,
         });
     }
+}
+
+function modifyMasterList(mPath, cPath){
+        console.log("Modifing MaterList");
+        let path = mPath;
+        let itemPath = cPath;
+        let placeNum, ItemKey, UnitNum, UnitPath, itemDescription, itemId, itemName;
+        //console.log("Path = "+path);
+        let ref = database.ref(path);
+        //update the master list
+        ref.once("value", function(snapshot){
+            let items = snapshot.val();
+            let keys = Object.keys(items);
+            //Get number in which keys
+            for( let i=0; i<keys.length; i++){
+                if( Object.keys(items)[i] == itemPath ){
+                    //console.log("PlaceNum = "+i);
+                    placeNum = i;
+                }
+            }
+            ItemKey = items[keys[placeNum]].ItemKey;
+            UnitNum = items[keys[placeNum]].UnitNum;
+            UnitPath = items[keys[placeNum]].UnitPath;
+            itemDescription = items[keys[placeNum]].itemDescription;
+            itemId = items[keys[placeNum]].itemId;
+            itemName = items[keys[placeNum]].itemName;
+            //console.log("ITEM IS : "+items[keys[placeNum]].ItemKey);
+            //update the masterlist
+            detailView_UnitPath = UnitPath;
+            database.ref(path+'/'+itemPath).set({
+                ItemKey: ItemKey,
+                UnitNum: UnitNum,
+                UnitPath: UnitPath,
+                itemDescription: document.getElementById("detailViewDescription").value,
+                itemId: document.getElementById("detailViewId").value,
+                itemName: document.getElementById("detailViewName").value
+            });
+        });
+        console.log("Modifying MasterList Done...")
+        return ItemKey;
+}
+
+function modifyUnitList(uPath, cPath){
+    console.log("Modifing UnitList");
+        let path = uPath;
+        let itemPath = cPath;
+        let placeNum, itemDescription, itemId, itemName, masterKey;
+        //console.log("Path = "+path);
+        let ref = database.ref(path);
+        //update the master list
+        ref.once("value", function(snapshot){
+            let items = snapshot.val();
+            let keys = Object.keys(items);
+            console.log("keys: "+keys);
+            //Get number in which keys
+            for( let i=0; i<keys.length; i++){
+                if( Object.keys(items)[i] == itemPath ){
+                    //console.log("PlaceNum = "+i);
+                    placeNum = i;
+                }
+            }
+            console.log("PlaceNum = "+placeNum);
+            itemDescription = items[keys[placeNum]].itemDescription;
+            itemId = items[keys[placeNum]].itemId;
+            itemName = items[keys[placeNum]].itemName;
+            masterKey = items[keys[placeNum]].masterKey;
+            console.log("itemId : "+items[keys[placeNum]].itemId);
+            console.log("itemName : "+items[keys[placeNum]].itemName);
+            console.log("masterKey : "+items[keys[placeNum]].masterKey);
+            //update the unitList
+            database.ref(path+'/'+itemPath).set({
+                itemDescription: document.getElementById("detailViewDescription").value,
+                itemId: document.getElementById("detailViewId").value,
+                itemName: document.getElementById("detailViewName").value,
+                masterKey: masterKey
+            });
+        });
+        console.log("Modifying UnitList Done...")
 }
 
 

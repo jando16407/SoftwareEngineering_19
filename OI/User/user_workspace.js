@@ -1,10 +1,10 @@
 var database;
-var submitButton1, submitButton2;
-var unitPath1, unitPath2, masterPath;
-var ref1, ref2, refAdmin;
-var ref1_L, ref2_L;
-var masterListContainer, listContainer1, listContainer2;
-var tableMaster, tableUnit1, tableUnit2;
+var submitButton1;
+var unitPath1, masterPath;
+var ref1, refAdmin;
+var ref1_L;
+var masterListContainer, listContainer1;
+var tableUnit1;
 var detailViewPath, detailViewKey, detailView_itemId;
 var detailView_itemName, detailView_itemDescription;
 var detailView_UnitPath;
@@ -41,19 +41,19 @@ function firebase_setup(){
 //initial setup for the page
 function page_setup(){
     submitButton1 = document.getElementById("submitButton1");
-    submitButton2 = document.getElementById("submitButton2");
+    //submitButton2 = document.getElementById("submitButton2");
     unitPath1 = 'Unit/Unit_001';
-    unitPath2 = 'Unit/Unit_002';
+    //unitPath2 = 'Unit/Unit_002';
     masterPath = 'MasterList';
     ref1 = database.ref(unitPath1);
-    ref2 = database.ref(unitPath2);
+    //ref2 = database.ref(unitPath2);
     refAdmin = database.ref(masterPath);
 }
 
 //Initial rendering of tables
 function init_tables(){ 
     //Main Tab setup
-    masterListContainer = document.createElement('table');
+ /*   masterListContainer = document.createElement('table');
     document.getElementById("masterItemList").appendChild(masterListContainer);
     masterListContainer.setAttribute('name0', 'itemTable0');
     masterListContainer.setAttribute("id", "masterTable");
@@ -62,7 +62,7 @@ function init_tables(){
     var topRow_0 = "<th>Unit</th><th>ID</th><th>Item Name</th><th>Item Description</th>";
     listRow_0.innerHTML = topRow_0;
     masterListContainer.appendChild(listRow_0);
-    
+ */   
     //Unit 1 tab setup
     //Create a table for Unit 1
     listContainer1 = document.createElement('table');
@@ -77,7 +77,7 @@ function init_tables(){
 
     //Unit 2 tab setup
     //Create a table for Unit 2
-    listContainer2 = document.createElement('table');
+  /*  listContainer2 = document.createElement('table');
     document.getElementById("officeItemList2").appendChild(listContainer2);
     listContainer2.setAttribute('name2', 'itemTable2');
     listContainer2.setAttribute("id", "unit2Table");
@@ -86,6 +86,7 @@ function init_tables(){
     let topRow_2 = "<th>ID</th><th>Item Name</th><th>Item Description</th>";
     listRow_2.innerHTML = topRow_2;
     listContainer2.appendChild(listRow_2);
+    */
 }
 
 //Error handling

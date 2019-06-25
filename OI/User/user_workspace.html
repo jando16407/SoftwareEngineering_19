@@ -35,7 +35,7 @@ table {
 </div>
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
 <!--
     <div class="w3-container w3-row">
     <div class="w3-col s4">
@@ -77,76 +77,94 @@ table {
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+<div class="w3-main" style="margin-left:200px;margin-top:43px;">
 <h2>Workspace</h2>
   <header>
   
-      <div class="w3-display-top " style="width:70%">
+    <div style="display: inline-block">
+      <div class="w3-display-top " style="width:100%; display: inline-block; width: 800px; overflow-y: scroll;">
         <div class="w3-bar w3-black">
             <!--<button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainList');">Main List</button>-->
           <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');">Unit 1</button>
           <!--<button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab2');">Unit 2</button>-->
         </div>
-    
-        <!-- Tabs -->
-        <!--
-        <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
-          
-          <h3>Main Inventory Item List</h3>
-          <h4 id="mainListUnit1">Unit 1</h4>
-          <h4 id="mainListUnit2">Unit 2</h4>
+  
+        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+          <div style="display: inline-block">
+            <h4>Item list</h4>
+            
+            <div style="height: 600px; overflow: scroll; width: 800px;">
+              <p id="officeItemList1">
+              </p>
+            </div>
+          </div>
 
         </div>
-        -->
-        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
-          
-          <h3>Unit 1</h3>
-          <h4>Add an item</h4>
-          <p>
-              <label for="item_id1"><b>Item ID</b></label><br>
-              <input id="id1" type="text" placeholder="Enter Item ID" name="id1" required>
-              <br>
-              <label for="item_name1"><b>Item Name</b></label><br>
-              <input id="name1" type="text" placeholder="Enter Item Name" name="name1" required>
-              <br>
-              <label for="item_description1"><b>Item Description</b></label><br>
-              <input id="description1" type="text" placeholder="Enter Item Description" name="description1" required>
-              <br>
-              <button id="submitButton1">Submit</button>
-          </p>
-          <br>
-          <h4>Item list</h4>
-          <p id="officeItemList1">
-          </p>
-        </div>
-        <!--
-        <div id="Tab2" class="w3-container w3-white w3-padding-16 myLink">
-        
-            <h3>Unit 2</h3>
-            <h4>Add an item</h4>
-            <p>
-                <label for="item_id2"><b>Item ID</b></label><br>
-                <input id="id2" type="text" placeholder="Enter Item ID" name="id2" required>
-                <br>
-                <label for="item_name2"><b>Item Name</b></label><br>
-                <input id="name2" type="text" placeholder="Enter Item Name" name="name2" required>
-                <br>
-                <label for="item_description2"><b>Item Description</b></label><br>
-                <input id="description2" type="text" placeholder="Enter Item Description" name="description2" required>
-                <br>
-                <button id="submitButton2">Submit</button>
-            </p>
-            <br>
-            <h4>Item list</h4>
-            <p id="officeItemList2">
-            </p>
-        </div>
-    -->
       </div>
+    </div>
+    <div style ="display: inline-block; vertical-align: top">
+      <div class="w3-display-top " style="width:100%; height: 700px; overflow: scroll; ">
+        <!-- Tab buttons -->
+        <div class="w3-bar w3-black">
+          <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'Tab_add');">Add Items</button>
+          <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'Tab_work');">Work Order</button>
+        </div>
+        <!--Tab1 (Adding items)-->
+        <div id="Tab_add" class="w3-container w3-white w3-padding-16 myLink2">
+          <div style="height: 300px; overflow: scroll;">
+            <h4>Add an item</h4>
+            
+            <p>
+                <label for="item_id1"><b>Item ID</b></label><br>
+                <input id="id1" type="text" placeholder="Enter Item ID" name="id1" required>
+                <br>
+                <label for="item_name1"><b>Item Name</b></label><br>
+                <input id="name1" type="text" placeholder="Enter Item Name" name="name1" required>
+                <br>
+                <label for="item_description1"><b>Item Description</b></label><br>
+                <input id="description1" type="text" placeholder="Enter Item Description" name="description1" required>
+                <br>
+                <button id="submitButton1">Submit</button>
+            </p>
+          </div>
+        </div>
+
+        <!--Tab2 (Work Orders)-->
+        <div id="Tab_work" class="w3-container w3-white w3-padding-16 myLink2">
+          <div style="height: 300px; overflow: scroll;">
+            <h4>Create a work order</h4>
+            
+          </div>
+        </div>
+
+        <!-- Detail View-->
+        <div id="DetailView" class="w3-container w3-white w3-padding-16 secondmyLink" style="overflow-y: scroll; height:300px;">
+          
+          <h4 >Detail View of Selected Item</h4>
+          <button id="deleteButton">Delete</button>
+          <div id="detailViewTable">
+            <table>
+              <tr>
+                <th>Item Id</th>
+                <th><input id="detailViewId" type="text" value="" onchange=""></th>              
+              </tr>
+              <tr>
+                <th>Item Name</th>
+                <th><input id="detailViewName" type="text" value=""></th>
+              </tr>
+              <tr>
+                <th>Item Description</th>
+                <th><input id="detailViewDescription" type="text" value=""></th>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
     </header>
 </div>
 
-<script src="tp1.js"></script>
+<script src="user_workspace.js"></script>
 <script src="tp2.js"></script>
 </body>
 </html>

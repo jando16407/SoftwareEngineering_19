@@ -446,8 +446,8 @@ function detailViewItemChangedMaster(){
         let unitNodePath;
         //Modify master list and it'll return the unit's unique ID
         unitNodePath = modifyMasterList(masterPath, childNodePath);
-        console.log("ItemKey: "+unitNodePath);
-        console.log("Path: "+detailView_UnitPath);
+        //console.log("ItemKey: "+unitNodePath);
+        //console.log("Path: "+detailView_UnitPath);
         
         //Then modify unit list
         modifyUnitList(detailView_UnitPath, unitNodePath);
@@ -456,14 +456,20 @@ function detailViewItemChangedMaster(){
 
 function detailViewItemChanged(){
     if(document.getElementById("detailViewTable").getAttribute("path") != ""){
-        console.log("Change detected");
+        /*console.log("Change detected");
         let path = document.getElementById("detailViewTable").getAttribute("path");
         console.log("Path = "+path);
         database.ref(path).set({
             itemId : document.getElementById("detailViewId").value,
             itemName : document.getElementById("detailViewName").value,
             itemDescription : document.getElementById("detailViewDescription").value,
-        });
+        });*/
+        let unitNodePath;
+        //Modify unit list first
+        unitNodePath = modifyUnitList(detailViewPath, childNodePath);
+
+        //Modify masterlist
+        modifyMasterList(detailView_UnitPath, unitNodePath)
     }
 }
 
@@ -518,7 +524,7 @@ function modifyUnitList(uPath, cPath){
         ref.once("value", function(snapshot){
             let items = snapshot.val();
             let keys = Object.keys(items);
-            console.log("keys: "+keys);
+//            console.log("keys: "+keys);
             //Get number in which keys
             for( let i=0; i<keys.length; i++){
                 if( Object.keys(items)[i] == itemPath ){
@@ -526,15 +532,16 @@ function modifyUnitList(uPath, cPath){
                     placeNum = i;
                 }
             }
-            console.log("PlaceNum = "+placeNum);
+//            console.log("PlaceNum = "+placeNum);
             itemDescription = items[keys[placeNum]].itemDescription;
             itemId = items[keys[placeNum]].itemId;
             itemName = items[keys[placeNum]].itemName;
             masterKey = items[keys[placeNum]].masterKey;
-            console.log("itemId : "+items[keys[placeNum]].itemId);
-            console.log("itemName : "+items[keys[placeNum]].itemName);
-            console.log("masterKey : "+items[keys[placeNum]].masterKey);
+//            console.log("itemId : "+items[keys[placeNum]].itemId);
+//            console.log("itemName : "+items[keys[placeNum]].itemName);
+//            console.log("masterKey : "+items[keys[placeNum]].masterKey);
             //update the unitList
+            detailView_UnitPath = "MasterList";
             database.ref(path+'/'+itemPath).set({
                 itemDescription: document.getElementById("detailViewDescription").value,
                 itemId: document.getElementById("detailViewId").value,
@@ -543,6 +550,7 @@ function modifyUnitList(uPath, cPath){
             });
         });
         console.log("Modifying UnitList Done...")
+        return masterKey;
 }
 
 

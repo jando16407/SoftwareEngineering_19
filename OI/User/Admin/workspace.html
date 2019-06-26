@@ -34,24 +34,10 @@ table {
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
   <span class="w3-bar-item w3-right">OI</span>
 </div>
-
+ 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
-<!--
-    <div class="w3-container w3-row">
-    <div class="w3-col s4">
-      <img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
-    </div>
-    <div class="w3-col s8 w3-bar">
-      <span>Welcome, <strong>Mike</strong></span><br>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
-    </div>
-  </div>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
 
-  <hr>
-  -->
   <div class="w3-container">
     <h5>Admin Dashboard</h5>
   </div>
@@ -63,16 +49,6 @@ table {
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
     <a href="messages.html" class="w3-bar-item w3-button w3-padding">Admin Messages</a>
     <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
-    <!--
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Views</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Traffic</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Geo</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>  Orders</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  News</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bank fa-fw"></i>  General</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  History</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
-  -->
   </div>
 </nav>
 
@@ -81,10 +57,14 @@ table {
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+<div class="w3-main" style="margin-left:200px;margin-top:40px;">
 <h2>Workspace</h2>
   <header>
-      <div class="w3-display-top " style="width:70%">
+
+    <!--The whole workspace-->
+    <div style="display: inline-block; width:100%;">
+      <div class="w3-display-top " style="width:70%; display: inline-block;">
+        <!-- Tab buttons -->
         <div class="w3-bar w3-black">
           <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainList');">Main List</button>
           <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');">Unit 1</button>
@@ -92,111 +72,223 @@ table {
         </div>
     
         <!-- Tabs -->
-        <!-- Main List Tab -->
-        <div id="MainList" class="w3-container w3-white w3-padding-16 myLink" style="overflow-y: scroll; height:300px;">
-          
-          <h3>Main Inventory Item List</h3>
-          <h4 id="masterItemList">Item List</h4>
+        <div style="overflow-y: scroll; overflow-x: scroll;">
+          <!-- Main List Tab -->
+          <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
+            <div style="display: inline-block">
+              <h3>Main Inventory Item List</h3>
+              <!-- Item List -->
+              <div style="height: 320px; overflow: scroll; width: 800px;">
+                <p id="masterItemList"></p>
+              </div>
+            </div>
+          </div>
 
-        </div>
+          <!-- Tab for Unit 1 -->
+          <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+              <div style="display: inline-block">
+                <h3>Unit 1</h3>
+                <!-- Item List -->
+                <div style="height: 320px; overflow: scroll; width: 800px;">
+                  <p id="officeItemList1"></p>
+                </div>
+              </div>
+          </div>
 
-        <!-- Tab for Unit 1 -->
-        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink" style="overflow-y: scroll; height:300px;">
-          
-          <h3>Unit 1</h3>
-          <h4>Add an item</h4>
-          <p>
-              <label for="item_id1"><b>Item ID</b></label><br>
-              <input id="id1" type="text" placeholder="Enter Item ID" name="id1" required>
-              <br>
-              <label for="item_name1"><b>Item Name</b></label><br>
-              <input id="name1" type="text" placeholder="Enter Item Name" name="name1" required>
-              <br>
-              <label for="item_description1"><b>Item Description</b></label><br>
-              <input id="description1" type="text" placeholder="Enter Item Description" name="description1" required>
-              <br>
-              <button id="submitButton1">Submit</button>
-          </p>
-          <br>
-          <h4>Item list</h4>
-          <p id="officeItemList1">
-          </p>
-        </div>
-
-        <!-- Tab for Unit 2 -->
-        <div id="Tab2" class="w3-container w3-white w3-padding-16 myLink" style="overflow-y: scroll; height:300px;">
-        
-            <h3>Unit 2</h3>
-            <h4>Add an item</h4>
-            <p>
-                <label for="item_id2"><b>Item ID</b></label><br>
-                <input id="id2" type="text" placeholder="Enter Item ID" name="id2" required>
-                <br>
-                <label for="item_name2"><b>Item Name</b></label><br>
-                <input id="name2" type="text" placeholder="Enter Item Name" name="name2" required>
-                <br>
-                <label for="item_description2"><b>Item Description</b></label><br>
-                <input id="description2" type="text" placeholder="Enter Item Description" name="description2" required>
-                <br>
-                <button id="submitButton2">Submit</button>
-            </p>
-            <br>
-            <h4>Item list</h4>
-            <p id="officeItemList2">
-            </p>
+          <!-- Tab for Unit 2 -->
+          <div id="Tab2" class="w3-container w3-white w3-padding-16 myLink">
+              <div style="display: inline-block">
+                <h3>Unit 2</h3>
+                <!-- Item List -->
+                <div style="height: 320px; overflow: scroll; width: 800px;">
+                  <p id="officeItemList2"></p>
+                </div>
+              </div>
+          </div>
         </div>
       </div>
+      <!-- Second tab on the right side -->
+      <div style ="display: inline-block; vertical-align: top; width:29%;">
+        <div class="w3-display-top " style="width:100%; height: 450px; ">
+          <!-- Tab buttons -->
+          <div class="w3-bar w3-black">
+            <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'Tab_add1');">Unit 1 Add Items</button>
+            <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'Tab_add2');">Unit 2 Add Items</button>
+          </div>
+          <!--Tab1 (Adding items)-->
+          <div id="Tab_add1" class="w3-container w3-white w3-padding-16 myLink2">
+            <div style="height: 400px; overflow: scroll;">
+              <h4>Add an item on Unit 1</h4>
+              <p>
+                  <label for="item_id1"><b>Item ID</b></label><br>
+                  <input id="id1" type="text" placeholder="Enter Item ID" name="id1" required>
+                  <br>
+                  <label for="item_name1"><b>Item Name</b></label><br>
+                  <input id="name1" type="text" placeholder="Enter Item Name" name="name1" required>
+                  <br>
+                  <label for="item_assign1"><b>Item Assign</b></label><br>
+                  <input id="assign1" type="text" placeholder="Enter Who To Assign To" name="assign1" required>
+                  <br>
+                  <label for="item_quantity1"><b>Item Quantity</b></label><br>
+                  <input id="quantity1" type="text" placeholder="Enter Item Quantity" name="quantity1" required>
+                  <br>
+                  <label for="item_quantityUnit1"><b>Item Quantity Unit</b></label><br>
+                  <input id="quantityUnit1" type="text" placeholder="Enter Item Quantity Unit" name="quantityUnit1" required>
+                  <br>
+                  <label for="item_description1"><b>Item Description</b></label><br>
+                  <input id="description1" type="text" placeholder="Enter Item Description" name="description1" required>
+                  <br>
+                  <h5>***** More Detail Information Below *****</h5>
+                  <label for="item_make1"><b>Item Make</b></label><br>
+                  <input id="make1" type="text" placeholder="Enter Item Make" name="make1" required>
+                  <br>
+                  <label for="item_model1"><b>Item Model</b></label><br>
+                  <input id="model1" type="text" placeholder="Enter Item Model" name="model1" required>
+                  <br>
+                  <label for="item_serialNumber1"><b>Item Serial Number</b></label><br>
+                  <input id="serialNumber1" type="text" placeholder="Enter Item Serial Number" name="serialNumber1" required>
+                  <br>
+                  <label for="item_serviceTag1"><b>Item Service Tag</b></label><br>
+                  <input id="serviceTag1" type="text" placeholder="Enter Item Service Tag" name="serviceTag1" required>
+                  <br>
+                  <label for="item_acquisitionDate1"><b>Item Acquisition Date</b></label><br>
+                  <input id="acquisitionDate1" type="text" placeholder="Enter Item Acquisition Date" name="acquisitionDate1" required>
+                  <br>
+                  <label for="item_purchaseFrom1"><b>Item Purchase From</b></label><br>
+                  <input id="purchaseFrom1" type="text" placeholder="Enter Item Purchased From" name="purchaseFrom1" required>
+                  <br>
+                  <label for="item_warranty1"><b>Item Warranty</b></label><br>
+                  <input id="warranty1" type="text" placeholder="Enter Item Warranty" name="warranty1" required>
+                  <br>
+                  <label for="item_condition1"><b>Item Condition</b></label><br>
+                  <input id="condition1" type="text" placeholder="Enter Item Condition" name="condition1" required>
+                  <br>
+                  <label for="item_value1"><b>Item Value</b></label><br>
+                  <input id="value1" type="text" placeholder="Enter Item Value" name="value1" required>
+                  <br>
+                  <label for="item_other1"><b>Item Other</b></label><br>
+                  <input id="other1" type="text" placeholder="Enter Item Other" name="other1" required>
+                  <br>
+                  
+                  <button id="submitButton1">Submit</button>
+              </p>
+            </div>
+          </div>
+          <!--Tab2 (Work Orders)-->
+          <div id="Tab_add2" class="w3-container w3-white w3-padding-16 myLink2">
+            <div style="height: 400px; overflow: scroll;">
+              <h4>Add an item on Unit 2</h4>
+              <p>
+                  <label for="item_id2"><b>Item ID</b></label><br>
+                  <input id="id2" type="text" placeholder="Enter Item ID" name="id2" required>
+                  <br>
+                  <label for="item_name2"><b>Item Name</b></label><br>
+                  <input id="name2" type="text" placeholder="Enter Item Name" name="name2" required>
+                  <br>
+                  <label for="item_assign2"><b>Item Assign</b></label><br>
+                  <input id="assign2" type="text" placeholder="Enter Who To Assign To" name="assign2" required>
+                  <br>
+                  <label for="item_quantity2"><b>Item Quantity</b></label><br>
+                  <input id="quantity2" type="text" placeholder="Enter Item Quantity" name="quantit2" required>
+                  <br>
+                  <label for="item_quantityUnit2"><b>Item Quantity Unit</b></label><br>
+                  <input id="quantityUnit2" type="text" placeholder="Enter Item Quantity Unit" name="quantityUnit2" required>
+                  <br>
+                  <label for="item_description2"><b>Item Description</b></label><br>
+                  <input id="description2" type="text" placeholder="Enter Item Description" name="description2" required>
+                  <br>
+                  <h5>***** More Detail Information Below *****</h5>
+                  <label for="item_make2"><b>Item Make</b></label><br>
+                  <input id="make2" type="text" placeholder="Enter Item Make" name="make2" required>
+                  <br>
+                  <label for="item_model2"><b>Item Model</b></label><br>
+                  <input id="model2" type="text" placeholder="Enter Item Model" name="model2" required>
+                  <br>
+                  <label for="item_serialNumber2"><b>Item Serial Number</b></label><br>
+                  <input id="serialNumber2" type="text" placeholder="Enter Item Serial Number" name="serialNumber2" required>
+                  <br>
+                  <label for="item_serviceTag2"><b>Item Service Tag</b></label><br>
+                  <input id="serviceTag2" type="text" placeholder="Enter Item Service Tag" name="serviceTag2" required>
+                  <br>
+                  <label for="item_acquisitionDate2"><b>Item Acquisition Date</b></label><br>
+                  <input id="acquisitionDate2" type="text" placeholder="Enter Item Acquisition Date" name="acquisitionDate2" required>
+                  <br>
+                  <label for="item_purchaseFrom2"><b>Item Purchase From</b></label><br>
+                  <input id="purchaseFrom2" type="text" placeholder="Enter Item Purchased From" name="purchaseFrom2" required>
+                  <br>
+                  <label for="item_warranty2"><b>Item Warranty</b></label><br>
+                  <input id="warranty2" type="text" placeholder="Enter Item Warranty" name="warranty2" required>
+                  <br>
+                  <label for="item_condition2"><b>Item Condition</b></label><br>
+                  <input id="condition2" type="text" placeholder="Enter Item Condition" name="condition2" required>
+                  <br>
+                  <label for="item_value2"><b>Item Value</b></label><br>
+                  <input id="value2" type="text" placeholder="Enter Item Value" name="value2" required>
+                  <br>
+                  <label for="item_other2"><b>Item Other</b></label><br>
+                  <input id="other2" type="text" placeholder="Enter Item Other" name="other2" required>
+                  <br>
+                  
+                  <button id="submitButton2">Submit</button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <!-- Second tabs on the bottom -->
-      <div class="w3-display-top " style="width:70%">
+    <!-- Detail View-->
+    <div style="width:100%; display: inline-block;" >
+      <div class="w3-display-top " style="width:99%">
+        <!-- Tab buttons -->
         <div class="w3-bar w3-black">
-          <button class="w3-bar-item w3-button secondtablink" onclick="secondopenLink(event, 'DetailView');">Detail View</button>
           <button class="w3-bar-item w3-button secondtablink" onclick="secondopenLink(event, 'DetailView');">Detail View</button>
         </div>
     
         <!-- Tabs -->
-        <!-- Main List Tab -->
-        <div id="DetailView" class="w3-container w3-white w3-padding-16 secondmyLink" style="overflow-y: scroll; height:300px;">
-          
-          <h4 >Detail View of Selected Item</h4>
-          <button id="deleteButton">Delete</button>
-          <div id="detailViewTable">
-          <table>
-            <tr>
-              <th>Item Id</th>
-              <th><input id="detailViewId" type="text" value="" onchange=""></th>              
-            </tr>
-            <tr>
-              <th>Item Name</th>
-              <th><input id="detailViewName" type="text" value=""></th>
-            </tr>
-            <tr>
-              <th>Item Description</th>
-              <th><input id="detailViewDescription" type="text" value=""></th>
-            </tr>
-          </table>
-        </div>
-        <!--
-        <div class="detailViewTableRight">
-          <table>
-            <tr>
-              <th>Item Id</th>
-              <th id="detailViewId"></th>              
-            </tr>
-            <tr>
-              <th>Item Name</th>
-              <th id="detailViewName"></th>
-            </tr>
-            <tr>
-              <th>Item Description</th>
-              <th id="detailViewDescription"></th>
-            </tr>
-          </table>
-        </div>
-        -->
+        <!--Tab1 (Detail View) -->
+        <div id="DetailView" class="w3-container w3-white w3-padding-16 secondmyLink" style="width:100%; height:250px; display: inline-block;">
+          <div style="overflow: scroll;">
+            <h4 >Detail View of Selected Item<button id="deleteButton">Delete</button></h4>
+            <!-- Table 1 -->
+            <div id="detailViewTable" style="display: inline-block; width: 40%">
+              <table>
+                <tr>
+                  <th>Item Id</th>
+                  <th><input id="detailViewId" type="text" value="" onchange=""></th>              
+                </tr>
+                <tr>
+                  <th>Item Name</th>
+                  <th><input id="detailViewName" type="text" value=""></th>
+                </tr>
+                <tr>
+                  <th>Item Description</th>
+                  <th><input id="detailViewDescription" type="text" value=""></th>
+                </tr>
+              </table>
+            </div>
+            <!-- Table 2 -->
+            <div id="detailViewTable" style="display: inline-block; width: 40%">
+              <table>
+                <tr>
+                  <th>Item Assign</th>
+                  <th><input id="detailViewId" type="text" value="" onchange=""></th>              
+                </tr>
+                <tr>
+                  <th>Item Description</th>
+                  <th><input id="detailViewName" type="text" value=""></th>
+                </tr>
+                <tr>
+                  <th>Item Description</th>
+                  <th><input id="detailViewDescription" type="text" value=""></th>
+                </tr>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-    </header>
+    </div>
+  </header>
 </div>
 
 

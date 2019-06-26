@@ -1,10 +1,10 @@
 var database;
-var submitButton1, submitButton2;
-var unitPath1, unitPath2, masterPath;
-var ref1, ref2, refAdmin;
-var ref1_L, ref2_L;
-var masterListContainer, listContainer1, listContainer2;
-var tableMaster, tableUnit1, tableUnit2;
+var submitButton1;
+var unitPath1, masterPath;
+var ref1, refAdmin;
+var ref1_L;
+var masterListContainer, listContainer1;
+var tableUnit1;
 var detailViewPath, detailViewKey, detailView_itemId;
 var detailView_itemName, detailView_itemDescription;
 var detailView_UnitPath;
@@ -41,19 +41,19 @@ function firebase_setup(){
 //initial setup for the page
 function page_setup(){
     submitButton1 = document.getElementById("submitButton1");
-    submitButton2 = document.getElementById("submitButton2");
+    //submitButton2 = document.getElementById("submitButton2");
     unitPath1 = 'Unit/Unit_001';
-    unitPath2 = 'Unit/Unit_002';
+    //unitPath2 = 'Unit/Unit_002';
     masterPath = 'MasterList';
     ref1 = database.ref(unitPath1);
-    ref2 = database.ref(unitPath2);
+    //ref2 = database.ref(unitPath2);
     refAdmin = database.ref(masterPath);
 }
 
 //Initial rendering of tables
 function init_tables(){ 
     //Main Tab setup
-    masterListContainer = document.createElement('table');
+ /*   masterListContainer = document.createElement('table');
     document.getElementById("masterItemList").appendChild(masterListContainer);
     masterListContainer.setAttribute('name0', 'itemTable0');
     masterListContainer.setAttribute("id", "masterTable");
@@ -62,7 +62,7 @@ function init_tables(){
     var topRow_0 = "<th>Unit</th><th>ID</th><th>Item Name</th><th>Item Description</th>";
     listRow_0.innerHTML = topRow_0;
     masterListContainer.appendChild(listRow_0);
-    
+ */   
     //Unit 1 tab setup
     //Create a table for Unit 1
     listContainer1 = document.createElement('table');
@@ -77,7 +77,7 @@ function init_tables(){
 
     //Unit 2 tab setup
     //Create a table for Unit 2
-    listContainer2 = document.createElement('table');
+  /*  listContainer2 = document.createElement('table');
     document.getElementById("officeItemList2").appendChild(listContainer2);
     listContainer2.setAttribute('name2', 'itemTable2');
     listContainer2.setAttribute("id", "unit2Table");
@@ -86,6 +86,7 @@ function init_tables(){
     let topRow_2 = "<th>ID</th><th>Item Name</th><th>Item Description</th>";
     listRow_2.innerHTML = topRow_2;
     listContainer2.appendChild(listRow_2);
+    */
 }
 
 //Error handling
@@ -97,6 +98,7 @@ function gotErr(err){
 //Detail view setup
 function detailView_setting(){
     //Delete button funciton setup
+    /*
     let deleteButton = document.getElementById("deleteButton");
     deleteButton.onclick = function() {
         if(detailViewPath != ""){
@@ -135,6 +137,7 @@ function detailView_setting(){
             detailViewDeleteItemKey = "";
         }
     };
+    */
 }
 
 /* Initialize Functions End */
@@ -145,29 +148,33 @@ function detailView_setting(){
 //Render table, clear the table everytime it's called and display new data
 function renderTableContents(path){
     //Rendering for MasterList
+    /*
     if(path == masterPath){
         while(masterListContainer.children.length > 1){
             masterListContainer.removeChild(masterListContainer.childNodes[1]);
         }
         renderMasterList();
     }
+    
     //Rendering for Unit 1
-    else if(path == unitPath1){
+    else */
+    if(path == unitPath1){
         while(listContainer1.children.length > 1){
             listContainer1.removeChild(listContainer1.childNodes[1]);
         }
         renderUnit1();
-    }
+    }/*
     //Rendering for Unit 2
     else  if(path == unitPath2){
         while(listContainer2.children.length > 1){
             listContainer2.removeChild(listContainer2.childNodes[1]);
         }
         renderUnit2();
-    }
+    }*/
 }
 
 //Update the table for masterList
+/*
 function renderMasterList(){
     refAdmin.once("value", function(snapshot){
         let items = snapshot.val();
@@ -197,7 +204,7 @@ function renderMasterList(){
         }
     }, gotErr);
 }
-
+*/
 //Update the table for Unit 1
 function renderUnit1(){
     ref1.once("value", function(snapshot){
@@ -216,11 +223,17 @@ function renderUnit1(){
             let id = document.createElement('th');
             let name = document.createElement('th');
             let desc = document.createElement('th');
+            let assign = document.createElement('th');
+            let quantity = document.createElement('th');
             id.innerHTML = items[k].itemId;
             name.innerHTML = items[k].itemName;
             desc.innerHTML = items[k].itemDescription;
+            assign.innerHTML = items[k].assign;
+            quantity.innerHTML = items[k].quantity;
             row.appendChild(id);
             row.appendChild(name);
+            row.appendChild(quantity);
+            row.appendChild(assign);
             row.appendChild(desc);
             listContainer1.appendChild(row);
         }
@@ -228,6 +241,7 @@ function renderUnit1(){
 }
 
 //Update the table for Unit 2
+/*
 function renderUnit2(){
     ref2.once("value", function(snapshot){
         let items = snapshot.val();
@@ -256,7 +270,7 @@ function renderUnit2(){
     }, gotErr);
 }
 
-
+*/
 /* Rendering funcitons End */
 
 
@@ -266,6 +280,7 @@ function renderUnit2(){
 function itemSelected(id, deletePath){
     childNodeIndex = id;
     detailViewDeleteItemPath = deletePath;
+    /*
     //when item is in masterlist
     if(0<=id && id < 100000){
         detailViewPath = masterPath;
@@ -294,7 +309,7 @@ function itemSelected(id, deletePath){
         //detailViewDeleteItemPath = deletePath;
     }
     //when item is in unit 1
-    else if(100000<=id && id < 200000){
+    else if(100000<=id && id < 200000){*/
         detailViewPath = 'Unit/Unit_001';
         childNodeIndex -= 100000;
         childNodePath = document.getElementById("unit1Table").childNodes[childNodeIndex].getAttribute("key");
@@ -318,7 +333,7 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewId").onchange = detailViewItemChanged;
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
-    } 
+  /*  } 
     //when item is in unit 2
     else if(200000<=id && id < 300000){
         detailViewPath = 'Unit/Unit_002'
@@ -344,7 +359,7 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewId").onchange = detailViewItemChanged;
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
-    }
+    }*/
 }
 
 
@@ -376,9 +391,12 @@ submitButton1.onclick = function(){
         itemId: document.getElementById("id1").value,
         itemName: document.getElementById("name1").value,
         itemDescription: document.getElementById("description1").value,
-        masterKey : newItemKey2
+        masterKey : newItemKey2,
+        assign: document.getElementById("assign1").value,
+        quantity: document.getElementById("quantity1").value,
     });
 }
+/*
 submitButton2.onclick = function(){
     //Push data to Unit
     let data = {
@@ -405,7 +423,7 @@ submitButton2.onclick = function(){
         masterKey : newItemKey2
     });
 }
-
+*/
 /* onClick handlings End */
 
 
@@ -424,9 +442,11 @@ function renderListen(){
     }, gotErr);
     //Any item modification, adding, deleting will update the 
     //list in unit 2
+    /*
     ref2.on("value", function(snapshot){
         renderTableContents(unitPath2);
     }, gotErr);
+    */
     //when item is added to masterlist
     refAdmin.on("child_added", function(snapshot){
         newItemKey2 = snapshot.key;
@@ -436,11 +456,12 @@ function renderListen(){
         newItemKey = snapshot.key;
     }, gotErr);
     //when item is added to unit 2
+    /*
     ref2.on("child_added", function(snapshot){
         newItemKey = snapshot.key;
-    }, gotErr);
+    }, gotErr);*/
 }
-
+/*
 function detailViewItemChangedMaster(){
     if(document.getElementById("detailViewTable").getAttribute("path") != ""){
         let unitNodePath;
@@ -453,17 +474,9 @@ function detailViewItemChangedMaster(){
         modifyUnitList(detailView_UnitPath, unitNodePath);
     }
 }
-
+*/
 function detailViewItemChanged(){
     if(document.getElementById("detailViewTable").getAttribute("path") != ""){
-        /*console.log("Change detected");
-        let path = document.getElementById("detailViewTable").getAttribute("path");
-        console.log("Path = "+path);
-        database.ref(path).set({
-            itemId : document.getElementById("detailViewId").value,
-            itemName : document.getElementById("detailViewName").value,
-            itemDescription : document.getElementById("detailViewDescription").value,
-        });*/
         let unitNodePath;
         //Modify unit list first
         unitNodePath = modifyUnitList(detailViewPath, childNodePath);

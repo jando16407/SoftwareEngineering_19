@@ -36,5 +36,23 @@ function openLink(evt, linkName) {
   document.getElementById(linkName).style.display = "block";
   evt.currentTarget.className += " w3-red";
 }
+
+// Tabs
+function openLink2(evt, linkName) {
+  var i, x, tttabbb;
+  x = document.getElementsByClassName("myLink2");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  tttabbb = document.getElementsByClassName("tttabbb");
+  for (i = 0; i < x.length; i++) {
+    tttabbb[i].className = tttabbb[i].className.replace(" w3-red", "");
+  }
+  document.getElementById(linkName).style.display = "block";
+  evt.currentTarget.className += " w3-red";
+}
+
+
 // Click on the first tablink on load
 document.getElementsByClassName("tablink")[0].click();
+document.getElementsByClassName("tttabbb")[0].click();

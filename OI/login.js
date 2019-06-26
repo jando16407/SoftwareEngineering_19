@@ -34,7 +34,8 @@ var firebaseConfig = {
   //did user hit login?
   var login = document.getElementById("loginButton")
 
-  login.onclick = function(){
+  login.onclick = function(e){
+    e.preventDefault();
         //get email & password from fields
         var emailInput = document.getElementById("emailInput")
         var passwordInput = document.getElementById("passwordInput")

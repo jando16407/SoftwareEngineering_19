@@ -70,22 +70,30 @@ table {
               </div>
               <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
                     <div style="display: inline-block">
-                      <div style="height: 200px; overflow: scroll;">
+                      <div style="background-color:#c3e6f3">
                         <h3>Low Items</h3>
-                        <p>Display list of low items through item id, name, and quanity</p>
-                        <ul id="lowItms"></ul>
+                        <div style="background-color: aliceblue"> 
+                          <ul id="lowItms"></ul>
+                        </div>
                       </div>
-                      <div style="height: 200px; overflow: scroll;">
+                      <div style="background: #c3e6f3">
                         <h3>Faulty Equipment</h3>
-                        <ul id="faultyItms"></ul>
+                        <div style="background-color: aliceblue">
+                          <h5>Furniture</h5>
+                          <ul id="faultyFurniture"></ul>
+                        </div>
+                        <div style="background-color: aliceblue">
+                          <h5>Electronic</h5>
+                          <ul id="faultyElectronic"></ul>
+                        </div>
                       </div>
-                      <div style="height: 200px; overflow: scroll;">
+                      <div style="background-color: #c3e6f3">
                         <h3>New Item Type Requests</h3>
                         <p>Tells Admin # of item type requests, then reference the workspace to handle faults</p><br><br>
                       </div>
                     </div>
                     <div style ="display: inline-block; vertical-align: top">
-                      <div  style="height: 400px; overflow: scroll;">
+                      <div  style="background-color: #c3e6f3">
                       <h2>Announcements</h2>
                       </div>
                       <div style="height: 400px;"> 
@@ -97,6 +105,12 @@ table {
                     </div>
                     <br>
                 </div>
+          <div style="background-color: #c3e6f3">
+            <h3>All Items</h3>
+            <ul id="electronicList"></ul>
+            <ul id="furnitureList"></ul>
+            <ul id="supplyList"></ul>
+          </div>
         </div>
       </header>
     
@@ -108,6 +122,6 @@ table {
 <script src="tp1.js"></script>
 <script src="tp2.js"></script>
 <script src="workorder.js"></script>
-
+<script src="listAll.js"></script>
 </body>
 </html>

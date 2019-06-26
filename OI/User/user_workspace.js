@@ -146,29 +146,33 @@ function detailView_setting(){
 //Render table, clear the table everytime it's called and display new data
 function renderTableContents(path){
     //Rendering for MasterList
+    /*
     if(path == masterPath){
         while(masterListContainer.children.length > 1){
             masterListContainer.removeChild(masterListContainer.childNodes[1]);
         }
         renderMasterList();
     }
+    
     //Rendering for Unit 1
-    else if(path == unitPath1){
+    else */
+    if(path == unitPath1){
         while(listContainer1.children.length > 1){
             listContainer1.removeChild(listContainer1.childNodes[1]);
         }
         renderUnit1();
-    }
+    }/*
     //Rendering for Unit 2
     else  if(path == unitPath2){
         while(listContainer2.children.length > 1){
             listContainer2.removeChild(listContainer2.childNodes[1]);
         }
         renderUnit2();
-    }
+    }*/
 }
 
 //Update the table for masterList
+/*
 function renderMasterList(){
     refAdmin.once("value", function(snapshot){
         let items = snapshot.val();
@@ -198,7 +202,7 @@ function renderMasterList(){
         }
     }, gotErr);
 }
-
+*/
 //Update the table for Unit 1
 function renderUnit1(){
     ref1.once("value", function(snapshot){
@@ -217,11 +221,17 @@ function renderUnit1(){
             let id = document.createElement('th');
             let name = document.createElement('th');
             let desc = document.createElement('th');
+            let assign = document.createElement('th');
+            let quantity = document.createElement('th');
             id.innerHTML = items[k].itemId;
             name.innerHTML = items[k].itemName;
             desc.innerHTML = items[k].itemDescription;
+            assign.innerHTML = items[k].assign;
+            quantity.innerHTML = items[k].quantity;
             row.appendChild(id);
             row.appendChild(name);
+            row.appendChild(quantity);
+            row.appendChild(assign);
             row.appendChild(desc);
             listContainer1.appendChild(row);
         }
@@ -229,6 +239,7 @@ function renderUnit1(){
 }
 
 //Update the table for Unit 2
+/*
 function renderUnit2(){
     ref2.once("value", function(snapshot){
         let items = snapshot.val();
@@ -257,7 +268,7 @@ function renderUnit2(){
     }, gotErr);
 }
 
-
+*/
 /* Rendering funcitons End */
 
 
@@ -267,6 +278,7 @@ function renderUnit2(){
 function itemSelected(id, deletePath){
     childNodeIndex = id;
     detailViewDeleteItemPath = deletePath;
+    /*
     //when item is in masterlist
     if(0<=id && id < 100000){
         detailViewPath = masterPath;
@@ -295,7 +307,7 @@ function itemSelected(id, deletePath){
         //detailViewDeleteItemPath = deletePath;
     }
     //when item is in unit 1
-    else if(100000<=id && id < 200000){
+    else if(100000<=id && id < 200000){*/
         detailViewPath = 'Unit/Unit_001';
         childNodeIndex -= 100000;
         childNodePath = document.getElementById("unit1Table").childNodes[childNodeIndex].getAttribute("key");
@@ -319,7 +331,7 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewId").onchange = detailViewItemChanged;
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
-    } 
+  /*  } 
     //when item is in unit 2
     else if(200000<=id && id < 300000){
         detailViewPath = 'Unit/Unit_002'
@@ -345,7 +357,7 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewId").onchange = detailViewItemChanged;
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
-    }
+    }*/
 }
 
 
@@ -377,9 +389,12 @@ submitButton1.onclick = function(){
         itemId: document.getElementById("id1").value,
         itemName: document.getElementById("name1").value,
         itemDescription: document.getElementById("description1").value,
-        masterKey : newItemKey2
+        masterKey : newItemKey2,
+        assign: document.getElementById("assign1").value,
+        quantity: document.getElementById("quantity1").value,
     });
 }
+/*
 submitButton2.onclick = function(){
     //Push data to Unit
     let data = {
@@ -406,7 +421,7 @@ submitButton2.onclick = function(){
         masterKey : newItemKey2
     });
 }
-
+*/
 /* onClick handlings End */
 
 
@@ -425,9 +440,11 @@ function renderListen(){
     }, gotErr);
     //Any item modification, adding, deleting will update the 
     //list in unit 2
+    /*
     ref2.on("value", function(snapshot){
         renderTableContents(unitPath2);
     }, gotErr);
+    */
     //when item is added to masterlist
     refAdmin.on("child_added", function(snapshot){
         newItemKey2 = snapshot.key;
@@ -437,11 +454,12 @@ function renderListen(){
         newItemKey = snapshot.key;
     }, gotErr);
     //when item is added to unit 2
+    /*
     ref2.on("child_added", function(snapshot){
         newItemKey = snapshot.key;
-    }, gotErr);
+    }, gotErr);*/
 }
-
+/*
 function detailViewItemChangedMaster(){
     if(document.getElementById("detailViewTable").getAttribute("path") != ""){
         let unitNodePath;
@@ -454,17 +472,9 @@ function detailViewItemChangedMaster(){
         modifyUnitList(detailView_UnitPath, unitNodePath);
     }
 }
-
+*/
 function detailViewItemChanged(){
     if(document.getElementById("detailViewTable").getAttribute("path") != ""){
-        /*console.log("Change detected");
-        let path = document.getElementById("detailViewTable").getAttribute("path");
-        console.log("Path = "+path);
-        database.ref(path).set({
-            itemId : document.getElementById("detailViewId").value,
-            itemName : document.getElementById("detailViewName").value,
-            itemDescription : document.getElementById("detailViewDescription").value,
-        });*/
         let unitNodePath;
         //Modify unit list first
         unitNodePath = modifyUnitList(detailViewPath, childNodePath);

@@ -98,6 +98,7 @@ function gotErr(err){
 //Detail view setup
 function detailView_setting(){
     //Delete button funciton setup
+    /*
     let deleteButton = document.getElementById("deleteButton");
     deleteButton.onclick = function() {
         if(detailViewPath != ""){
@@ -136,6 +137,7 @@ function detailView_setting(){
             detailViewDeleteItemKey = "";
         }
     };
+    */
 }
 
 /* Initialize Functions End */

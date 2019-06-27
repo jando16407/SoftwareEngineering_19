@@ -5,7 +5,7 @@ var submitButton1;
 
 firebase_setup();
 page_setup();
-init_tables();
+init_list();
 renderListen();
 
 
@@ -35,7 +35,7 @@ function page_setup(){
 }
 
 //Initial rendering of tables
-function init_tables(){ 
+function init_list(){ 
     //Main Tab setup
     masterListContainer = document.createElement('table');
     document.getElementById("masterItemList").appendChild(masterListContainer);

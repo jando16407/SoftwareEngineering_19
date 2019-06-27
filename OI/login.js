@@ -40,8 +40,9 @@ var firebaseConfig = {
             var errorCode = error.code;
             var errorMessage = error.message;
             alert("error")
-            // ...
+            // ...º
         });
+       
     }
   //checks if signed in and sends to appropriate page
   firebase.auth().onAuthStateChanged(function(user) {

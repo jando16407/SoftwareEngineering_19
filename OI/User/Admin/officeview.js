@@ -88,8 +88,6 @@ var officeView = document.getElementById("officeViewDiv")
 var green = new fabric.Color("rgb(173,255,47)")
 //onclick function for office view
 officeView.onclick = function(event){
-    console.log("circle time")
-   
     var rect = officeView.getBoundingClientRect()
     var x = event.clientX - rect.left - 5
     var y = event.clientY - rect.top - 5

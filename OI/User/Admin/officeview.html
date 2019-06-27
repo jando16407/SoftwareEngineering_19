@@ -7,6 +7,12 @@
 <link rel="stylesheet" href="temp.css">
 <link rel="stylesheet" href="temp2.css">
 <link rel="stylesheet" href="temp3.css">
+<link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<script src="../../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
 <style>
@@ -37,18 +43,15 @@ table {
 </div>
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
 
-  <div class="w3-container">
-    <h5>Admin Dashboard</h5>
-  </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <h3 class="w3-padding">Admin Dashboard</h3>
     <a href="main.html" class="w3-bar-item w3-button w3-padding">Admin Main Panel</a>
     <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
-    <a href="messages.html" class="w3-bar-item w3-button w3-padding">Admin Messages</a>
     <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
   </div>
 </nav>
@@ -60,7 +63,7 @@ table {
 <!-- !PAGE CONTENT! -->
 
 
-<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+<div class="w3-main" style="margin-left:200px;margin-top:43px;">
 <h2>Office View</h2>
   <header>
       <div class="w3-display-top " style="width:100%">
@@ -69,13 +72,12 @@ table {
             <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');">Fault Reports</button>
           </div>
           <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
-                <div style="display: inline-block">
-                <canvas id="officeView" width="1000px" height="500px"></canvas>
+                <div id="officeViewDiv" style="display: inline-block">
+                <canvas id="officeView" width="1000px" height="500px" onclick="console.log('hi');"></canvas>
                 </div>
                 <div style ="display: inline-block; vertical-align: top">
-                  <button class="w3-bar-item w3-button tablink">Edit :p</button><br><br>
-                  <button class="w3-bar-item w3-button tablink">Save</button><br><br>
-                  <button class="w3-bar-item w3-button tablink">Delete</button><br><br>
+                  <button id="addUnit" class="w3-bar-item w3-button tablink" onclick="addUnits(event);">Add Units</button><br><br>
+                  <button id="deleteUnit" class="w3-bar-item w3-button tablink" onclick="deleteUnits(event);">Delete Units</button><br><br>
                 </div>
                 <br>
                 <input id="file" class="custom-file-input" type="file" title=" "onchange="readURL(this)" />
@@ -86,6 +88,7 @@ table {
 </div>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-storage.js"></script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.0.0/fabric.min.js"></script>
 <script src="tp1.js"></script>
 <script src="tp2.js"></script>
 <script src="officeview.js"></script>

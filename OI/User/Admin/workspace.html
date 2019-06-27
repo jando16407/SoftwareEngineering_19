@@ -6,6 +6,12 @@
 <link rel="stylesheet" href="temp.css">
 <link rel="stylesheet" href="temp2.css">
 <link rel="stylesheet" href="temp3.css">
+<link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<script src="../../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
 <style>
@@ -33,45 +39,18 @@ table {
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
   <span class="w3-bar-item w3-right">OI</span>
 </div>
-
+ 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
-<!--
-    <div class="w3-container w3-row">
-    <div class="w3-col s4">
-      <img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
-    </div>
-    <div class="w3-col s8 w3-bar">
-      <span>Welcome, <strong>Mike</strong></span><br>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
-    </div>
-  </div>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
 
-  <hr>
-  -->
-  <div class="w3-container">
-    <h5>Admin Dashboard</h5>
-  </div>
   <div class="w3-bar-block">
-    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <a href="#" class="w3-bar-menu w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <h3 class="w3-padding">Admin Dashboard</h3>
     <a href="main.html" class="w3-bar-item w3-button w3-padding">Admin Main Panel</a>
     <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
-    <a href="messages.html" class="w3-bar-item w3-button w3-padding">Admin Messages</a>
     <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
-    <!--
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Views</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Traffic</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Geo</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>  Orders</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  News</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bank fa-fw"></i>  General</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  History</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
-  -->
   </div>
 </nav>
 
@@ -80,10 +59,14 @@ table {
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+<div class="w3-main" style="margin-left:200px;margin-top:40px;">
 <h2>Workspace</h2>
   <header>
-      <div class="w3-display-top " style="width:70%">
+
+    <!--The whole workspace-->
+    <div style="display: inline-block; width:100%;">
+      <div class="w3-display-top " style="width:70%; display: inline-block;">
+        <!-- Tab buttons -->
         <div class="w3-bar w3-black">
           <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainList');">Main List</button>
           <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');">Unit 1</button>
@@ -91,313 +74,229 @@ table {
         </div>
     
         <!-- Tabs -->
-        <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
-          
-          <h3>Main Inventory Item List</h3>
-          <h4 id="mainListUnit1">Unit 1</h4>
-          <h4 id="mainListUnit2">Unit 2</h4>
-
-        </div>
-        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
-          
-          <h3>Unit 1</h3>
-          <h4>Add an item</h4>
-          <p>
-              <label for="item_id1"><b>Item ID</b></label><br>
-              <input id="id1" type="text" placeholder="Enter Item ID" name="id1" required>
-              <br>
-              <label for="item_name1"><b>Item Name</b></label><br>
-              <input id="name1" type="text" placeholder="Enter Item Name" name="name1" required>
-              <br>
-              <label for="item_description1"><b>Item Description</b></label><br>
-              <input id="description1" type="text" placeholder="Enter Item Description" name="description1" required>
-              <br>
-              <button id="submitButton1">Submit</button>
-          </p>
-          <br>
-          <h4>Item list</h4>
-          <p id="officeItemList1">
-          </p>
-        </div>
-        <div id="Tab2" class="w3-container w3-white w3-padding-16 myLink">
-        
-            <h3>Unit 2</h3>
-            <h4>Add an item</h4>
-            <p>
-                <label for="item_id2"><b>Item ID</b></label><br>
-                <input id="id2" type="text" placeholder="Enter Item ID" name="id2" required>
-                <br>
-                <label for="item_name2"><b>Item Name</b></label><br>
-                <input id="name2" type="text" placeholder="Enter Item Name" name="name2" required>
-                <br>
-                <label for="item_description2"><b>Item Description</b></label><br>
-                <input id="description2" type="text" placeholder="Enter Item Description" name="description2" required>
-                <br>
-                <button id="submitButton2">Submit</button>
-            </p>
-            <br>
-            <h4>Item list</h4>
-            <p id="officeItemList2">
-            </p>
-        </div>
-<!--
-        <div id="Flight" class="w3-container w3-white w3-padding-16 myLink">
-          <h3>Travel the world with us</h3>
-          <div class="w3-row-padding" style="margin:0 -16px;">
-            <div class="w3-half">
-              <label>From</label>
-              <input class="w3-input w3-border" type="text" placeholder="Departing from">
-            </div>
-            <div class="w3-half">
-              <label>To</label>
-              <input class="w3-input w3-border" type="text" placeholder="Arriving at">
+        <div style="overflow-y: scroll; overflow-x: scroll;">
+          <!-- Main List Tab -->
+          <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
+            <div style="display: inline-block">
+              <h3>Main Inventory Item List</h3>
+              <!-- Item List -->
+              <div style="height: 320px; overflow: scroll; width: 800px;">
+                <p id="masterItemList"></p>
+              </div>
             </div>
           </div>
-          <p><button class="w3-button w3-dark-grey">Search and find dates</button></p>
-          
+
+          <!-- Tab for Unit 1 -->
+          <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+              <div style="display: inline-block">
+                <h3>Unit 1</h3>
+                <!-- Item List -->
+                <div style="height: 320px; overflow: scroll; width: 800px;">
+                  <p id="officeItemList1"></p>
+                </div>
+              </div>
+          </div>
+
+          <!-- Tab for Unit 2 -->
+          <div id="Tab2" class="w3-container w3-white w3-padding-16 myLink">
+              <div style="display: inline-block">
+                <h3>Unit 2</h3>
+                <!-- Item List -->
+                <div style="height: 320px; overflow: scroll; width: 800px;">
+                  <p id="officeItemList2"></p>
+                </div>
+              </div>
+          </div>
         </div>
-    
-        <div id="Hotel" class="w3-container w3-white w3-padding-16 myLink">
-          <h3>Find the best hotels</h3>
-          <p>Book a hotel with us and get the best fares and promotions.</p>
-          <p>We know hotels - we know comfort.</p>
-          <p><button class="w3-button w3-dark-grey">Search Hotels</button></p>
-        </div>
-    
-        <div id="Car" class="w3-container w3-white w3-padding-16 myLink">
-          <h3>Best car rental in the world!</h3>
-          <p><span class="w3-tag w3-deep-orange">DISCOUNT!</span> Special offer if you book today: 25% off anywhere in the world with CarServiceRentalRUs</p>
-          <input class="w3-input w3-border" type="text" placeholder="Pick-up point">
-          <p><button class="w3-button w3-dark-grey">Search Availability</button></p>
-        </div>
-      -->
       </div>
-    </header>
-  <!-- Header -->
-<!--
-  <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
+      <!-- Second tab on the right side -->
+      <div style ="display: inline-block; vertical-align: top; width:29%;">
+        <div class="w3-display-top " style="width:100%; height: 450px; ">
+          <!-- Tab buttons -->
+          <div class="w3-bar w3-black">
+            <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'Tab_add1');">Unit 1 Add Items</button>
+            <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'Tab_add2');">Unit 2 Add Items</button>
+          </div>
+          <!--Tab1 (Adding items)-->
+          <div id="Tab_add1" class="w3-container w3-white w3-padding-16 myLink2">
+            <div style="height: 400px; overflow: scroll;">
+              <h4>Add an item on Unit 1</h4>
+              <p>
+                  <label for="item_id1"><b>Item ID</b></label><br>
+                  <input id="id1" type="text" placeholder="Enter Item ID" name="id1" required>
+                  <br>
+                  <label for="item_name1"><b>Item Name</b></label><br>
+                  <input id="name1" type="text" placeholder="Enter Item Name" name="name1" required>
+                  <br>
+                  <label for="item_assign1"><b>Item Assign</b></label><br>
+                  <input id="assign1" type="text" placeholder="Enter Who To Assign To" name="assign1" required>
+                  <br>
+                  <label for="item_quantity1"><b>Item Quantity</b></label><br>
+                  <input id="quantity1" type="text" placeholder="Enter Item Quantity" name="quantity1" required>
+                  <br>
+                  <label for="item_quantityUnit1"><b>Item Quantity Unit</b></label><br>
+                  <input id="quantityUnit1" type="text" placeholder="Enter Item Quantity Unit" name="quantityUnit1" required>
+                  <br>
+                  <label for="item_description1"><b>Item Description</b></label><br>
+                  <input id="description1" type="text" placeholder="Enter Item Description" name="description1" required>
+                  <br>
+                  <h5>***** More Detail Information Below *****</h5>
+                  <label for="item_make1"><b>Item Make</b></label><br>
+                  <input id="make1" type="text" placeholder="Enter Item Make" name="make1" required>
+                  <br>
+                  <label for="item_model1"><b>Item Model</b></label><br>
+                  <input id="model1" type="text" placeholder="Enter Item Model" name="model1" required>
+                  <br>
+                  <label for="item_serialNumber1"><b>Item Serial Number</b></label><br>
+                  <input id="serialNumber1" type="text" placeholder="Enter Item Serial Number" name="serialNumber1" required>
+                  <br>
+                  <label for="item_serviceTag1"><b>Item Service Tag</b></label><br>
+                  <input id="serviceTag1" type="text" placeholder="Enter Item Service Tag" name="serviceTag1" required>
+                  <br>
+                  <label for="item_acquisitionDate1"><b>Item Acquisition Date</b></label><br>
+                  <input id="acquisitionDate1" type="text" placeholder="Enter Item Acquisition Date" name="acquisitionDate1" required>
+                  <br>
+                  <label for="item_purchaseFrom1"><b>Item Purchase From</b></label><br>
+                  <input id="purchaseFrom1" type="text" placeholder="Enter Item Purchased From" name="purchaseFrom1" required>
+                  <br>
+                  <label for="item_warranty1"><b>Item Warranty</b></label><br>
+                  <input id="warranty1" type="text" placeholder="Enter Item Warranty" name="warranty1" required>
+                  <br>
+                  <label for="item_condition1"><b>Item Condition</b></label><br>
+                  <input id="condition1" type="text" placeholder="Enter Item Condition" name="condition1" required>
+                  <br>
+                  <label for="item_value1"><b>Item Value</b></label><br>
+                  <input id="value1" type="text" placeholder="Enter Item Value" name="value1" required>
+                  <br>
+                  <label for="item_other1"><b>Item Other</b></label><br>
+                  <input id="other1" type="text" placeholder="Enter Item Other" name="other1" required>
+                  <br>
+                  
+                  <button id="submitButton1">Submit</button>
+              </p>
+            </div>
+          </div>
+          <!--Tab2 (Work Orders)-->
+          <div id="Tab_add2" class="w3-container w3-white w3-padding-16 myLink2">
+            <div style="height: 400px; overflow: scroll;">
+              <h4>Add an item on Unit 2</h4>
+              <p>
+                  <label for="item_id2"><b>Item ID</b></label><br>
+                  <input id="id2" type="text" placeholder="Enter Item ID" name="id2" required>
+                  <br>
+                  <label for="item_name2"><b>Item Name</b></label><br>
+                  <input id="name2" type="text" placeholder="Enter Item Name" name="name2" required>
+                  <br>
+                  <label for="item_assign2"><b>Item Assign</b></label><br>
+                  <input id="assign2" type="text" placeholder="Enter Who To Assign To" name="assign2" required>
+                  <br>
+                  <label for="item_quantity2"><b>Item Quantity</b></label><br>
+                  <input id="quantity2" type="text" placeholder="Enter Item Quantity" name="quantit2" required>
+                  <br>
+                  <label for="item_quantityUnit2"><b>Item Quantity Unit</b></label><br>
+                  <input id="quantityUnit2" type="text" placeholder="Enter Item Quantity Unit" name="quantityUnit2" required>
+                  <br>
+                  <label for="item_description2"><b>Item Description</b></label><br>
+                  <input id="description2" type="text" placeholder="Enter Item Description" name="description2" required>
+                  <br>
+                  <h5>***** More Detail Information Below *****</h5>
+                  <label for="item_make2"><b>Item Make</b></label><br>
+                  <input id="make2" type="text" placeholder="Enter Item Make" name="make2" required>
+                  <br>
+                  <label for="item_model2"><b>Item Model</b></label><br>
+                  <input id="model2" type="text" placeholder="Enter Item Model" name="model2" required>
+                  <br>
+                  <label for="item_serialNumber2"><b>Item Serial Number</b></label><br>
+                  <input id="serialNumber2" type="text" placeholder="Enter Item Serial Number" name="serialNumber2" required>
+                  <br>
+                  <label for="item_serviceTag2"><b>Item Service Tag</b></label><br>
+                  <input id="serviceTag2" type="text" placeholder="Enter Item Service Tag" name="serviceTag2" required>
+                  <br>
+                  <label for="item_acquisitionDate2"><b>Item Acquisition Date</b></label><br>
+                  <input id="acquisitionDate2" type="text" placeholder="Enter Item Acquisition Date" name="acquisitionDate2" required>
+                  <br>
+                  <label for="item_purchaseFrom2"><b>Item Purchase From</b></label><br>
+                  <input id="purchaseFrom2" type="text" placeholder="Enter Item Purchased From" name="purchaseFrom2" required>
+                  <br>
+                  <label for="item_warranty2"><b>Item Warranty</b></label><br>
+                  <input id="warranty2" type="text" placeholder="Enter Item Warranty" name="warranty2" required>
+                  <br>
+                  <label for="item_condition2"><b>Item Condition</b></label><br>
+                  <input id="condition2" type="text" placeholder="Enter Item Condition" name="condition2" required>
+                  <br>
+                  <label for="item_value2"><b>Item Value</b></label><br>
+                  <input id="value2" type="text" placeholder="Enter Item Value" name="value2" required>
+                  <br>
+                  <label for="item_other2"><b>Item Other</b></label><br>
+                  <input id="other2" type="text" placeholder="Enter Item Other" name="other2" required>
+                  <br>
+                  
+                  <button id="submitButton2">Submit</button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail View-->
+    <div style="width:100%; display: inline-block;" >
+      <div class="w3-display-top " style="width:99%">
+        <!-- Tab buttons -->
+        <div class="w3-bar w3-black">
+          <button class="w3-bar-item w3-button secondtablink" onclick="secondopenLink(event, 'DetailView');">Detail View</button>
+        </div>
+    
+        <!-- Tabs -->
+        <!--Tab1 (Detail View) -->
+        <div id="DetailView" class="w3-container w3-white w3-padding-16 secondmyLink" style="width:100%; height:230px; display: inline-block;">
+          <div style="overflow: scroll;">
+            <h4 >Detail View of Selected Item<button id="deleteButton">Delete</button></h4>
+            <!-- Table 1 -->
+            <div id="detailViewTable" style="display: inline-block; width: 40%">
+              <table>
+                <tr>
+                  <th>Item Id</th>
+                  <th><input id="detailViewId" type="text" value="" onchange=""></th>              
+                </tr>
+                <tr>
+                  <th>Item Name</th>
+                  <th><input id="detailViewName" type="text" value=""></th>
+                </tr>
+                <tr>
+                  <th>Item Description</th>
+                  <th><input id="detailViewDescription" type="text" value=""></th>
+                </tr>
+              </table>
+            </div>
+            <!-- Table 2 -->
+            <div id="detailViewTable" style="display: inline-block; width: 40%">
+              <table>
+                <tr>
+                  <th>Item Assign</th>
+                  <th><input id="detailViewId" type="text" value="" onchange=""></th>              
+                </tr>
+                <tr>
+                  <th>Item Description</th>
+                  <th><input id="detailViewName" type="text" value=""></th>
+                </tr>
+                <tr>
+                  <th>Item Description</th>
+                  <th><input id="detailViewDescription" type="text" value=""></th>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
-
-  <div class="w3-row-padding w3-margin-bottom">
-    <div class="w3-quarter">
-      <div class="w3-container w3-red w3-padding-16">
-        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>52</h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Messages</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-blue w3-padding-16">
-        <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>99</h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Views</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-teal w3-padding-16">
-        <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>23</h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Shares</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-orange w3-text-white w3-padding-16">
-        <div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>50</h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Users</h4>
-      </div>
-    </div>
-  </div>
-
-  <div class="w3-panel">
-    <div class="w3-row-padding" style="margin:0 -16px">
-      <div class="w3-third">
-        <h5>Regions</h5>
-        <img src="/w3images/region.jpg" style="width:100%" alt="Google Regional Map">
-      </div>
-      <div class="w3-twothird">
-        <h5>Feeds</h5>
-        <table class="w3-table w3-striped w3-white">
-          <tr>
-            <td><i class="fa fa-user w3-text-blue w3-large"></i></td>
-            <td>New record, over 90 views.</td>
-            <td><i>10 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
-            <td>Database error.</td>
-            <td><i>15 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-users w3-text-yellow w3-large"></i></td>
-            <td>New record, over 40 users.</td>
-            <td><i>17 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-comment w3-text-red w3-large"></i></td>
-            <td>New comments.</td>
-            <td><i>25 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bookmark w3-text-blue w3-large"></i></td>
-            <td>Check transactions.</td>
-            <td><i>28 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-laptop w3-text-red w3-large"></i></td>
-            <td>CPU overload.</td>
-            <td><i>35 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-share-alt w3-text-green w3-large"></i></td>
-            <td>New shares.</td>
-            <td><i>39 mins</i></td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
-  <hr>
-  <div class="w3-container">
-    <h5>General Stats</h5>
-    <p>New Visitors</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-center w3-padding w3-green" style="width:25%">+25%</div>
-    </div>
-
-    <p>New Users</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-center w3-padding w3-orange" style="width:50%">50%</div>
-    </div>
-
-    <p>Bounce Rate</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-center w3-padding w3-red" style="width:75%">75%</div>
-    </div>
-  </div>
-  <hr>
-
-  <div class="w3-container">
-    <h5>Countries</h5>
-    <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
-      <tr>
-        <td>United States</td>
-        <td>65%</td>
-      </tr>
-      <tr>
-        <td>UK</td>
-        <td>15.7%</td>
-      </tr>
-      <tr>
-        <td>Russia</td>
-        <td>5.6%</td>
-      </tr>
-      <tr>
-        <td>Spain</td>
-        <td>2.1%</td>
-      </tr>
-      <tr>
-        <td>India</td>
-        <td>1.9%</td>
-      </tr>
-      <tr>
-        <td>France</td>
-        <td>1.5%</td>
-      </tr>
-    </table><br>
-    <button class="w3-button w3-dark-grey">More Countries  <i class="fa fa-arrow-right"></i></button>
-  </div>
-  <hr>
-  <div class="w3-container">
-    <h5>Recent Users</h5>
-    <ul class="w3-ul w3-card-4 w3-white">
-      <li class="w3-padding-16">
-        <img src="/w3images/avatar2.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
-        <span class="w3-xlarge">Mike</span><br>
-      </li>
-      <li class="w3-padding-16">
-        <img src="/w3images/avatar5.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
-        <span class="w3-xlarge">Jill</span><br>
-      </li>
-      <li class="w3-padding-16">
-        <img src="/w3images/avatar6.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
-        <span class="w3-xlarge">Jane</span><br>
-      </li>
-    </ul>
-  </div>
-  <hr>
-
-  <div class="w3-container">
-    <h5>Recent Comments</h5>
-    <div class="w3-row">
-      <div class="w3-col m2 text-center">
-        <img class="w3-circle" src="/w3images/avatar3.png" style="width:96px;height:96px">
-      </div>
-      <div class="w3-col m10 w3-container">
-        <h4>John <span class="w3-opacity w3-medium">Sep 29, 2014, 9:12 PM</span></h4>
-        <p>Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><br>
-      </div>
-    </div>
-
-    <div class="w3-row">
-      <div class="w3-col m2 text-center">
-        <img class="w3-circle" src="/w3images/avatar1.png" style="width:96px;height:96px">
-      </div>
-      <div class="w3-col m10 w3-container">
-        <h4>Bo <span class="w3-opacity w3-medium">Sep 28, 2014, 10:15 PM</span></h4>
-        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><br>
-      </div>
-    </div>
-  </div>
-  <br>
-  <div class="w3-container w3-dark-grey w3-padding-32">
-    <div class="w3-row">
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-green">Demographic</h5>
-        <p>Language</p>
-        <p>Country</p>
-        <p>City</p>
-      </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-red">System</h5>
-        <p>Browser</p>
-        <p>OS</p>
-        <p>More</p>
-      </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-orange">Target</h5>
-        <p>Users</p>
-        <p>Active</p>
-        <p>Geo</p>
-        <p>Interests</p>
-      </div>
-    </div>
-  </div>
--->
-  <!-- Footer -->
-<!--
-  <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4>FOOTER</h4>
-    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-  </footer>
--->  
-  <!-- End page content -->
 </div>
 
-<script src="tp1.js"></script>
+
+<!--<script src="tp1.js"></script>-->
+<script src="workspace.js"></script>
 <script src="tp2.js"></script>
+
 </body>
 </html>

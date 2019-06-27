@@ -68,7 +68,7 @@ function identifyUser(email){
     //send user to their page based on userType
     if(type == 'Admin')
       window.location.href = "User/Admin/main.html"
-    else
+    else if(type == 'Employee')
       window.location.href = "User/main.html"
   })
   

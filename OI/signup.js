@@ -29,7 +29,7 @@ isAdmin.onclick = function(){
 }
 //signup button
 var signup = document.getElementById("signupButton")
-signup.onclick = function(){
+signup.onclick = async function(){
     //get other necessary variables
     var nameInput = document.getElementById("name")
     var email = document.getElementById("email")
@@ -40,7 +40,7 @@ signup.onclick = function(){
         return
     }
     //creates new user in firebase authentication
-    firebase.auth().createUserWithEmailAndPassword(email.value, pw1.value).catch(function(error) {
+    await firebase.auth().createUserWithEmailAndPassword(email.value, pw1.value).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -54,7 +54,7 @@ signup.onclick = function(){
         secNum = sectionNumInput.value
         type = "Employee"
     }
-    firebase.database().ref('users/' + userId).set({
+    await firebase.database().ref('users/' + userId).set({
         name: nameInput.value,
         sectionNum: secNum,
         userType: type

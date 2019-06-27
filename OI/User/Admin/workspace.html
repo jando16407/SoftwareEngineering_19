@@ -6,9 +6,14 @@
 <link rel="stylesheet" href="temp.css">
 <link rel="stylesheet" href="temp2.css">
 <link rel="stylesheet" href="temp3.css">
+<link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<script src="../../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
-
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -38,16 +43,13 @@ table {
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
 
-  <div class="w3-container">
-    <h5>Admin Dashboard</h5>
-  </div>
   <div class="w3-bar-block">
-    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <a href="#" class="w3-bar-menu w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <h3 class="w3-padding">Admin Dashboard</h3>
     <a href="main.html" class="w3-bar-item w3-button w3-padding">Admin Main Panel</a>
     <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
-    <a href="messages.html" class="w3-bar-item w3-button w3-padding">Admin Messages</a>
     <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
   </div>
 </nav>
@@ -247,7 +249,7 @@ table {
     
         <!-- Tabs -->
         <!--Tab1 (Detail View) -->
-        <div id="DetailView" class="w3-container w3-white w3-padding-16 secondmyLink" style="width:100%; height:250px; display: inline-block;">
+        <div id="DetailView" class="w3-container w3-white w3-padding-16 secondmyLink" style="width:100%; height:230px; display: inline-block;">
           <div style="overflow: scroll;">
             <h4 >Detail View of Selected Item<button id="deleteButton">Delete</button></h4>
             <!-- Table 1 -->

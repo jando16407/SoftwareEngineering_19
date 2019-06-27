@@ -6,6 +6,12 @@
 <link rel="stylesheet" href="temp.css">
 <link rel="stylesheet" href="temp2.css">
 <link rel="stylesheet" href="temp3.css">
+<link rel="stylesheet" type="text/css" href="../dist/semantic.min.css">
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<script src="../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
 <style>
@@ -37,14 +43,11 @@ table {
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
 
-  <div class="w3-container">
-    <h5>Employee Dashboard</h5>
-  </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <h3 class="w3-padding">Employee Dashboard</h3>
     <a href="main.html" class="w3-bar-item w3-button w3-padding">Employee Main Panel</a>
     <a href="user_workspace.html" class="w3-bar-item w3-button w3-padding">Employee Workspace</a>
-    <a href="settings.html" class="w3-bar-item w3-button w3-padding">Employee Settings</a>
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Employee Settings</a>
     <a href="../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
   </div>
@@ -136,7 +139,7 @@ table {
           <button class="w3-bar-item w3-button secondtablink" onclick="secondopenLink(event, 'DetailView');">Detail View</button>
         </div>  
         <!--Tab1 (Detail View) -->
-        <div id="DetailView" class="w3-container w3-white w3-padding-16 secondmyLink" style="width:100%; height:250px; display: inline-block;">
+        <div id="DetailView" class="w3-container w3-white w3-padding-16 secondmyLink" style="width:100%; height:230px; display: inline-block;">
           <div style="overflow: scroll;">
             <h4 >Detail View of Selected Item</h4>
             <!--

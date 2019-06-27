@@ -36,21 +36,11 @@ table {
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
-<!--
-    <div class="w3-container w3-row">
-    <div class="w3-col s4">
-      <img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
-    </div>
-    <div class="w3-col s8 w3-bar">
-      <span>Welcome, <strong>Mike</strong></span><br>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
-    </div>
-  </div>
-
-  <hr>
-  -->
+  <div class="w3-container w3-row">
+      <div class="w3-col s4">
+        <img src="../../img/Inventory-maintenance-icon.png" class="w3-square w3-margin-right" style="width:46px">
+      </div>
+    <hr>
   <div class="w3-container">
     <h5>Admin Dashboard</h5>
   </div>
@@ -62,16 +52,6 @@ table {
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
     <a href="messages.html" class="w3-bar-item w3-button w3-padding">Admin Messages</a>
     <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
-    <!--
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Views</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Traffic</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Geo</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>  Orders</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  News</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bank fa-fw"></i>  General</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  History</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
-  -->
   </div>
 </nav>
 
@@ -81,40 +61,66 @@ table {
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-    <h2>Main Panel</h2>
-      <header>
-          <div class="w3-display-top " style="width:100%">
-              <div class="w3-bar w3-black">
-                <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');"></button>
-              </div>
-              <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
-                    <div style="display: inline-block">
-                      <div style="height: 200px; overflow: scroll;">
-                        <h3>Low Items</h3>
-                        <p>Display list of low items through item id, name, and quanity</p><br><br>
-                      </div>
-                      <div style="height: 200px; overflow: scroll;">
-                        <h3>Equipment Faults</h3>
-                        <p>Displays list of unit # where the fault is, the item id and name, and level of severity</p><br><br>
-                      </div>
-                      <div style="height: 200px; overflow: scroll;">
-                        <h3>New Item Type Requests</h3>
-                        <p>Tells Admin # of item type requests, then reference the workspace to handle faults</p><br><br>
-                      </div>
-                    </div>
-                    <div style ="display: inline-block; vertical-align: top">
-                      <div  style="height: 400px; overflow: scroll;">
-                      <h2>Announcements</h2>
-                      </div>
-                      <div style="height: 400px;"> 
-                        <h3>Send Messages</h3>
-                        <p>(does not need to or from just text input field and send button)</p>
-                        <input type="text"/>
-                        <button>Send</button>
-                      </div>
-                    </div>
-                    <br>
+  <h2>Main Panel</h2>
+    <header>
+      <!--The whole workspace-->
+      <div style="display: inline-block; width:100%;">
+        <div class="w3-display-top " style="width:60%; display: inline-block;">
+          <!-- Tab buttons -->
+          <div class="w3-bar w3-black">
+            <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainTab');"></button>
+          </div>
+          
+          <!-- Tabs -->
+          <div style="overflow-y: scroll; overflow-x: scroll;">
+            <!-- Main Tab -->
+            <div id="MainTab" class="w3-container w3-white w3-padding-16 myLink">
+              <div style="display: inline-block">
+                <!-- Low Items -->
+                <h3>Low Item Status</h3>
+                <div style="height: 150px; overflow: scroll; width: 600px;">
+                    <p>Display list of low items through item id, name, and quanity</p>
+                  <p id="lowItemStatus"></p>
                 </div>
+                <!-- Equipment Faults -->
+                <h3>Equipment Faults Status</h3>
+                <div style="height: 150px; overflow: scroll; width: 600px;">
+                  <p>Displays list of unit # where the fault is, the item id and name, and level of severity</p>
+                  <p id="equipmentFaultStatus"></p>
+                </div>
+                <!-- Work Order Request -->
+                <h3>Work Order Status</h3>
+                <div style="height: 150px; overflow: scroll; width: 600px;">
+                  <p>Display the brief summary of workorder status</p>
+                  <p id="workOrderStatus" ></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Second Tab on the Right side -->
+        <div style ="display: inline-block; vertical-align: top; width:39%;">
+            <div class="w3-display-top " style="width:100%; height: 450px; ">
+              <!-- Tab buttons -->
+              <div class="w3-bar w3-black">
+                  <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'AnnouncementsTab');"></button>
+              </div>
+              <!--Tab1 (Announcements)-->
+              <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
+                <!-- Top Part (Display past announcements) -->
+                <h3>Past Announcements</h3>
+                <div style="height: 360px; overflow: scroll;">  
+                  <p id="pastAnnouncementsList"></p>
+                </div>
+                <!-- Bottom Part (Send Announcements) -->
+                <h3>Send Messages</h3>
+                <div style="height: 150px; overflow: scroll;">
+                  <input type="text"/>
+                  <button>Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
     

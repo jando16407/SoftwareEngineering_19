@@ -31,7 +31,7 @@ function firebase_setup(){
 function page_setup(){
     submitButton1 = document.getElementById("submitButton1");
     announcementsPath = "Announcements"
-    ref = database.ref(unitPath1);
+    ref = database.ref(announcementsPath);
 }
 
 //Initial rendering of tables

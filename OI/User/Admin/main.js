@@ -102,8 +102,6 @@ function renderAnnouncements(){
 function itemSelected(id, container){
     childNodePath = document.getElementById("pastAnnouncementsList").childNodes[id].getAttribute("key");
     selecedItem.value = document.getElementById("pastAnnouncementsList").childNodes[id].childNodes[0].innerHTML;
-    console.log(selecedItem);
-    console.log(id);
 }
 
 //Submit button handling, push data to firebase

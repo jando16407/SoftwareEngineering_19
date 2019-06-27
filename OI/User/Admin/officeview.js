@@ -93,7 +93,6 @@ officeView.onclick = function(event){
     var y = event.clientY - rect.top - 5
     if(isAddingUnits){
         //put circle at coords of mouse on canvas
-        console.log("extra time")
         var circ = new fabric.Circle({
             left: x,
             top: y,
@@ -102,6 +101,9 @@ officeView.onclick = function(event){
             opacity: 0.3
         })
         canvas.add(circ)
+    }
+    if(isDeletingUnits){
+        canvas.remove(canvas.getActiveObject());
     }
 
 }

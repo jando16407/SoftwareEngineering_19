@@ -39,7 +39,7 @@ var firebaseConfig = {
             // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
-            alert("error")
+            alert(errorMessage)
             // ...
         });
     }

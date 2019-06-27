@@ -42,7 +42,7 @@ table {
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
-  
+
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
     <h3 class="w3-padding">Admin Dashboard</h3>
@@ -102,26 +102,23 @@ table {
             <div class="w3-display-top " style="width:100%; height: 450px; ">
               <!-- Tab buttons -->
               <div class="w3-bar w3-black">
-                  <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'AnnouncementsTab');"></button>
+                  <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'AnnouncementsTab');"></button>
               </div>
               <!--Tab1 (Announcements)-->
               <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
                 <!-- Top Part (Display past announcements) -->
-                <h3>Past Announcements</h3>
-                <div style="height: 360px; overflow: scroll;">  
-                  <p id="pastAnnouncementsList"></p>
-                  <div class="ui message">
-                      <div class="header">
-                        Changes in Service
-                      </div>
-                      <p>We just updated our privacy policy here to better service our customers. We recommend reviewing the changes.</p>
-                    </div>
+                <h3>Past Announcements</h3>                
+                <div id="pastAnnouncementsList" style="height: 360px; overflow: scroll;">
                 </div>
+                <input id="selectedAnnouncement" style="width: 300px; height: 30px;" placeholder="Click Announcement to delete"></input>
+                <button id="deleteButton" style="height: 30px">Delete</button>
                 <!-- Bottom Part (Send Announcements) -->
-                <h3>Send Messages</h3>
-                <div style="height: 150px; overflow: scroll;">
-                  <input type="text"/>
-                  <button>Send</button>
+                <h3>Send New Announcement</h3>
+                <div style="height: 170px; overflow: scroll;">
+                  <input id="title" type="text" placeholder="Type title..." style="width: 302px; height: 40px;"/><br>
+                  <!--<input id="body" type="text" placeholder="Body" style="width: 300px; height: 100px;"/>-->
+                  <textarea id="body" placeholder="Type body..." cols=40 rows=5 ></textarea>
+                  <button id="submitButton1">Send Announcement</button>
                 </div>
               </div>
             </div>
@@ -131,6 +128,6 @@ table {
     
     </div>
 
-<script src="tp2.js"></script>
+<script src="main.js"></script>
 </body>
 </html>

@@ -1,10 +1,7 @@
 var database;
 var announcementsPath, ref;
-var submitButton1, deleteButton;
+
 var announcementContainer;
-var currentDate = new Date();
-var childNodePath;
-var selecedItem;
 
 
 firebase_setup();
@@ -32,12 +29,9 @@ function firebase_setup(){
 
 //initial setup for the page
 function page_setup(){
-    submitButton1 = document.getElementById("submitButton1");
-    deleteButton = document.getElementById("deleteButton");
     announcementsPath = "Announcements"
     ref = database.ref(announcementsPath);
     announcementContainer = document.getElementById("pastAnnouncementsList");
-    selecedItem = document.getElementById("selectedAnnouncement");
 }
 
 //Error handling
@@ -77,9 +71,6 @@ function renderAnnouncements(){
             let id = announcementContainer.children.length + 1;
             announcement.setAttribute("key", keys[i]);
             announcement.setAttribute("class", 'ui message');
-            announcement.addEventListener("click", function(){
-                itemSelected(id, announcement);
-            });
             title.setAttribute("class", 'header');
             title.innerHTML = items[k].title;
             body.innerHTML = items[k].body;
@@ -93,44 +84,6 @@ function renderAnnouncements(){
 }
 
 /* Rendering funcitons End */
-
-
-
-/* onClick handlings Start */
-
-//Handle when item in a list is clicked
-function itemSelected(id, container){
-    childNodePath = document.getElementById("pastAnnouncementsList").childNodes[id].getAttribute("key");
-    selecedItem.value = document.getElementById("pastAnnouncementsList").childNodes[id].childNodes[0].innerHTML;
-    console.log(selecedItem);
-    console.log(id);
-}
-
-//Submit button handling, push data to firebase
-submitButton1.onclick = function(){
-    //Push data to Unit
-    let data = {
-        title: document.getElementById("title").value,
-        body: document.getElementById("body").value.replace(/\r?\n/g, '<br />'),
-        date: currentDate.getMonth()+'/'+currentDate.getDate()+'/'+currentDate.getFullYear()
-    }
-    ref.push(data)
-    document.getElementById("title").value = "";
-    document.getElementById("body").value = "";
-}
-
-//Delete button handling
-deleteButton.onclick = function(){
-    //Check if item is selected or not
-    let deleteRef = database.ref(announcementsPath+'/'+childNodePath);
-    deleteRef.remove();
-    childNodePath = "";
-    selecedItem.value = "";
-}
-
-
-/* onClick handlings End */
-
 
 
 
@@ -189,23 +142,7 @@ function openLink(evt, linkName) {
   evt.currentTarget.className += " w3-red";
 }
 
-// Tabs
-function openLink2(evt, linkName) {
-  var i, x, tttabbb;
-  x = document.getElementsByClassName("myLink2");
-  for (i = 0; i < x.length; i++) {
-    x[i].style.display = "none";
-  }
-  tttabbb = document.getElementsByClassName("tttabbb");
-  for (i = 0; i < x.length; i++) {
-    tttabbb[i].className = tttabbb[i].className.replace(" w3-red", "");
-  }
-  document.getElementById(linkName).style.display = "block";
-  evt.currentTarget.className += " w3-red";
-}
-
 
 // Click on the first tablink on load
 document.getElementsByClassName("tablink")[0].click();
-document.getElementsByClassName("tttabbb")[0].click();
 /* Basic Page JavaScript End */

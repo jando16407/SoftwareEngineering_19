@@ -411,6 +411,7 @@ submitButton2.onclick = function(){
 
 /* Database modify handling start */
 
+//Listen to any value changes on the database
 function renderListen(){
     //Any item modification, adding, deleting will update the 
     //list in MasterList

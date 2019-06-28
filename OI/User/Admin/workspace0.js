@@ -11,19 +11,11 @@ var detailView_UnitPath;
 var childNodeIndex, childNodePath;
 var newItemKey, newItemKey2, detailViewDeleteItemPath;
 
-
-var officeViewRef;
-var numOfUnits, unitNameArray =[];
-var itemListTabContainer;
-var tabButtons = [];
-var wait = true;
-
 firebase_setup();
-get_unit_info();
-//page_setup();
-//detailView_setting();
-//init_tables();
-//renderListen();
+page_setup();
+detailView_setting();
+init_tables();
+renderListen();
 
 
 
@@ -46,31 +38,6 @@ function firebase_setup(){
     database = firebase.firestore();
 }
 
-//Get unit information and create units dynamically
-async function get_unit_info(){
-    officeViewRef = database.collection('Office').doc('officeView');
-    await officeViewRef.get().then(function(doc) {
-        if(doc.exists){
-            //Get number of units
-            console.log("Doc data: "+doc.data().Units[1]);
-            numOfUnits = doc.data().Units.length;
-            console.log("numofUnits: "+numOfUnits);
-            //Get unit's name and store it in an array
-            for( let i=0; i<numOfUnits; i++ ){
-                unitNameArray[i] = doc.data().Units[i];
-                console.log(unitNameArray[i]);
-            }
-        } 
-        else {
-            console.log("No such document");
-        }
-    }).catch(function(error) {
-        console.log('Error: ');
-    });
-    wait = false;
-    init_tabs();
-}
-
 //initial setup for the page
 function page_setup(){
     submitButton1 = document.getElementById("submitButton1");
@@ -81,27 +48,6 @@ function page_setup(){
     ref1 = database.ref(unitPath1);
     ref2 = database.ref(unitPath2);
     refAdmin = database.ref(masterPath);
-}
-
-//Dynamically create tabs
-function init_tabs(){
-    console.log("INIT TABS");
-    itemListTabContainer = document.getElementById('ItemListTabContainer');
-    //Add master list
-    tabButtons[0] = document.createElement('button');
-    tabButtons[0].setAttribute('class', 'w3-bar-item w3-button tablink');
-    tabButtons[0].setAttribute('onclick', 'openLink(event, MainList);')
-    tabButtons[0].innerHTML = 'Main List';
-    itemListTabContainer.appendChild(tabButtons[0]);
-    //Iterate through units and create new tabs dynamically
-    for( let i=1; i<numOfUnits+1; i++ ){
-        tabButtons[i] = document.createElement('button');
-        tabButtons[i].setAttribute('class', 'w3-bar-item w3-button tablink');
-        tabButtons[i].setAttribute('onclick', 'openLink(event, '+unitNameArray[i-1]+');')
-        tabButtons[i].innerHTML = unitNameArray[i-1];
-        itemListTabContainer.appendChild(tabButtons[i]);
-        console.log("Added tab: "+tabButtons[i]);
-    }
 }
 
 //Initial rendering of tables
@@ -318,7 +264,6 @@ function renderUnit2(){
 
 //Handle when item in a list is clicked
 function itemSelected(id, deletePath){
-    
     childNodeIndex = id;
     detailViewDeleteItemPath = deletePath;
     //when item is in masterlist

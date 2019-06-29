@@ -1,3 +1,3 @@
-db.collection('office'.get().then((snapshot)=>{
-    
-}))
+db.collection('Watis').get().then((snapshot)=>{
+
+})

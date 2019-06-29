@@ -1,4 +1,4 @@
-var database;
+//var database;
 var submitButton1, submitButton2;
 var unitPath1, unitPath2, masterPath;
 var ref1, ref2, refAdmin;
@@ -12,15 +12,22 @@ var childNodeIndex, childNodePath;
 var newItemKey, newItemKey2, detailViewDeleteItemPath;
 
 
-var officeViewRef;
-var numOfUnits, unitNameArray =[];
-var itemListTabContainer;
-var tabButtons = [];
-var wait = true;
+var database;
+var officeViewRef;  //Database ref to OfficeView
+var numOfUnits;     //Nuber of units stored on database
+var unitNameArray =[];  //Names of units stored on database
+var itemListTabButtonContainer; //mark to display itemListTabButtons
+var itemListTabContainer;       //mark to display itemListTabsContents
+//var itemListContents;           //mark to display tab contents
+var tabButtons = [];    //Stores Tab buttons dynamically for item list
+var tabContentsFrame = [];      //Stores Tab contents most outer div dynamically for item list
+var tabContentsItemList = [];   //Stores Tab contents actual list dynamically for item list
+var tabContentsItemTableContainer = [];  //Stores Table contents dynamically for item list
+
 
 firebase_setup();
+page_setup();
 get_unit_info();
-//page_setup();
 //detailView_setting();
 //init_tables();
 //renderListen();
@@ -44,21 +51,30 @@ function firebase_setup(){
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     database = firebase.firestore();
+    console.log("01 Firebase set up done...");
+}
+
+//initial setup for the page
+function page_setup(){
+    officeViewRef = database.collection('Office').doc('officeView');
+    itemListTabButtonContainer = document.getElementById('ItemListTabContainer');
+    itemListTabContainer = document.getElementById('ItemListTabContents');
+//    itemListContents = document.getElementById('ItemListTabContents');
+    //console.log("itemListTabContainer = "+itemListTabContainer);
+    console.log("02 Page setup done...")
 }
 
 //Get unit information and create units dynamically
 async function get_unit_info(){
-    officeViewRef = database.collection('Office').doc('officeView');
     await officeViewRef.get().then(function(doc) {
         if(doc.exists){
             //Get number of units
-            console.log("Doc data: "+doc.data().Units[1]);
             numOfUnits = doc.data().Units.length;
-            console.log("numofUnits: "+numOfUnits);
+            console.log("Number of Units: "+numOfUnits);
             //Get unit's name and store it in an array
             for( let i=0; i<numOfUnits; i++ ){
                 unitNameArray[i] = doc.data().Units[i];
-                console.log(unitNameArray[i]);
+                //console.log(unitNameArray[i]);
             }
         } 
         else {
@@ -67,11 +83,16 @@ async function get_unit_info(){
     }).catch(function(error) {
         console.log('Error: ');
     });
-    wait = false;
-    init_tabs();
+    console.log("03 Get unit info done...")
+    await init_tabs();
+    await init_tables();
+    await document.getElementsByClassName("tablink")[0].click();
+    await document.getElementsByClassName("tttabbb")[0].click();
 }
 
-//initial setup for the page
+
+
+/*
 function page_setup(){
     submitButton1 = document.getElementById("submitButton1");
     submitButton2 = document.getElementById("submitButton2");
@@ -82,29 +103,146 @@ function page_setup(){
     ref2 = database.ref(unitPath2);
     refAdmin = database.ref(masterPath);
 }
+*/
 
 //Dynamically create tabs
 function init_tabs(){
-    console.log("INIT TABS");
-    itemListTabContainer = document.getElementById('ItemListTabContainer');
-    //Add master list
-    tabButtons[0] = document.createElement('button');
+    //Add Main List tab
+    tabButtons[0]= document.createElement('button');
+    console.log("tubButtons[0] = "+tabButtons[0]);
     tabButtons[0].setAttribute('class', 'w3-bar-item w3-button tablink');
-    tabButtons[0].setAttribute('onclick', 'openLink(event, MainList);')
+    tabButtons[0].onclick = function(){
+        openLink(event, 'MainFrameList');
+    };
     tabButtons[0].innerHTML = 'Main List';
-    itemListTabContainer.appendChild(tabButtons[0]);
+    itemListTabButtonContainer.appendChild(tabButtons[0]);
     //Iterate through units and create new tabs dynamically
     for( let i=1; i<numOfUnits+1; i++ ){
         tabButtons[i] = document.createElement('button');
         tabButtons[i].setAttribute('class', 'w3-bar-item w3-button tablink');
-        tabButtons[i].setAttribute('onclick', 'openLink(event, '+unitNameArray[i-1]+');')
+        tabButtons[i].onclick = function(){
+            openLink(event, unitNameArray[i-1]+'FrameList');
+        };
         tabButtons[i].innerHTML = unitNameArray[i-1];
-        itemListTabContainer.appendChild(tabButtons[i]);
-        console.log("Added tab: "+tabButtons[i]);
+        itemListTabButtonContainer.appendChild(tabButtons[i]);
+        //console.log("Added tab: "+tabButtons[i]);
     }
+    console.log("04 Init tab done...");
 }
 
 //Initial rendering of tables
+function init_tables(){
+    //Init the Main List tab first
+    //the most outer div
+    tabContentsFrame[0] = document.createElement('div');
+    tabContentsFrame[0].setAttribute('id', 'MainFrameList');
+    tabContentsFrame[0].setAttribute('class', 'w3-container w3-white w3-padding-16 myLink');
+    //Inside div1
+    let div1 = document.createElement('div');
+    div1.setAttribute('style', 'display: inline-block;');
+    let tabContentsTitle = document.createElement('h3');
+    tabContentsTitle.innerHTML = 'Main Inventory Item List';
+    //Inside div2
+    let div2 = document.createElement('div');
+    div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
+    //Inside <p>
+    tabContentsItemList[0] = document.createElement('p');
+    tabContentsItemList[0].setAttribute('id', 'masterItemList');
+    //Inside Table setup
+    tabContentsItemTableContainer[0] = document.createElement('table');
+    tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
+    tabContentsItemTableContainer[0].setAttribute('id', 'masterTable');
+    let listRow = document.createElement('tr');
+    let topRow = "<th>Unit</th><th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
+    listRow.innerHTML = topRow;
+    tabContentsItemTableContainer[0].appendChild(listRow);
+
+    //Put everything together
+    div2.appendChild(tabContentsItemList[0]);
+    div1.appendChild(tabContentsTitle);
+    div1.appendChild(div2);
+    tabContentsFrame[0].appendChild(div1);
+    itemListTabContainer.appendChild(tabContentsFrame[0]);
+
+    /* Example HTML 
+    <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
+        <div style="display: inline-block">
+            <h3>Main Inventory Item List</h3>
+            <!-- Item List -->
+            <div style="height: 320px; overflow: scroll; width: 800px;">
+                <p id="masterItemList"></p>
+            </div>
+        </div>
+    </div>
+    */
+    for( let i=1; i<numOfUnits+1; i++ ){
+       //the most outer div
+        tabContentsFrame[0] = document.createElement('div');
+        tabContentsFrame[0].setAttribute('id', unitNameArray[i-1]+'FrameList');
+        console.log("FRAME NAME = "+unitNameArray[i-1]+'FrameList');
+        tabContentsFrame[0].setAttribute('class', 'w3-container w3-white w3-padding-16 myLink');
+        //Inside div1
+        let div1 = document.createElement('div');
+        div1.setAttribute('style', 'display: inline-block;');
+        let tabContentsTitle = document.createElement('h3');
+        tabContentsTitle.innerHTML = unitNameArray[i-1]+' Item List';
+        //Inside div2
+        let div2 = document.createElement('div');
+        div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
+        //Inside <p>
+        tabContentsItemList[0] = document.createElement('p');
+        tabContentsItemList[0].setAttribute('id', unitNameArray[i-1]+'ItemList');
+        //Inside Table setup
+        tabContentsItemTableContainer[0] = document.createElement('table');
+        tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
+        tabContentsItemTableContainer[0].setAttribute('id', unitNameArray[i-1]+'Table');
+        let listRow = document.createElement('tr');
+        let topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
+        listRow.innerHTML = topRow;
+        tabContentsItemTableContainer[0].appendChild(listRow);
+
+        //Put everything together
+        div2.appendChild(tabContentsItemList[0]);
+        div1.appendChild(tabContentsTitle);
+        div1.appendChild(div2);
+        tabContentsFrame[0].appendChild(div1);
+        itemListTabContainer.appendChild(tabContentsFrame[0]);
+    }
+/*
+    for( let i=1; i<numOfUnits+1; i++ ){
+        //the most outer div
+    tabContentsFrame[i] = document.createElement('div');
+    tabContentsFrame[i].setAttribute('id', unitNameArray[i+1]+'FrameList');
+    tabContentsFrame[i].setAttribute('class', 'w3-container w3-white w3-padding-16 myLink');
+    tabContentsFrame[i].setAttribute('style', 'display: block;');
+    //Inside div1
+    let div1 = document.createElement('div');
+    div1.setAttribute('style', 'display: inline-block');
+    let tabContentsTitle = unitNameArray[i+1]+' Item List';
+    //Inside div2
+    let div2 = document.createElement('div');
+    div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
+    //Inside <p>
+    tabContentsItemList[i] = document.createElement('p');
+    tabContentsItemList[i].setAttribute('id', unitNameArray[i+1]+'ItemList');
+    //Inside Table setup
+    tabContentsItemTable[i] = document.createElement('table');
+    
+    tabContentsItemList[i].appendChild(tabContentsItemTable[i]);
+    div2.innerHTML = tabContentsItemList[i];
+    div1.innerHTML = tabContentsTitle + div2;
+    tabContentsFrame[i].innerHTML = div1;
+    tabContentsFrame[i].setAttribute("id", unitNameArray[i+1]+"Table");
+    let listRow = document.createElement('tr');
+    let topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
+    listRow.innerHTML = topRow;
+    tabContentsItemTable[i].appendChild(listRow);
+    itemListContents.innerHTML = itemListContents.innerHTML + tabContentsItemTable[i];
+    }
+    */
+    console.log("Init table done...");
+}
+/*
 function init_tables(){ 
     //Main Tab setup
     masterListContainer = document.createElement('table');
@@ -141,7 +279,7 @@ function init_tables(){
     listRow_2.innerHTML = topRow_2;
     listContainer2.appendChild(listRow_2);
 }
-
+*/
 //Error handling
 function gotErr(err){
     console.log("Error!!");
@@ -190,7 +328,6 @@ function detailView_setting(){
         }
     };
 }
-
 /* Initialize Functions End */
 
 
@@ -408,6 +545,7 @@ function itemSelected(id, deletePath){
 /* onClick handlings Start */
 
 //Submit button handling, push data to firebase
+/*
 submitButton1.onclick = function(){
     //Push data to Unit
     let data = {
@@ -460,7 +598,7 @@ submitButton2.onclick = function(){
         masterKey : newItemKey2
     });
 }
-
+*/
 /* onClick handlings End */
 
 
@@ -611,3 +749,72 @@ function modifyUnitList(uPath, cPath){
 
 
 /* Database modify handling end */
+
+
+
+/* Page Display Stuff (Originally in tp2.js) */
+
+
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+
+// Tabs
+function openLink(evt, linkName) {
+    console.log("CLOCKED LINK: "+linkName);
+    if(linkName != undefined ){
+        var i, x, tablinks;
+        x = document.getElementsByClassName("myLink");
+        for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < x.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+        }
+        document.getElementById(linkName).style.display = "block";
+        evt.currentTarget.className += " w3-red";
+    }
+}
+
+// Tabs
+function openLink2(evt, linkName) {
+  var i, x, tttabbb;
+  x = document.getElementsByClassName("myLink2");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  tttabbb = document.getElementsByClassName("tttabbb");
+  for (i = 0; i < x.length; i++) {
+    tttabbb[i].className = tttabbb[i].className.replace(" w3-red", "");
+  }
+  document.getElementById(linkName).style.display = "block";
+  evt.currentTarget.className += " w3-red";
+}
+
+
+// Click on the first tablink on load
+//document.getElementsByClassName("tablink")[0].click();
+//document.getElementsByClassName("tttabbb")[0].click();
+
+
+/* Page display stuff end */

@@ -35,7 +35,7 @@ function firebase_setup(){
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    database = firebase.firestore();
+    database = firebase.database();
 }
 
 //initial setup for the page

@@ -24,6 +24,7 @@ function w3_close() {
 
 // Tabs
 function openLink(evt, linkName) {
+  console.log("CLOCKED LINK: "+linkName);
   var i, x, tablinks;
   x = document.getElementsByClassName("myLink");
   for (i = 0; i < x.length; i++) {

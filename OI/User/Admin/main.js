@@ -5,11 +5,12 @@ var announcementContainer;
 var currentDate = new Date();
 var childNodePath;
 var selecedItem;
+var firebase;
 
 
 firebase_setup();
-page_setup();
-renderListen();
+//page_setup();
+//renderListen();
 
 
 /* Initialize Functions Start */
@@ -27,15 +28,25 @@ function firebase_setup(){
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    database = firebase.database();
+    database = firebase.firestore();
 }
+database.collection("cities").add({
+  name: "Tokyo",
+  country: "Japan"
+})
+.then(function(docRef) {
+  console.log("Document written with ID: ", docRef.id);
+})
+.catch(function(error) {
+  console.error("Error adding document: ", error);
+});
 
 //initial setup for the page
 function page_setup(){
     submitButton1 = document.getElementById("submitButton1");
     deleteButton = document.getElementById("deleteButton");
     announcementsPath = "Announcements"
-    ref = database.ref(announcementsPath);
+   // ref = database.ref(announcementsPath);
     announcementContainer = document.getElementById("pastAnnouncementsList");
     selecedItem = document.getElementById("selectedAnnouncement");
 }

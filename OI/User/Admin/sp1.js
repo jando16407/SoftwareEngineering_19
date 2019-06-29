@@ -28,39 +28,24 @@ submitButton1.onclick = async function(){
          var itemUsername = document.getElementById("username");
          var itemOldPass = document.getElementById("oldpass");
          var itemNewPass = document.getElementById("newpass");
-         //var itemOldEmail = document.getElementById("oldemail");
-         //var itemNewEmail = document.getElementById("newemail");
           
-/*           
 firebase.auth().signInWithEmailAndPassword(itemUsername.value, itemOldPass.value).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
-          alert("error00000")
+          alert("error")
           // ...º
       });
-  */    
+      
 var user22 = firebase.auth().currentUser;
-firebase.auth().onAuthStateChanged
+firebase.auth().onAuthStateChanged;
 user22.updatePassword(itemNewPass.value).then(function() {
-  //Update successful.
-  alert("AAAAAAAA");
+  alert('Password Updated successfully');
 }).catch(function(error) {
   console.log('An error happened.')
 });
-/*
-var user = firebase.auth().currentUser;
-var newPassword = getASecureRandomPassword();
-
-user.updatePassword(newPassword).then(function() {
-  // Update successful.
-}).catch(function(error) {
-  // An error happened.
-});
-*/
 
 }
-
 /************************* Delete Username ********************************/
 submitButton2.onclick = function(){ 
  var itemDelete = document.getElementById("username2");
@@ -70,26 +55,16 @@ submitButton2.onclick = function(){
   // Handle Errors here.
   var errorCode = error.code;
   var errorMessage = error.message;
-  alert("error1111111");
+  alert("error");
   // ...º
 });
-//var currentUser = itemDelete.value;
-var user3 = firebase.auth().itemDelete;
-//user3.delete().then(function() {
-  firebase.auth().delete().then(function() {
-  // User deleted.
-  alert("%%%%%%%%%%%%%%%%");
-}).catch(function(error) {
-  // An error happened.
-  alert("A");
-});
-/*
+
 var user = firebase.auth().currentUser;
 
 user.delete().then(function() {
-  // User deleted.
+  alert('User Deleted successfully');
 }).catch(function(error) {
   // An error happened.
 });
-*/
+
 }

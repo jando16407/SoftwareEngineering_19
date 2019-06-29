@@ -1,15 +1,11 @@
-
 <!DOCTYPE html>
 <html>
-<title>OI - Admin Messages</title>
+<title>OI - Admin Setting</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="temp.css">
 <link rel="stylesheet" href="temp2.css">
 <link rel="stylesheet" href="temp3.css">
-<<<<<<< HEAD
-
-=======
 <link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
 <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -18,7 +14,6 @@
 <script src="../../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
->>>>>>> master
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -44,98 +39,56 @@ table {
 </div>
 
 <!-- Sidebar/menu -->
-<<<<<<< HEAD
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
 
-  <div class="w3-container">
-    <h5>Admin Dashboard</h5>
-  </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <h3 class="w3-padding">Admin Setting</h3>
     <a href="main.html" class="w3-bar-item w3-button w3-padding">Admin Main Panel</a>
     <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
-    <a href="messages.html" class="w3-bar-item w3-button w3-padding">Admin Messages</a>
-    <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
- 
-=======
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
-
-  <div class="w3-bar-block">
-    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <h3 class="w3-padding">Admin Dashboard</h3>
-    <a href="main.html" class="w3-bar-item w3-button w3-padding">Admin Main Panel</a>
-    <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
-    <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
+    <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Messages</a>
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
     <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
->>>>>>> master
-
   </div>
 </nav>
-
-
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<<<<<<< HEAD
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
 <h2>Setting</h2>
   <header>
-  
-      <div class="w3-display-top " style="width:70%">
-        <div class="w3-bar w3-black">
-          <button class="w3-bar-item w3-button " onclick="openLink(event, 'Tab1');">Setting Panel</button>
-          
-        </div>
-    
-        <!-- Tabs -->
         <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
-
-=======
-<div class="w3-main" style="margin-left:200px;margin-top:43px;">
-<h2>Settings</h2>
- 
-  <!-- End page content -->
-</div>
->>>>>>> master
-
         </div>
         <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
           <p>
               <label for="item_id1"><b>Username</b></label><br>
-              <input id="username" type="text" placeholder="" name="" required>
+              <input id="username" type="text" placeholder="Enter Username" name="id1" required>
               <br>
-              <label for="item_name1"><b>Old Password</b></label><br>
-              <input id="oldpass" type="password" placeholder="" name="" required>
+              <label for="item_id2"><b>Old Password</b></label><br>
+              <input id="oldpass" type="password" placeholder="Enter Old Password" name="name1" required>
               <br>
-              <label for="item_name1"><b>New Password</b></label><br>
-              <input id="newpass" type="password" placeholder="" name="" required>
+              <label for="item_id3"><b>New Password</b></label><br>
+              <input id="newpass" type="password" placeholder="Enter New Password" name="description1" required>
               <br>
-              <label for="item_description1"><b>Old email</b></label><br>
-              <input id="oldemail" type="text" placeholder="" name="" required>
-              <br>
-              <label for="item_description1"><b>New email</b></label><br>
-              <input id="newemail" type="text" placeholder="" name="" required>
-              <br><br>
               <button id="submitButton1">Submit</button>
-               <br><br>
-              <label for="item_id1"><b>Delete Username</b></label><br>
-              <input id="username2" type="text" placeholder="" name="" required>
-              <br>
-              <label for="password2"><b>Password</b></label><br>
-              <input id="password2" type="password" placeholder="" name="" required>
-              <br>
-              <br>
-              <button id="submitButton2">Submit</button>
           </p>
           <br>
+          <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+            <p>
+              <label for="item_id4"><b>Username</b></label><br>
+              <input id="username2" type="text" placeholder="Enter Username" name="id4" required>
+              <br>
+              <label for="item_id5"><b>Password</b></label><br>
+              <input id="password2" type="password" placeholder="Enter Password" name="name4" required>
+              <br>
+              <button id="submitButton2">Submit</button>
+            </p>
           <p id="officeItemList1"></p>
           </p>
         </div>
       </div>
     </header>
-  
 </div>
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>

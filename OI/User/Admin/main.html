@@ -6,8 +6,8 @@
 <link rel="stylesheet" href="../../css/temp.css">
 <link rel="stylesheet" href="../../css/temp2.css">
 <link rel="stylesheet" href="../../css/temp3.css">
-<script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
+<ript src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -99,8 +99,8 @@ table {
                       <div style="height: 400px;"> 
                         <h3>Send Messages</h3>
                         <p>(does not need to or from just text input field and send button)</p>
-                        <input type="text"/>
-                        <button>Send</button>
+                        <input type="text" id="showAll"/>
+                        <button id="sndBtn">Send</button>
                       </div>
                     </div>
                     <br>
@@ -115,13 +115,13 @@ table {
       </header>
     
     </div>
-  <pre id="object">
 
-  </pre>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<!-- !!! Move firestore script up to the head above!!! -->
+<!-- TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/etup#config-web-app -->
 
-<script src="tp1.js"></script>
+<!---- <script src="tp1.js"></script> ---->
 <script src="tp2.js"></script>
-<script src="workorder.js"></script>
 <script src="listAll.js"></script>
 </body>
 </html>

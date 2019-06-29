@@ -3,15 +3,14 @@
 <title>OI - Admin Workspace</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="temp.css">
-<link rel="stylesheet" href="temp2.css">
-<link rel="stylesheet" href="temp3.css">
+<link rel="stylesheet" href="../../css/w3.css">
 <link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
 <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
   crossorigin="anonymous"></script>
 <script src="../../dist/semantic.js"></script>
+<!--
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>-->
 <script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js"></script>
@@ -85,10 +84,16 @@ table {
       <div style ="display: inline-block; vertical-align: top; width:29%;">
         <div class="w3-display-top " style="width:100%; height: 450px; ">
           <!-- Tab buttons -->
-          <div class="w3-bar w3-black">
+          <div id="ItemAddTabContainer" class="w3-bar w3-black" style="height: 35px; overflow-y: scroll;">
             <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'Tab_add1');">Unit 1 Add Items</button>
             <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'Tab_add2');">Unit 2 Add Items</button>
           </div>
+          <!-- Tabs -->
+        <div style="overflow-y: scroll; overflow-x: scroll;">
+            <p id="ItemAddTabContents"></p>
+            
+          </div>
+
           <!--Tab1 (Adding items)-->
           <div id="Tab_add1" class="w3-container w3-white w3-padding-16 myLink2">
             <div style="height: 400px; overflow: scroll;">

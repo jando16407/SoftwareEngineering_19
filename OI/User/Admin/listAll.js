@@ -1,4 +1,6 @@
-const firebaseConfig = {
+
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
     apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
     authDomain: "office-inventory-12f99.firebaseapp.com",
     databaseURL: "https://office-inventory-12f99.firebaseio.com",
@@ -7,9 +9,16 @@ const firebaseConfig = {
     messagingSenderId: "147848186588",
     appId: "1:147848186588:web:33dbc8d727af1de4"
   };
-firebase.initializeApp(firebaseConfig);
-let firestore = firebase.firestore();
-const dbRef = firestore.doc("Watis/NusiCkayiV6LuuMOu94U/Inventory");
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+db.collection('Watis').get().then((snapShot) =>{
+    snapShot.forEach((doc) => {
+        console.log(`${doc.condition}`)
+    })
+
+})
+const dbRef = db.doc("Watis/NusiCkayiV6LuuMOu94U/Inventory");
 const printOut = document.querySelector('#supplyList');
 const showAll = document.querySelector("#showAll");
 const sndBtn = document.querySelector("sndBtn");

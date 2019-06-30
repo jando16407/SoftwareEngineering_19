@@ -36,7 +36,7 @@ table {
 <body class="w3-light-grey">
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open(event, 'navbar');"><i class="fa fa-bars"></i>  Menu</button>
   <span class="w3-bar-item w3-right">OI</span>
   <div class="w3-col s4">
       <img src="../../img/Inventory-maintenance-icon.png" class="w3-square w3-margin-right" style="width:46px">
@@ -45,7 +45,7 @@ table {
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
 
-  <div class="w3-bar-block">
+  <div class="w3-bar-block" id="navbar">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
     <h3 class="w3-padding">Admin Dashboard</h3>
     <a href="main.html" class="w3-bar-item w3-button w3-padding">Admin Main Panel</a>
@@ -90,12 +90,16 @@ table {
             <h3>Work Order Status</h3>
             <div style="height: auto; width: 600px;">
               <p>Display the brief summary of workorder status</p>
-                  <ul id="officeList"></ul>
+                  <ul id="workOrder"></ul>
             </div>
             <div style="background-color: #c3e6f3">
               <h3>All Items</h3>
               <ul id="supplyList"></ul>
             </div>
+            <div style="background-color: #c3e6f3">
+                <h3>Office Items</h3>
+                <ul id="officeList"></ul>
+              </div>
           </div>
         </div>
       </div>
@@ -130,8 +134,8 @@ table {
 <!-- !!! Move firestore script up to the head above!!! -->
 <!-- TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/etup#config-web-app -->
 
-<script src="listAll.js"></script>
-<script src="announce.js"></script>
-<script src="juriUML.js"></script>
+<script src="./MainHTML/listAll.js"></script>
+<script src="./MainHTML/announce.js"></script>
+<script src="./MainHTML/juriUML.js"></script>
 </body>
 </html>

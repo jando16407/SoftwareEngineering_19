@@ -18,22 +18,32 @@ function renderList(doc){
     let itemName = document.createElement('span');
     let itemDescription = document.createElement('span');
     let condition = document.createElement('span');
+    let col1 = document.createElement('span');
+    let col2 = document.createElement('span');
+
 
     li.setAttribute('data-id', doc.id);
     itemName.textContent = doc.data().itemName;
     itemDescription.textContent = doc.data().itemDescription;
     condition.textContent = doc.data().condition;
+    col1.textContent = ' - ';
+    col2.textContent = ' - ';
 
     li.appendChild(itemName);
+    li.appendChild(col1);
     li.appendChild(itemDescription);
+    li.appendChild(col2);
     li.appendChild(condition);
 
     printOut.appendChild(li);
+
 }
-db.collection('Watis/NusiCkayiV6LuuMOu94U/Inventory').get().then((snapShot) =>{
+
+db.collection('Watis/NusiCkayiV6LuuMOu94U/Inventory').orderBy('itemName').get().then((snapShot) =>{
     snapShot.docs.forEach((doc) => {
         console.log(doc.data())
         renderList(doc);
+
     })
 
 })

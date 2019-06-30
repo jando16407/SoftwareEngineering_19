@@ -8,5 +8,5 @@ function logout() {
     }
     function resetTimer(){
      clearTimeout(t);
-     t = setTimeout(function(){logout();}, 3000);
+     t = setTimeout(function(){logout();}, 60000);
     }

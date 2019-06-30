@@ -60,132 +60,72 @@ table {
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:200px;margin-top:43px;">
+<div class="w3-main" style="margin-left:200px; margin-top:43px;">
   <h2>Main Panel</h2>
-    <header>
-      <!--The whole workspace-->
-      <div style="display: inline-block; width:100%;">
-        <div class="w3-display-top " style="width:60%; display: inline-block;">
-          <!-- Tab buttons -->
-          <div class="w3-bar w3-black">
-            <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainTab');"></button>
-          </div>
-          
-          <!-- Tabs -->
-          <div style="overflow-y: scroll; overflow-x: scroll;">
-            <!-- Main Tab -->
-            <div id="MainTab" class="w3-container w3-white w3-padding-16 myLink">
-              <div style="display: inline-block">
-                <!-- Low Items -->
-                <h3>Low Item Status</h3>
-                <div style="height: 150px; overflow: scroll; width: 600px;">
-                    <p>Display list of low items through item id, name, and quanity</p>
-                  <p id="lowItemStatus"></p>
-                </div>
-                <!-- Equipment Faults -->
-                <h3>Equipment Faults Status</h3>
-                <div style="height: 150px; overflow: scroll; width: 600px;">
-                  <p>Displays list of unit # where the fault is, the item id and name, and level of severity</p>
-                  <p id="equipmentFaultStatus"></p>
-                </div>
-                <!-- Work Order Request -->
-                <h3>Work Order Status</h3>
-                <div style="height: 150px; overflow: scroll; width: 600px;">
-                  <p>Display the brief summary of workorder status</p>
-                  <p id="workOrderStatus" ></p>
-                </div>
-              </div>
+  <!--The whole workspace-->
+  <div style="display: inline-block; width:100%;">
+    <div class="w3-display-top " style="width:60%; display: inline-block;">
+      <!-- Tab buttons -->
+      <div class="w3-bar w3-black">
+        <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainTab');"></button>
+      </div>
+      <!-- Tabs -->
+      <div>
+        <!-- Main Tab -->
+        <div id="MainTab" class="w3-container w3-white w3-padding-16 myLink">
+          <div style="display: inline-block">
+            <!-- Low Items -->
+            <h3>Low Item Status</h3>
+            <div style="height: auto; width: auto;">
+              <p>Display list of low items through item id, name, and quanity</p>
+              <ul id="lowItem"></ul>
+            </div>
+            <!-- Equipment Faults -->
+            <h3>Equipment Faults Status</h3>
+            <div style="height: auto; width: auto;">
+              <p style="width: inherit">Displays list of unit # where the fault is, the item id and name, and level of severity</p>
+              <ul id="faulty"></ul>
+            </div>
+            <!-- Work Order Request -->
+            <h3>Work Order Status</h3>
+            <div style="height: auto; width: 600px;">
+              <p>Display the brief summary of workorder status</p>
+                  <ul id="officeList"></ul>
+            </div>
+            <div style="background-color: #c3e6f3">
+              <h3>All Items</h3>
+              <ul id="supplyList"></ul>
             </div>
           </div>
         </div>
-        <!-- Second Tab on the Right side -->
-        <div style ="display: inline-block; vertical-align: top; width:39%;">
-            <div class="w3-display-top " style="width:100%; height: 450px; ">
-              <!-- Tab buttons -->
-              <div class="w3-bar w3-black">
-                  <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'AnnouncementsTab');"></button>
-              </div>
-              <!--Tab1 (Announcements)-->
-              <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
-                <!-- Top Part (Display past announcements) -->
-                <h3>Past Announcements</h3>                
-                <div id="pastAnnouncementsList" style="height: 360px; overflow: scroll;">
-                </div>
-                <input id="selectedAnnouncement" style="width: 300px; height: 30px;" placeholder="Click Announcement to delete"></input>
-                <button id="deleteButton" style="height: 30px">Delete</button>
-                <!-- Bottom Part (Send Announcements) -->
-                <h3>Send New Announcement</h3>
-                <div style="height: 170px; overflow: scroll;">
-                  <input id="title" type="text" placeholder="Type title..." style="width: 302px; height: 40px;"/><br>
-                  <!--<input id="body" type="text" placeholder="Body" style="width: 300px; height: 100px;"/>-->
-                  <textarea id="body" placeholder="Type body..." cols=40 rows=5 ></textarea>
-                  <button id="submitButton1">Send Announcement</button>
-                </div>
-              </div>
-            </div>
+      </div>
+    </div>
+    <!-- Second Tab on the Right side -->
+    <div style ="display: inline-block; vertical-align: top; width:39%;">
+      <div class="w3-display-top " style="width:100%; height: 450px; ">
+        <!-- Tab buttons -->
+        <div class="w3-bar w3-black">
+          <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'AnnouncementsTab');"></button>
+        </div>
+        <!--Tab1 (Announcements)-->
+        <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
+          <!-- Top Part (Display past announcements) -->
+          <h3>Past Announcements</h3>                
+          <div id="announce" style="height: auto;">
+          </div><br>
+          <div style="height: auto;"> 
+            <h3>Send Announcement</h3>
+            <form id="send-msg-form">
+                <input type="text" style="width: 100%" id="msgTitle" placeholder="Subject..."><br>
+              <textarea type="input" id="msgSay" placeholder="Message..." style="width: 100%; height: 100px"></textarea><br>
+            <button id="sndBtn">Send</button>
+            </form>
           </div>
-
-<div class="w3-main" style="margin-left:300px;margin-top:43px;">
-    <h2>Main Panel</h2>
-      <header>
-          <div class="w3-display-top " style="width:100%">
-<div class="w3-main" style="margin-left:200px;margin-top:43px;">
-  <div class="w3-bar w3-black">
-    <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');"></button>
-  </div>
-  <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
-    <div style="display: inline-block">
-      <div style="background-color:#c3e6f3">
-        <h3>Low Items</h3>
-        <div style="background-color: aliceblue"> 
-          <ul id="lowItms"></ul>
         </div>
       </div>
-      <div style="background: #c3e6f3">
-        <h3>Faulty Equipment</h3>
-        <div style="background-color: aliceblue">
-          <h5>Furniture</h5>
-          <ul id="faultyFurniture"></ul>
-        </div>
-        <div style="background-color: aliceblue">
-          <h5>Electronic</h5>
-          <ul id="faultyElectronic"></ul>
-        </div>
-      </div>
-      <div style="background-color: #c3e6f3">
-        <h3>New Item Type Requests</h3>
-        <p>Tells Admin # of item type requests, then reference the workspace to handle faults</p><br><br>
-      </div>
-    </div>
-    <div style ="display: inline-block; vertical-align: top">
-      <div  style="background-color: #c3e6f3">
-      <h2>Announcements</h2>
-      <div style="background-color: #c3e6f3">
-        <ul id="announce"></ul>
-      </div>
-      </div>
-      <div style="height: 400px;"> 
-        <h3>Send Announcement</h3>
-        <form id="send-msg-form">
-          <input type="text" style="width: 500px" id="msgTitle" placeholder="Subject..."><br>
-        <textarea type="input" id="msgSay" placeholder="Message..." style="width: 500px; height: 100px"></textarea><br>
-        <button id="sndBtn">Send</button>
-        </form>
-      </div>
-    </div>
-        <br>
-    </div>
-    <div style="background-color: #c3e6f3">
-      <h3>All Items</h3>
-      <ul id="supplyList"></ul>
-    </div>
-    <div style="background-color: #c3e6f3">
-      <h3>Office</h3>
-      <ul id="officeList"></ul>
     </div>
   </div>
 </div>
-
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <!-- !!! Move firestore script up to the head above!!! -->
 <!-- TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/etup#config-web-app -->

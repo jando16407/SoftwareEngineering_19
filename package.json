@@ -21,6 +21,9 @@
   },
   "homepage": "https://github.com/jando16407/Software-Engineering-Project-2019#readme",
   "dependencies": {
-    "firebase": "^6.1.0"
+    "admin": "^1.4.1",
+    "firebase": "^6.2.4",
+    "firebaseui": "^4.0.0",
+    "node.js": "0.0.0"
   }
 }

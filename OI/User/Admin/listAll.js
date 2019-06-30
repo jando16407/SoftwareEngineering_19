@@ -12,25 +12,30 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-db.collection('Watis').get().then((snapShot) =>{
-    snapShot.forEach((doc) => {
-        console.log(`${doc.condition}`)
+  // create element and render item list
+function renderList(doc){
+    let li = document.createElement('li');
+    let itemName = document.createElement('span');
+    let itemDescription = document.createElement('span');
+    let condition = document.createElement('span');
+
+    li.setAttribute('data-id', doc.id);
+    itemName.textContent = doc.data().itemName;
+    itemDescription.textContent = doc.data().itemDescription;
+    condition.textContent = doc.data().condition;
+
+    li.appendChild(itemName);
+    li.appendChild(itemDescription);
+    li.appendChild(condition);
+
+    printOut.appendChild(li);
+}
+db.collection('Watis/NusiCkayiV6LuuMOu94U/Inventory').get().then((snapShot) =>{
+    snapShot.docs.forEach((doc) => {
+        console.log(doc.data())
+        renderList(doc);
     })
 
 })
-const dbRef = db.doc("Watis/NusiCkayiV6LuuMOu94U/Inventory");
 const printOut = document.querySelector('#supplyList');
-const showAll = document.querySelector("#showAll");
-const sndBtn = document.querySelector("sndBtn");
 
-sndBtn.addEventListener("click", function(){
-    const textToSnd = showAll.value;
-    console.log("I am showing it... " + textToSnd + "to firestore.");
-    dbRef.set({
-        printOut: textToSnd
-    }).then(function(){
-        alert("Request sent...");
-    }).catch(function (e){
-        alert("Request not sent...");
-    })
-})

@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="../../css/temp2.css">
 <link rel="stylesheet" href="../../css/temp3.css">
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
-<ript src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -95,21 +95,28 @@ table {
                     <div style ="display: inline-block; vertical-align: top">
                       <div  style="background-color: #c3e6f3">
                       <h2>Announcements</h2>
+                      <div style="background-color: #c3e6f3">
+                        <ul id="announce"></ul>
+                      </div>
                       </div>
                       <div style="height: 400px;"> 
-                        <h3>Send Messages</h3>
-                        <p>(does not need to or from just text input field and send button)</p>
-                        <input type="text" id="showAll"/>
+                        <h3>Send Announcement</h3>
+                        <form id="send-msg-form">
+                          <input type="text" style="width: 500px" id="msgTitle" placeholder="Subject..."><br>
+                        <textarea type="input" id="msgSay" placeholder="Message..." style="width: 500px; height: 100px"></textarea><br>
                         <button id="sndBtn">Send</button>
+                        </form>
                       </div>
                     </div>
                     <br>
                 </div>
           <div style="background-color: #c3e6f3">
             <h3>All Items</h3>
-            <ul id="electronicList"></ul>
-            <ul id="furnitureList"></ul>
             <ul id="supplyList"></ul>
+          </div>
+          <div style="background-color: #c3e6f3">
+            <h3>Office</h3>
+            <ul id="officeList"></ul>
           </div>
         </div>
       </header>
@@ -123,5 +130,6 @@ table {
 <!---- <script src="tp1.js"></script> ---->
 <script src="tp2.js"></script>
 <script src="listAll.js"></script>
+<script src="announce.js"></script>
 </body>
 </html>

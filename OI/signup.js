@@ -35,6 +35,7 @@ signup.onclick = async function(){
     var email = document.getElementById("email")
     var pw1 = document.getElementById("password1")
     var pw2 = document.getElementById("password2")
+    var phone = document.getElementById("phoneInput")
     if(pw1.value !== pw2.value){
         alert("Passwords not the sameeeee")
         return
@@ -50,6 +51,7 @@ signup.onclick = async function(){
     var userId = email.value.match(/^(.+)@/)[1]
     var secNum = 0
     var type = "Admin"
+    var telephone = phone.value
     if(isAdmin.checked == false){
         secNum = sectionNumInput.value
         type = "Employee"
@@ -57,7 +59,8 @@ signup.onclick = async function(){
     await firebase.database().ref('users/' + userId).set({
         name: nameInput.value,
         sectionNum: secNum,
-        userType: type
+        userType: type,
+        userPhone: telephone
     });
       
       alert("You have successfully signed up!")

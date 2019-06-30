@@ -1,9 +1,11 @@
-/*firebase.auth().signOut().then(function() {
+/*
+firebase.auth().signOut().then(function() {
 //
 }, function(error) {
   // An error happened.
 });
 */
+
 function logOut(){  
   firebase.initializeApp(settings);
 

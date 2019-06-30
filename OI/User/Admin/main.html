@@ -14,6 +14,9 @@
 <script src="../../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
+<script src="hotkeys.min.js"></script>
+<script src="../../timeout.js"></script>
+
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -50,10 +53,12 @@ table {
     <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
+    <a href="messages.html" class="w3-bar-item w3-button w3-padding">Admin Messasges</a>
     <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
   </div>
 </nav>
 
+  
 
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
@@ -129,5 +134,6 @@ table {
     </div>
 
 <script src="main.js"></script>
+<script src="shortcuts.js"></script>
 </body>
 </html>

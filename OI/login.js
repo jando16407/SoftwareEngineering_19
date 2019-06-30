@@ -67,9 +67,11 @@ function identifyUser(email){
     var type = snapshot.val() 
     //send user to their page based on userType
     if(type == 'Admin')
-      window.location.href = "User/Admin/main.html"
+             window.location.href = "index2.html"
+      //window.location.href = "User/Admin/main.html"
     else if(type == 'Employee')
-      window.location.href = "User/main.html"
+            window.location.href = "index3.html"
+      //window.location.href = "User/main.html"
   })
   
 }

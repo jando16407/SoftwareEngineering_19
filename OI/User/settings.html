@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
-<title>OI - Employee Settings</title>
+<title>OI - Admin Setting</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="temp.css">
 <link rel="stylesheet" href="temp2.css">
 <link rel="stylesheet" href="temp3.css">
-<link rel="stylesheet" type="text/css" href="../dist/semantic.min.css">
+<link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
 <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
   crossorigin="anonymous"></script>
-<script src="../dist/semantic.js"></script>
+  <script src="hotkeys.min.js"></script>
+  <script src="../timeout.js"></script>
+<script src="../../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
 <style>
@@ -21,13 +23,11 @@ table {
         border-collapse: collapse;
         width: 100%;
     }
-
     td, th {
         border: 1px solid #dddddd;
         text-align: left;
         padding: 8px;
     }
-
     tr:nth-child(even) {
         background-color: #dddddd;
     }
@@ -36,54 +36,68 @@ table {
 
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
   <span class="w3-bar-item w3-right">OI</span>
 </div>
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
 
   <div class="w3-bar-block">
-    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <h3 class="w3-padding">Employee Dashboard</h3>
-    <a href="main.html" class="w3-bar-item w3-button w3-padding">Employee Main Panel</a>
-    <a href="user_workspace.html" class="w3-bar-item w3-button w3-padding">Employee Workspace</a>
-    <a href="settings.html" class="w3-bar-item w3-button w3-padding">Employee Settings</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <h3 class="w3-padding">Admin Setting</h3>
+    <a href="main.html" class="w3-bar-item w3-button w3-padding">Admin Main Panel</a>
+    <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
     <a href="../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
-
   </div>
 </nav>
-
-
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:200px;margin-top:40px;">
-  <h2>User Settings</h2>
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+<h2>Setting</h2>
   <header>
-    <!--The whole workspace-->
-    <div style="display: inline-block; width:100%;">
-      <div class="w3-display-top " style="width:99%; display: inline-block;">
-        <!-- Tab buttons -->
-        <div class="w3-bar w3-black">
-          <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainTab');"></button>
+        <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
         </div>
-
-        <!--Tab1 (Announcements)-->
-        <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
-          <!-- Top Part (Display past announcements) -->
-          <h3>Settings</h3>
-          <div style="height: 600px; overflow: scroll;">  
-            Display settings stuff here
-          </div>
+        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+          <p>
+              <label for="item_id1"><b>Username</b></label><br>
+              <input id="username" type="text" placeholder="Enter Username" name="id1" required>
+              <br>
+              <label for="item_id2"><b>Old Password</b></label><br>
+              <input id="oldpass" type="password" placeholder="Enter Old Password" name="name1" required>
+              <br>
+              <label for="item_id3"><b>New Password</b></label><br>
+              <input id="newpass" type="password" placeholder="Enter New Password" name="description1" required>
+              <br>
+              <button id="submitButton1">Submit</button>
+          </p>
+          <br>
+          <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+            <p>
+              <label for="item_id4"><b>Username</b></label><br>
+              <input id="username2" type="text" placeholder="Enter Username" name="id4" required>
+              <br>
+              <label for="item_id5"><b>Password</b></label><br>
+              <input id="password2" type="password" placeholder="Enter Password" name="name4" required>
+              <br>
+              <button id="submitButton2">Submit</button>
+            </p>
+          <p id="officeItemList1"></p>
+          </p>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
 </div>
-
-<script src="tp1.js"></script>
-<script src="tp2.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
+<!--<script src="login.js"></script>-->
+<script src="sp1.js"></script>
+<script src="shortcuts.js"></script>
+<!-- <script src="package-lock.json"></script>
+<script src="office-inventory-12f99-firebase-adminsdk-pm972-c0bb3a8888.json"></script>
+ Firebase App (the core Firebase SDK) is always required and must be listed first -->
 </body>
 </html>

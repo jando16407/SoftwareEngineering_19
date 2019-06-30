@@ -36,16 +36,20 @@ function renderList(doc){
     li.appendChild(condition);
 
     printOut.appendChild(li);
-
 }
 
-db.collection('Watis/NusiCkayiV6LuuMOu94U/Inventory').orderBy('itemName').get().then((snapShot) =>{
-    snapShot.docs.forEach((doc) => {
-        console.log(doc.data())
-        renderList(doc);
-
-    })
+db.collection('Watis/NusiCkayiV6LuuMOu94U/Inventory').orderBy('itemName').onSnapshot((snapshot) =>{
+  let changes = snapshot.docChanges();
+  changes.forEach(change =>{
+      if(change.type == 'added'){
+        console.log(change.doc.data())
+          renderList(change.doc);
+      } else if (change.type == 'removed'){
+          let li = printOut.querySelector('[data-id=' + change.doc.id + ']');
+          printOut.removeChild(li);
+      }
+  })
 
 })
-const printOut = document.querySelector('#supplyList');
+const printOut = document.querySelector('#equipmentList');
 

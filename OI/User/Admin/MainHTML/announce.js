@@ -7,6 +7,7 @@ months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec
 days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
 }
+const workOrder = document.querySelector('#workOrder');
 function renderMsg(doc){
     let li = document.createElement('li');
     let msgTitle = document.createElement('span');
@@ -45,14 +46,19 @@ function renderMsg(doc){
         db.collection('Announcement').doc(id).delete();
     })
 }
-db.collection('Announcement').orderBy('postDate').get().then((snapShot) =>{
-    snapShot.docs.forEach((doc) => {
-        console.log(doc.data())
-        renderMsg(doc);
+db.collection('Announcement').orderBy('postDate').onSnapshot((snapshot) =>{
+    let changes = snapshot.docChanges();
+    changes.forEach(change =>{
+        if(change.type == 'added'){
+            renderMsg(change.doc);
+        } else if (change.type == 'removed'){
+            let li = printAnnounce.querySelector('[data-id=' + change.doc.id + ']');
+            printAnnounce.removeChild(li);
+        }
     })
-})
+})  
 
-const printAnnounce = document.querySelector('#announce');
+const printAnnounce = document.querySelector('#announceAll');
 const form = document.querySelector("#send-msg-form");
 const sndBtn = document.querySelector("sndBtn");
 

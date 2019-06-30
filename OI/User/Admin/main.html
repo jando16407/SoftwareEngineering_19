@@ -76,28 +76,32 @@ table {
           <div style="display: inline-block">
             <!-- Low Items -->
             <h3>Low Item Status</h3>
-            <div style="height: auto; width: auto;">
-              <p>Display list of low items through item id, name, and quanity</p>
+            <p>Display list of low items through item id, name, and quanity</p>
+            <div style="height: auto; width: auto; background-color: #f2d1f7">
               <ul id="lowItem"></ul>
             </div>
             <!-- Equipment Faults -->
             <h3>Equipment Faults Status</h3>
-            <div style="height: auto; width: auto;">
-              <p style="width: inherit">Displays list of unit # where the fault is, the item id and name, and level of severity</p>
+            <p style="width: inherit">Displays list of unit # where the fault is, the item id and name, and level of severity</p>
+            <div style="height: auto; width: auto; background-color: #f2d1f7">
               <ul id="faulty"></ul>
             </div>
             <!-- Work Order Request -->
             <h3>Work Order Status</h3>
-            <div style="height: auto; width: 600px;">
+            <div style="height: auto; width: auto;">
               <p>Display the brief summary of workorder status</p>
                   <ul id="workOrder"></ul>
             </div>
             <div style="background-color: #c3e6f3">
-              <h3>All Items</h3>
-              <ul id="supplyList"></ul>
+                <h3>Office Supply Inventory</h3>
+                <ul id="supplyList"></ul>
+              </div>
+            <div style="background-color: #c3e6f3">
+              <h3>Equipment Inventory</h3>
+              <ul id="equipmentList"></ul>
             </div>
             <div style="background-color: #c3e6f3">
-                <h3>Office Items</h3>
+                <h3>Office Locations</h3>
                 <ul id="officeList"></ul>
               </div>
           </div>
@@ -116,6 +120,7 @@ table {
           <!-- Top Part (Display past announcements) -->
           <h3>Past Announcements</h3>                
           <div id="announce" style="height: auto;">
+            <ul id="announceAll"></ul>
           </div><br>
           <div style="height: auto;"> 
             <h3>Send Announcement</h3>
@@ -134,8 +139,11 @@ table {
 <!-- !!! Move firestore script up to the head above!!! -->
 <!-- TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/etup#config-web-app -->
 
-<script src="./MainHTML/listAll.js"></script>
+<script src="./MainHTML/equipment.js"></script>
 <script src="./MainHTML/announce.js"></script>
 <script src="./MainHTML/juriUML.js"></script>
+<script src="./MainHTML/officeSupply.js"></script>
+<script src="./MainHTML/lowItem.js"></script>
+<script src="./MainHTML/faulty.js"></script>
 </body>
 </html>

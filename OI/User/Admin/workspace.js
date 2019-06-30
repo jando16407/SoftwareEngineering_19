@@ -29,7 +29,7 @@ var itemAddTabContainer;       //mark to display itemAddTabsContents
 var tabButtons_add = [];    //Stores Tab buttons dynamically for item add
 var tabContentsFrame_add = [];      //Stores Tab contents most outer div dynamically for item add
 var tabContentsItemAdd_add = [];   //Stores Tab contents actual list dynamically for item add
-//var tabContentsItemTableContainer_add = [];  //Stores Table contents dynamically for item add
+
 
 firebase_setup();
 page_setup();
@@ -92,6 +92,8 @@ async function get_unit_info(){
     console.log("03 Get unit info done...")
     await init_tabs();
     await init_tables();
+    await init_tabs_add();
+    await init_tables_add();
     await document.getElementsByClassName("tablink")[0].click();
     await document.getElementsByClassName("tttabbb")[0].click();
 }
@@ -130,6 +132,22 @@ function init_tabs(){
         };
         tabButtons[i].innerHTML = unitNameArray[i-1];
         itemListTabButtonContainer.appendChild(tabButtons[i]);
+        //console.log("Added tab: "+tabButtons[i]);
+    }
+    console.log("04 Init tab done...");
+}
+
+//Dynamically create tabs
+function init_tabs_add(){
+    //Iterate through units and create new tabs dynamically
+    for( let i=0; i<numOfUnits; i++ ){
+        tabButtons_add[i] = document.createElement('button');
+        tabButtons_add[i].setAttribute('class', 'w3-bar-item w3-button tttabbb');
+        tabButtons_add[i].onclick = function(){
+            openLink2(event, unitNameArray[i]+'FrameAdd');
+        };
+        tabButtons_add[i].innerHTML = unitNameArray[i];
+        itemAddTabButtonContainer.appendChild(tabButtons_add[i]);
         //console.log("Added tab: "+tabButtons[i]);
     }
     console.log("04 Init tab done...");
@@ -184,77 +202,88 @@ function init_tables(){
     //Init tables for all units as well
     for( let i=1; i<numOfUnits+1; i++ ){
        //the most outer div
-        tabContentsFrame[0] = document.createElement('div');
-        tabContentsFrame[0].setAttribute('id', unitNameArray[i-1]+'FrameList');
+        tabContentsFrame[i] = document.createElement('div');
+        tabContentsFrame[i].setAttribute('id', unitNameArray[i-1]+'FrameList');
         //console.log("FRAME NAME = "+unitNameArray[i-1]+'FrameList');
-        tabContentsFrame[0].setAttribute('class', 'w3-container w3-white w3-padding-16 myLink');
+        tabContentsFrame[i].setAttribute('class', 'w3-container w3-white w3-padding-16 myLink');
         //Inside div1
-        let div1 = document.createElement('div');
-        div1.setAttribute('style', 'display: inline-block;');
-        let tabContentsTitle = document.createElement('h3');
-        tabContentsTitle.innerHTML = unitNameArray[i-1]+' Item List';
+        let _div1 = document.createElement('div');
+        _div1.setAttribute('style', 'display: inline-block;');
+        let _tabContentsTitle = document.createElement('h3');
+        _tabContentsTitle.innerHTML = unitNameArray[i-1]+' Item List';
         //Inside div2
-        let div2 = document.createElement('div');
-        div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
+        let _div2 = document.createElement('div');
+        _div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
         //Inside <p>
-        tabContentsItemList[0] = document.createElement('p');
-        tabContentsItemList[0].setAttribute('id', unitNameArray[i-1]+'ItemList');
+        tabContentsItemList[i] = document.createElement('p');
+        tabContentsItemList[i].setAttribute('id', unitNameArray[i-1]+'ItemList');
         //Inside Table setup
-        tabContentsItemTableContainer[0] = document.createElement('table');
-        tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
-        tabContentsItemTableContainer[0].setAttribute('id', unitNameArray[i-1]+'Table');
-        let listRow = document.createElement('tr');
-        let topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
-        listRow.innerHTML = topRow;
-        tabContentsItemTableContainer[0].appendChild(listRow);
+        tabContentsItemTableContainer[i] = document.createElement('table');
+        tabContentsItemList[i].appendChild(tabContentsItemTableContainer[i]);
+        tabContentsItemTableContainer[i].setAttribute('id', unitNameArray[i-1]+'Table');
+        let _listRow = document.createElement('tr');
+        let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
+        _listRow.innerHTML = _topRow;
+        tabContentsItemTableContainer[i].appendChild(_listRow);
 
         //Put everything together
-        div2.appendChild(tabContentsItemList[0]);
-        div1.appendChild(tabContentsTitle);
-        div1.appendChild(div2);
-        tabContentsFrame[0].appendChild(div1);
-        itemListTabContainer.appendChild(tabContentsFrame[0]);
+        _div2.appendChild(tabContentsItemList[i]);
+        _div1.appendChild(_tabContentsTitle);
+        _div1.appendChild(_div2);
+        tabContentsFrame[i].appendChild(_div1);
+        itemListTabContainer.appendChild(tabContentsFrame[i]);
     }
     console.log("05 Init table done...");
 }
-/*
-function init_tables(){ 
-    //Main Tab setup
-    masterListContainer = document.createElement('table');
-    document.getElementById("masterItemList").appendChild(masterListContainer);
-    masterListContainer.setAttribute('name0', 'itemTable0');
-    masterListContainer.setAttribute("id", "masterTable");
-    tableMaster = document.getElementById("masterTable");
-    var listRow_0 = document.createElement('tr');
-    var topRow_0 = "<th>Unit</th><th>ID</th><th>Item Name</th><th>Item Description</th>";
-    listRow_0.innerHTML = topRow_0;
-    masterListContainer.appendChild(listRow_0);
-    
-    //Unit 1 tab setup
-    //Create a table for Unit 1
-    listContainer1 = document.createElement('table');
-    document.getElementById("officeItemList1").appendChild(listContainer1);
-    listContainer1.setAttribute('name1', 'itemTable1');
-    listContainer1.setAttribute("id", "unit1Table");
-    tableUnit1 = document.getElementById("unit1Table");
-    let listRow_1 = document.createElement('tr');
-    let topRow_1 = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
-    listRow_1.innerHTML = topRow_1;
-    listContainer1.appendChild(listRow_1);
 
-    //Unit 2 tab setup
-    //Create a table for Unit 2
-    listContainer2 = document.createElement('table');
-    document.getElementById("officeItemList2").appendChild(listContainer2);
-    listContainer2.setAttribute('name2', 'itemTable2');
-    listContainer2.setAttribute("id", "unit2Table");
-    tableUnit2 = document.getElementById("unit2Table");
-    let listRow_2 = document.createElement('tr');
-    let topRow_2 = "<th>ID</th><th>Item Name</th><th>Item Description</th>";
-    listRow_2.innerHTML = topRow_2;
-    listContainer2.appendChild(listRow_2);
+function init_tables_add(){
+    //Init tables for all units as well
+    for( let i=0; i<numOfUnits; i++ ){
+        //the most outer div
+        tabContentsFrame_add[i] = document.createElement('div');
+        tabContentsFrame_add[i].setAttribute('id', unitNameArray[i]+'FrameAdd');
+        //console.log("FRAME NAME = "+unitNameArray[i-1]+'FrameList');
+        tabContentsFrame_add[i].setAttribute('class', 'w3-container w3-white w3-padding-16 myLink2');
+        //Inside div1
+        let div1 = document.createElement('div');
+        div1.setAttribute('style', 'height: 400px; overflow: scroll;');
+        let tabContentsTitle = document.createElement('h4');
+        tabContentsTitle.innerHTML = 'Add an item on '+unitNameArray[i];
+        //Inside <p>
+        tabContentsItemAdd_add[i] = document.createElement('p');
+        tabContentsItemAdd_add[i].setAttribute('id', unitNameArray[i]+'ItemAdd');
+        //Input field setup
+        let item_id_label = document.createElement('label');
+        item_id_label.setAttribute('for', 'item_id'+i);
+        item_id_label.innerHTML = '<b>Item ID</b>';
+        let item_id_input = document.createElement('input');
+        item_id_input.setAttribute('id', 'id'+i);
+        item_id_input.setAttribute('type', 'test');
+        item_id_input.setAttribute('placeholder', 'Enter Item ID');
+
+/*
+         tabContentsItemTableContainer[0] = document.createElement('table');
+         tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
+         tabContentsItemTableContainer[0].setAttribute('id', unitNameArray[i-1]+'Table');
+         let listRow = document.createElement('tr');
+         let topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
+         listRow.innerHTML = topRow;
+         tabContentsItemTableContainer[0].appendChild(listRow);
+ */
+         //Put everything together
+         //div2.appendChild(tabContentsItemList[0]);
+         div1.appendChild(tabContentsTitle);
+         tabContentsItemList[i].appendChild(item_id_label);
+         //tabContentsItemList,appendChild('<br>');
+         tabContentsItemList[i].appendChild(item_id_input);
+         div1.appendChild(tabContentsItemList[i]);
+         //div1.appendChild(div2);
+         tabContentsFrame_add[i].appendChild(div1);
+         itemAddTabContainer.appendChild(tabContentsFrame_add[i]);
+     }
+     console.log("05 Init table for add items done...");
 }
-*/
+
 //Error handling
 function gotErr(err){
     console.log("Error!!");

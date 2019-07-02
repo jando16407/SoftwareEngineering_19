@@ -93,9 +93,10 @@ async function get_unit_info(){
     await init_tabs();
     await init_tables();
     await init_tabs_add();
-    await init_tables_add();
+    await init_add_units_contents();
     await document.getElementsByClassName("tablink")[0].click();
     await document.getElementsByClassName("tttabbb")[0].click();
+    await initial_rendering();
 }
 
 
@@ -134,7 +135,7 @@ function init_tabs(){
         itemListTabButtonContainer.appendChild(tabButtons[i]);
         //console.log("Added tab: "+tabButtons[i]);
     }
-    console.log("04 Init tab done...");
+    console.log("04.1 Init tab done...");
 }
 
 //Dynamically create tabs
@@ -150,7 +151,7 @@ function init_tabs_add(){
         itemAddTabButtonContainer.appendChild(tabButtons_add[i]);
         //console.log("Added tab: "+tabButtons[i]);
     }
-    console.log("04 Init tab done...");
+    console.log("04.2 Init tab for add items done...");
 }
 
 //Initial rendering of tables
@@ -176,7 +177,7 @@ function init_tables(){
     tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
     tabContentsItemTableContainer[0].setAttribute('id', 'masterTable');
     let listRow = document.createElement('tr');
-    let topRow = "<th>Unit</th><th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
+    let topRow = "<th>Unit</th><th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
     listRow.innerHTML = topRow;
     tabContentsItemTableContainer[0].appendChild(listRow);
 
@@ -222,7 +223,7 @@ function init_tables(){
         tabContentsItemList[i].appendChild(tabContentsItemTableContainer[i]);
         tabContentsItemTableContainer[i].setAttribute('id', unitNameArray[i-1]+'Table');
         let _listRow = document.createElement('tr');
-        let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
+        let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
         _listRow.innerHTML = _topRow;
         tabContentsItemTableContainer[i].appendChild(_listRow);
 
@@ -233,10 +234,10 @@ function init_tables(){
         tabContentsFrame[i].appendChild(_div1);
         itemListTabContainer.appendChild(tabContentsFrame[i]);
     }
-    console.log("05 Init table done...");
+    console.log("05.1 Init table done...");
 }
 
-function init_tables_add(){
+function init_add_units_contents(){
     //Init tables for all units as well
     for( let i=0; i<numOfUnits; i++ ){
         //the most outer div
@@ -253,35 +254,124 @@ function init_tables_add(){
         tabContentsItemAdd_add[i] = document.createElement('p');
         tabContentsItemAdd_add[i].setAttribute('id', unitNameArray[i]+'ItemAdd');
         //Input field setup
-        let item_id_label = document.createElement('label');
-        item_id_label.setAttribute('for', 'item_id'+i);
-        item_id_label.innerHTML = '<b>Item ID</b>';
-        let item_id_input = document.createElement('input');
-        item_id_input.setAttribute('id', 'id'+i);
-        item_id_input.setAttribute('type', 'test');
-        item_id_input.setAttribute('placeholder', 'Enter Item ID');
+        //New line
+            let new_line = document.createElement('br');
+        //Item ID
+            let item_id_label = document.createElement('label');
+            item_id_label.setAttribute('for', 'item_id'+i);
+            item_id_label.innerHTML = '<p>Item ID</p>';
+            let item_id_input = document.createElement('input');
+            item_id_input.setAttribute('id', 'id'+i);
+            item_id_input.setAttribute('type', 'test');
+            item_id_input.setAttribute('placeholder', 'Enter Item ID');
+        //Item Name
+            let item_name_label = document.createElement('label');
+            item_name_label.setAttribute('for', 'item_name'+i);
+            item_name_label.innerHTML = '<p>Item Name</p>';
+            let item_name_input = document.createElement('input');
+            item_name_input.setAttribute('id', 'name'+i);
+            item_name_input.setAttribute('type', 'test');
+            item_name_input.setAttribute('placeholder', 'Enter Item Name');
+        //Quantity
+            let item_quantity_label = document.createElement('label');
+            item_quantity_label.setAttribute('for', 'item_quantity'+i);
+            item_quantity_label.innerHTML = '<p>Item Quantity</p>';
+            let item_quantity_input = document.createElement('input');
+            item_quantity_input.setAttribute('id', 'quantity'+i);
+            item_quantity_input.setAttribute('type', 'test');
+            item_quantity_input.setAttribute('placeholder', 'Enter Item Assign');
+        //Quantity Unit    
+            let item_quantity_unit_label = document.createElement('label');
+            item_quantity_unit_label.setAttribute('for', 'item_quantity_unit'+i);
+            item_quantity_unit_label.innerHTML = '<p>Item Quantity Unit</p>';
+            let item_quantity_unit_input = document.createElement('input');
+            item_quantity_unit_input.setAttribute('id', 'quantity_unit'+i);
+            item_quantity_unit_input.setAttribute('type', 'test');
+            item_quantity_unit_input.setAttribute('placeholder', 'Enter Item Quantity Unit');
+        //Item description
+            let item_description_label = document.createElement('label');
+            item_description_label.setAttribute('for', 'item_description'+i);
+            item_description_label.innerHTML = '<p>Item Description</p>';
+            let item_description_input = document.createElement('input');
+            item_description_input.setAttribute('id', 'description'+i);
+            item_description_input.setAttribute('type', 'test');
+            item_description_input.setAttribute('placeholder', 'Enter Item Description');
+        //Item category
+            let item_category_label = document.createElement('label');
+            item_category_label.setAttribute('for', 'category'+i);
+            item_category_label.innerHTML = '<p>Item Category</p>';
+            let item_category_input = document.createElement('input');
+            item_category_input.setAttribute('id', 'category'+i);
+            item_category_input.setAttribute('type', 'test');
+            item_category_input.setAttribute('placeholder', 'Enter Item Category');
+        //Item sub-category
+            let item_subcategory_label = document.createElement('label');
+            item_subcategory_label.setAttribute('for', 'item_subcategory'+i);
+            item_subcategory_label.innerHTML = '<p>Item Sub Category</p>';
+            let item_subcategory_input = document.createElement('input');
+            item_subcategory_input.setAttribute('id', 'subcategory'+i);
+            item_subcategory_input.setAttribute('type', 'test');
+            item_subcategory_input.setAttribute('placeholder', 'Enter Item Sub Category');
+        //Assign
+            let item_assign_label = document.createElement('label');
+            item_assign_label.setAttribute('for', 'item_assign'+i);
+            item_assign_label.innerHTML = '<p>Item Assign</p>';
+            let item_assign_input = document.createElement('input');
+            item_assign_input.setAttribute('id', 'assign'+i);
+            item_assign_input.setAttribute('type', 'test');
+            item_assign_input.setAttribute('placeholder', 'Enter Item Assign');
+        //Optional detail
+            let optional_details = document.createElement('h6');
+            optional_details.innerHTML = 'Optional Detail Information:';
+        //Submit Button
+            let item_submit_button = document.createElement('button');
+            item_submit_button.setAttribute('id', 'submit_button'+i);
+            item_submit_button.innerHTML = 'Submit';
+            item_submit_button.onclick = function(e) {
+                submitButtonClicked(unitNameArray[i], i);
+            };
 
-/*
-         tabContentsItemTableContainer[0] = document.createElement('table');
-         tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
-         tabContentsItemTableContainer[0].setAttribute('id', unitNameArray[i-1]+'Table');
-         let listRow = document.createElement('tr');
-         let topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
-         listRow.innerHTML = topRow;
-         tabContentsItemTableContainer[0].appendChild(listRow);
- */
+
          //Put everything together
-         //div2.appendChild(tabContentsItemList[0]);
          div1.appendChild(tabContentsTitle);
-         tabContentsItemList[i].appendChild(item_id_label);
-         //tabContentsItemList,appendChild('<br>');
-         tabContentsItemList[i].appendChild(item_id_input);
-         div1.appendChild(tabContentsItemList[i]);
-         //div1.appendChild(div2);
-         tabContentsFrame_add[i].appendChild(div1);
-         itemAddTabContainer.appendChild(tabContentsFrame_add[i]);
+         //Add input fields
+         //Id, Name, Quantity
+            tabContentsItemAdd_add[i].appendChild(item_id_label);
+            tabContentsItemAdd_add[i].appendChild(item_id_input);
+            tabContentsItemAdd_add[i].appendChild(item_name_label);
+            tabContentsItemAdd_add[i].appendChild(item_name_input);
+            tabContentsItemAdd_add[i].appendChild(item_quantity_label);
+            tabContentsItemAdd_add[i].appendChild(item_quantity_input);
+        //Quantity Unit, Description, Category
+            tabContentsItemAdd_add[i].appendChild(item_quantity_unit_label);
+            tabContentsItemAdd_add[i].appendChild(item_quantity_unit_input);
+            tabContentsItemAdd_add[i].appendChild(item_description_label);
+            tabContentsItemAdd_add[i].appendChild(item_description_input);
+            tabContentsItemAdd_add[i].appendChild(item_category_label);
+            tabContentsItemAdd_add[i].appendChild(item_category_input);
+        //Sub Category, Assign
+            tabContentsItemAdd_add[i].appendChild(item_subcategory_label);
+            tabContentsItemAdd_add[i].appendChild(item_subcategory_input);
+            tabContentsItemAdd_add[i].appendChild(optional_details);
+            tabContentsItemAdd_add[i].appendChild(item_assign_label);
+            tabContentsItemAdd_add[i].appendChild(item_assign_input);
+
+        //Add Submit button
+            tabContentsItemAdd_add[i].appendChild(new_line);
+            tabContentsItemAdd_add[i].appendChild(item_submit_button);
+        div1.appendChild(tabContentsItemAdd_add[i]);
+        tabContentsFrame_add[i].appendChild(div1);
+        itemAddTabContainer.appendChild(tabContentsFrame_add[i]);
      }
-     console.log("05 Init table for add items done...");
+     console.log("05.2 Init table for add items done...");
+}
+
+function initial_rendering(){
+    //Iterate through all units to get data and display
+    for( let j=0; j<numOfUnits; j++ ){
+        renderUnit(j);
+    }
+    console.log('06 Initial table rendering done...');
 }
 
 //Error handling
@@ -394,6 +484,51 @@ function renderMasterList(){
 }
 
 //Update the table for Unit 1
+function renderUnit( unitNum ){
+    let unitName = unitNameArray[unitNum]
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+    //Make the base of table setup
+    ref.orderBy('id').get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+        //snapshot.docChanges().forEach(function(doc)   {
+            // doc.data() is never undefined for query doc snapshots
+            //console.log(doc.id, " => ", doc.data().name);
+            let row = document.createElement('tr');
+            let id = document.createElement('th');
+            let name = document.createElement('th');
+            let quantity = document.createElement('th');
+            let category = document.createElement('th');
+            let subcategory = document.createElement('th');
+            let description = document.createElement('th');
+            if( doc.data().id != undefined ){
+                id.innerHTML = doc.data().id;
+            }
+            if( doc.data().name != undefined ){
+                name.innerHTML = doc.data().name;
+            }
+            if( doc.data().quantity != undefined ){
+                quantity.innerHTML = doc.data().quantity;
+            }
+            if( doc.data().category != undefined ){
+                category.innerHTML = doc.data().category;
+            }
+            if( doc.data().subcategory != undefined ){
+                subcategory.innerHTML = doc.data().subcategory;
+            }
+            if( doc.data().description != undefined ){
+                description.innerHTML = doc.data().description;
+            }
+            row.appendChild(id);
+            row.appendChild(name);
+            row.appendChild(quantity);
+            row.appendChild(category);
+            row.appendChild(subcategory);
+            row.appendChild(description);
+            tabContentsItemTableContainer[unitNum+1].appendChild(row);
+        });
+    });
+}
+/*
 function renderUnit1(){
     ref1.once("value", function(snapshot){
         let items = snapshot.val();
@@ -421,7 +556,7 @@ function renderUnit1(){
         }
     }, gotErr);
 }
-
+*/
 //Update the table for Unit 2
 function renderUnit2(){
     ref2.once("value", function(snapshot){
@@ -549,6 +684,47 @@ function itemSelected(id, deletePath){
 /* onClick handlings Start */
 
 //Submit button handling, push data to firebase
+
+function submitButtonClicked( unitName, i ) {
+    console.log("Submit button clicked...");
+    //check mandatory input field if empty or not
+    let item = [];
+    let category = [];
+    let data = {};
+    item[0] = document.getElementById('id'+i).value;
+    category[0] = 'id';
+    item[1] = document.getElementById('name'+i).value;
+    category[1] = 'name';
+    item[2] = document.getElementById('quantity'+i).value;
+    category[2] = 'quantity';
+    item[3] = document.getElementById('quantity_unit'+i).value;
+    category[3] = 'quantity_unit';
+    item[4] = document.getElementById('description'+i).value;
+    category[4] = 'description';
+    item[5] = document.getElementById('category'+i).value;
+    category[5] = 'category';
+    item[6] = document.getElementById('subcategory'+i).value;
+    category[6] = 'subcategory';
+    item[7] = document.getElementById('assign'+i).value;
+    category[7] = 'assign';
+    console.log(unitName);
+    
+    //Iterate to gather inputs and build data to push
+    for( let j=0; j<item.length; j++ ){
+        if( item[j] != ''){
+            //Add input to data
+            data[category[j]] = item[j];
+            //Clear the input field
+            document.getElementById(category[j]+i).value = '';
+        }
+    }
+
+    //Add data to database
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+    ref.add(data)
+
+    console.log(data);
+}
 /*
 submitButton1.onclick = function(){
     //Push data to Unit

@@ -7,7 +7,7 @@ months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec
 days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
 }
-const workOrder = document.querySelector('#workOrder');
+
 function renderMsg(doc){
     let li = document.createElement('li');
     let msgTitle = document.createElement('span');

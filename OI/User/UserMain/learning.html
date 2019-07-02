@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+  <header>
+<title>OI - Employee Main</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../../css/w3.css">
+<link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<script src="../../dist/semantic.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.css">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+p{
+    font-size: 14px;
+}
+    td {
+        border: 1px solid #03fa03;
+        text-align: left;
+        padding: 8px;
+        background: #dbf5df
+    }
+    th {
+        border: 1px solid #03fa03;
+        text-align: left;
+        padding: 8px;
+        background: #f9fafa
+    }
+    tr:nth-child(even) {
+        background-color: #3ff503;
+    }
+form {
+  background: #dbf5df;
+  border: #03fa03;
+  padding: 20px;
+}
+</style>
+</header>
+<body class="w3-light-grey">
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+    <img src="../../img/Inventory-maintenance-icon.png" class="w3-square w3-margin-right" style="width:46px">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open('');"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-right">OI</span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+
+  <div class="w3-container">
+    <h5>Employee Dashboard</h5>
+  </div>
+  <div class="w3-bar-block">
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li class="logged-in">
+            <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+        </li>
+        <li class="logged-out">
+            <a href="#" class="w3-bar-item w3-button w3-padding modal-trigger" data-target="modal-login">Login</a>
+        </li>
+        <li class="logged-in">
+            <a href="learning.html" class="w3-bar-item w3-button w3-padding modal-trigger" data-target="modal-workRequest">Main Panel</a>
+        </li>
+        <li class="logged-in">
+            <a href="#" class="w3-bar-item w3-button w3-padding modal-trigger" data-target="modal-workRequest">Work Request</a>
+        </li>
+        <li class="logged-in">
+            <a href="#" class="w3-bar-item w3-button w3-padding modal-trigger" data-target="modal-setting" id="logout">Setting</a>
+        </li>
+        <li class="logged-in">
+            <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
+        </li>
+    </ul>
+  </div>
+</nav>
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:45px;">
+<h2>Main Panel</h2>
+  <div class="workRequestForm">
+      <form>
+          <p>Click here for work request:</p>
+          <button class="w3-btn yellow darken-2  modal-trigger" data-target="modal-workRequest">Work Request</button>
+      </form>
+  </div>
+  <div class="collapsible1" style="border: #ffffff; background: #dbf5df"><h4>My Request</h4>
+    <ul class="w3-animate-right z-depth-1 list" id="myRequest"></ul>
+  </div>
+  <div class="collapsible1" style="border: #ffffff; background: #dbf5df"><h4>Faulty Electronic Items</h4>
+    <ul class="w3-animate-right z-depth-1 list" id="faulty"></ul>
+  </div>
+  <div class="collapsible1" style="border: #ffffff; background: #dbf5df"><h4>Supply Requested Items</h4>
+    <ul class="w3-animate-right z-depth-1 list" id="lowItem"></ul>
+  </div>
+  <!-- GUIDE LIST -->
+    <div class="container" style="margin-top: 40px;">
+        <ul class="collapsible z-depth-0 guides" style="border: none;">
+            <li>
+                <div class="collapsible-header grey lighten-4">Guide title</div>
+                <div class="collapsible-body white">Lorem ipsum dolor sit amet.</div>
+            </li>
+            <li>
+                <div class="collapsible-header grey lighten-4">Guide title</div>
+                <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
+            </li>
+            <li>
+                <div class="collapsible-header grey lighten-4">Guide title</div>
+                <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
+            </li>
+            <li>
+                <div class="collapsible-header grey lighten-4">Guide title</div>
+                <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
+            </li>
+        </ul>
+    </div>
+    
+</>
+
+  <!-- LOGIN MODAL -->
+  <div id="modal-login" class="modal">
+    <div class="modal-content">
+        <h4>Login</h4><br />
+        <form id="login-form">
+        <div class="input-field">
+            <input type="email" id="login-email" required />
+            <label for="login-email">Email address</label>
+        </div>
+        <div class="input-field">
+            <input type="password" id="login-password" required />
+            <label for="login-password">Your password</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Login</button>
+        </form>
+    </div>
+  </div>
+  <!-- ACCOUNT MODAL -->
+  <div id="modal-setting" class="modal">
+    <div class="modal-content center-align">
+        <h4>Account details</h4><br />
+        <div class="account-details"></div>
+    </div>
+  </div>
+  <!-- CREATE GUIDE MODAL -->
+  <div id="modal-workRequest" class="modal">
+        <div class="modal-content">
+          <h4>Work Order Request Form</h4>
+
+          <form id="requestForm" class="w3-btn dark-gray">
+                <h6 class="formTitle w3-black" style="font-weight: 600">Request Form</h6>
+                <table>
+                  <th>Requester:</th>
+                  <tr>
+                    <td>
+                      <label class="label ">First name</label></td><td><input type="textfield" id="firstName" class="input-field w3-hover-dark-gray" style="height: 30px; width: 250px" required />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="label ">Middle name</label></td><td><input type="textfield" id="midName" class="input-field w3-hover-dark-gray" style="height: 30px" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="label ">Last name</label></td><td><input type="textfield" id="lastName" class="input-field w3-hover-dark-gray" style="height: 30px" required />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="label ">Section</label></td><td><input type="textfield" id="section" class="input-field w3-hover-dark-gray" style="height: 30px" required />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="label">Nature of request</label></td><td><select id="requestType" class="input-field w3-hover-dark-gray" style="height: 100px" required>
+                        <option value="electrical">Electrical</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="officeSupply">Office Supply</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                      <td>
+                        <label class="label ">What item are you requesting?</label></td><td><input type="textfield" id="itemName" class="input-field w3-hover-dark-gray" style="height: 30px" placeholder="  ie. folder" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label class="label ">Item description</label></td><td><input type="textfield" id="itemDescription" class="input-field w3-hover-dark-gray" style="height: 30px" placeholder="  ie. 3-in" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label class="label ">Quantity</label></td><td><input type="textfield" id="quantity" class="input-field w3-hover-dark-gray" style="height: 30px" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label class="label ">When do you need it by?</label></td><td><input type="textfield" id="needBy" class="input-field w3-hover-dark-gray" style="height: 30px" required />
+                      </td>
+                    </tr>
+                  <tr><td>Brief description of the problem</td><td><textarea class="input-field" style="width:300px; height: 100px; background: #ffffff" type="textfield" id="problem"></textarea></td></tr>
+                </table>
+                
+                <button class="btn yellow darken-2 z-depth-0" id="submitButton">Submit</button>
+              </form>
+        </div>
+      </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.js"></script>    
+<script src="../UserMain/workRequest.js"></script>
+<script src="../../logout.js"></script>
+<script src="../Admin/AdminMain/faulty.js"></script>
+<script src="../Admin/AdminMain/lowItem.js"></script>
+<script src="../UserMain/auth.js"></script>
+</body>
+</html>

@@ -47,6 +47,7 @@ form {
 
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+    <img src="../img/Inventory-maintenance-icon.png" class="w3-square w3-margin-right" style="width:46px">
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
   <span class="w3-bar-item w3-right">OI</span>
 </div>
@@ -54,11 +55,7 @@ form {
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
 
-    <div class="w3-container w3-row">
-    <div class="w3-col s4">
-      <img src="../img/Inventory-maintenance-icon.png" class="w3-square w3-margin-right" style="width:46px">
-    </div>
-
+  <div class="w3-container w3-row">
   <div class="w3-container">
     <h5>Employee Dashboard</h5>
   </div>
@@ -70,6 +67,7 @@ form {
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Employee Settings</a>
     <a href="../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
 
+  </div>
   </div>
 </nav>
 <!-- !PAGE CONTENT! -->
@@ -87,17 +85,22 @@ form {
         </tr>
         <tr>
           <td>
-            <label class="label ">Last name</label></td><td><input type="textfield" id="firstName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" />
+            <label class="label ">Middle name</label></td><td><input type="textfield" id="midName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" />
           </td>
         </tr>
         <tr>
           <td>
-            <label class="label ">Section</label></td><td><input type="textfield" id="firstName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" />
+            <label class="label ">Last name</label></td><td><input type="textfield" id="lastName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" />
           </td>
         </tr>
         <tr>
           <td>
-            <label class="label">Nature of request</label></td><td>      <select class="requestTypes w3-hover-dark-gray" style="height: 30px">
+            <label class="label ">Section</label></td><td><input type="textfield" id="section" class="collapsible-body w3-hover-dark-gray" style="height: 30px" />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label">Nature of request</label></td><td>      <select id="requestType" class="requestTypes w3-hover-dark-gray" style="height: 30px">
               <option value="electrical">Electrical</option>
               <option value="furniture">Furniture</option>
               <option value="officeSupply">Office Supply</option>
@@ -106,39 +109,44 @@ form {
         </tr>
         <tr>
             <td>
-              <label class="label ">What item are you requesting?</label></td><td><input type="text" id="itemName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" placeholder="ie. folder" />
+              <label class="label ">What item are you requesting?</label></td><td><input type="text" id="itemName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" placeholder="  ie. folder" />
             </td>
           </tr>
           <tr>
-              <td>
-                <label class="label ">When do you need it by?</label></td><td><input type="textfield" id="itemName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" />
-              </td>
-            </tr>
+            <td>
+              <label class="label ">Item description</label></td><td><input type="text" id="itemDescription" class="collapsible-body w3-hover-dark-gray" style="height: 30px" placeholder="  ie. 3-in"/>
+            </td>
+          </tr>
           <tr>
-              <td>
-                <label class="label ">Item description</label></td><td><input type="text" id="itemName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" placeholder="ie. 3-in"/>
-              </td>
-            </tr>
-        <tr><td>Brief description of the problem</td><td><textarea class="" rows="4" cols="50" name="comment" form="usrform"></textarea></td></tr>
+            <td>
+              <label class="label ">Quantity</label></td><td><input type="textfield" id="quantity" class="collapsible-body w3-hover-dark-gray" style="height: 30px" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="label ">When do you need it by?</label></td><td><input type="textfield" id="needBy" class="collapsible-body w3-hover-dark-gray" style="height: 30px" />
+            </td>
+          </tr>
+        <tr><td>Brief description of the problem</td><td><textarea class="input" rows="4" cols="50" id="problem"></textarea></td></tr>
       </table>
       <button id="submitButton">Submit</button>
     </form>
   </div>
 
-  <div class="collapsible1" style="border: #ffffff; background: #dbf5df"><h4>Faulty Furniture Items</h4>
-    <ul class="w3-animate-right z-depth-1 list" id="furnitureList"></ul>
+  <div class="collapsible1" style="border: #ffffff; background: #dbf5df"><h4>My Request</h4>
+    <ul class="w3-animate-right z-depth-1 list" id="myRequest"></ul>
   </div>
   <div class="collapsible1" style="border: #ffffff; background: #dbf5df"><h4>Faulty Electronic Items</h4>
-    <ul class="w3-animate-right z-depth-1 list" id="electronicList"></ul>
+    <ul class="w3-animate-right z-depth-1 list" id="faulty"></ul>
   </div>
   <div class="collapsible1" style="border: #ffffff; background: #dbf5df"><h4>Supply Requested Items</h4>
     <ul class="w3-animate-right z-depth-1 list" id="lowItem"></ul>
   </div>
 </div>
-<script src="../User/tp2.js"></script>
-<script src="../User/request.js"></script>
+
+<script src="../User/UserMain/workRequest.js"></script>
 <script src="../logout.js"></script>
-<script src="../User/Admin/MainHTML/lowItem.js"></script>
-<script src="../User/Admin/MainHTML/faulty.js"></script>
+<script src="../User/Admin/AdminMain/faulty.js"></script>
+<script src="../User/Admin/AdminMain/lowItem.js"></script>
 </body>
 </html>

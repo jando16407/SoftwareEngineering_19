@@ -1,3 +1,17 @@
+
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
+    authDomain: "office-inventory-12f99.firebaseapp.com",
+    databaseURL: "https://office-inventory-12f99.firebaseio.com",
+    projectId: "office-inventory-12f99",
+    storageBucket: "office-inventory-12f99.appspot.com",
+    messagingSenderId: "147848186588",
+    appId: "1:147848186588:web:33dbc8d727af1de4"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 function formatTime(){
     let time = new Date(),
     minutes = time.getMinutes().toString().length == 1 ? '0'+time.getMinutes() : time.getMinutes(),
@@ -7,7 +21,7 @@ function formatTime(){
     days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
     }
-    const workOrder = document.querySelector('#workOrder');
+
     function renderMsg(doc){
         let li = document.createElement('li');
         let firstName = document.createElement('span');
@@ -18,6 +32,7 @@ function formatTime(){
         let itemName = document.createElement('span');
         let itemDescription = document.createElement('span');
         let requestType = document.createElement('span');
+        let needBy = document.createElement('span');
 
         let cross = document.createElement('button');
     
@@ -30,6 +45,7 @@ function formatTime(){
         itemName.textContent = doc.data().itemName;
         itemDescription.textContent = doc.data().itemDescription;
         requestType.textContent = doc.data().requestType;
+        needBy.textContent = doc.data().needBy
 
         cross.textContent = 'X';
 
@@ -44,37 +60,44 @@ function formatTime(){
 
         li.appendChild(cross);
     
-        printAnnounce.appendChild(li);
+        printRequest.appendChild(li);
         // delete Announcement
         cross.addEventListener('click', (e)=>{
             //e.stopPropagation();
             let id = e.target.parentElement.getAttribute('data-id');
-            db.collection('Announcement').doc(id).delete();
+            db.collection('Watis/NusiCkayiV6LuuMOu94U/workOrder').doc(id).delete();
         })
     }
-    db.collection('Announcement').orderBy('requestDate').onSnapshot((snapshot) =>{
+    db.collection('Watis/NusiCkayiV6LuuMOu94U/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
         let changes = snapshot.docChanges();
         changes.forEach(change =>{
             if(change.type == 'added'){
                 renderMsg(change.doc);
             } else if (change.type == 'removed'){
-                let li = printAnnounce.querySelector('[data-id=' + change.doc.id + ']');
-                printAnnounce.removeChild(li);
+                let li = printRequest.querySelector('[data-id=' + change.doc.id + ']');
+                printRequest.removeChild(li);
             }
         })
     })  
     
-    const printAnnounce = document.querySelector('#announceAll');
-    const form = document.querySelector("#send-msg-form");
-    const sndBtn = document.querySelector("sndBtn");
-    
-    
+    const printRequest = document.querySelector('#myRequest');
+    const form = document.querySelector("#requestForm");
+    const sndBtn = document.querySelector("#submitButton");
+
     // Post this for everyone
     form.addEventListener('submit', (e)=>{
         e.preventDefault();
-        db.collection('Announcement').add({
+        db.collection('Watis/NusiCkayiV6LuuMOu94U/workOrder').add({
             firstName: form.firstName.value,
+            midName: form.midName.value,
             lastName: form.lastName.value,
+            section: form.section.value,
+            requestType: form.requestType.value,
+            itemName: form.itemName.value,
+            itemDescription:form.itemDescription.value,
+            quantity: form.quantity.value,
+            problem: form.problem.value,
+            needBy: form.needBy.value,
             requestDate: formatTime(),
         })
     })

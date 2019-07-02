@@ -96,6 +96,7 @@ async function get_unit_info(){
     await init_add_units_contents();
     await document.getElementsByClassName("tablink")[0].click();
     await document.getElementsByClassName("tttabbb")[0].click();
+    await initial_rendering();
 }
 
 
@@ -176,7 +177,7 @@ function init_tables(){
     tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
     tabContentsItemTableContainer[0].setAttribute('id', 'masterTable');
     let listRow = document.createElement('tr');
-    let topRow = "<th>Unit</th><th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
+    let topRow = "<th>Unit</th><th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
     listRow.innerHTML = topRow;
     tabContentsItemTableContainer[0].appendChild(listRow);
 
@@ -222,7 +223,7 @@ function init_tables(){
         tabContentsItemList[i].appendChild(tabContentsItemTableContainer[i]);
         tabContentsItemTableContainer[i].setAttribute('id', unitNameArray[i-1]+'Table');
         let _listRow = document.createElement('tr');
-        let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
+        let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
         _listRow.innerHTML = _topRow;
         tabContentsItemTableContainer[i].appendChild(_listRow);
 
@@ -365,6 +366,14 @@ function init_add_units_contents(){
      console.log("05.2 Init table for add items done...");
 }
 
+function initial_rendering(){
+    //Iterate through all units to get data and display
+    for( let j=0; j<numOfUnits; j++ ){
+        renderUnit(j);
+    }
+    console.log('06 Initial table rendering done...');
+}
+
 //Error handling
 function gotErr(err){
     console.log("Error!!");
@@ -475,6 +484,51 @@ function renderMasterList(){
 }
 
 //Update the table for Unit 1
+function renderUnit( unitNum ){
+    let unitName = unitNameArray[unitNum]
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+    //Make the base of table setup
+    ref.orderBy('id').get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+        //snapshot.docChanges().forEach(function(doc)   {
+            // doc.data() is never undefined for query doc snapshots
+            //console.log(doc.id, " => ", doc.data().name);
+            let row = document.createElement('tr');
+            let id = document.createElement('th');
+            let name = document.createElement('th');
+            let quantity = document.createElement('th');
+            let category = document.createElement('th');
+            let subcategory = document.createElement('th');
+            let description = document.createElement('th');
+            if( doc.data().id != undefined ){
+                id.innerHTML = doc.data().id;
+            }
+            if( doc.data().name != undefined ){
+                name.innerHTML = doc.data().name;
+            }
+            if( doc.data().quantity != undefined ){
+                quantity.innerHTML = doc.data().quantity;
+            }
+            if( doc.data().category != undefined ){
+                category.innerHTML = doc.data().category;
+            }
+            if( doc.data().subcategory != undefined ){
+                subcategory.innerHTML = doc.data().subcategory;
+            }
+            if( doc.data().description != undefined ){
+                description.innerHTML = doc.data().description;
+            }
+            row.appendChild(id);
+            row.appendChild(name);
+            row.appendChild(quantity);
+            row.appendChild(category);
+            row.appendChild(subcategory);
+            row.appendChild(description);
+            tabContentsItemTableContainer[unitNum+1].appendChild(row);
+        });
+    });
+}
+/*
 function renderUnit1(){
     ref1.once("value", function(snapshot){
         let items = snapshot.val();
@@ -502,7 +556,7 @@ function renderUnit1(){
         }
     }, gotErr);
 }
-
+*/
 //Update the table for Unit 2
 function renderUnit2(){
     ref2.once("value", function(snapshot){

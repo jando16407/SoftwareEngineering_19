@@ -93,7 +93,7 @@ async function get_unit_info(){
     await init_tabs();
     await init_tables();
     await init_tabs_add();
-    await init_tables_add();
+    await init_add_units_contents();
     await document.getElementsByClassName("tablink")[0].click();
     await document.getElementsByClassName("tttabbb")[0].click();
 }
@@ -134,7 +134,7 @@ function init_tabs(){
         itemListTabButtonContainer.appendChild(tabButtons[i]);
         //console.log("Added tab: "+tabButtons[i]);
     }
-    console.log("04 Init tab done...");
+    console.log("04.1 Init tab done...");
 }
 
 //Dynamically create tabs
@@ -150,7 +150,7 @@ function init_tabs_add(){
         itemAddTabButtonContainer.appendChild(tabButtons_add[i]);
         //console.log("Added tab: "+tabButtons[i]);
     }
-    console.log("04 Init tab done...");
+    console.log("04.2 Init tab for add items done...");
 }
 
 //Initial rendering of tables
@@ -233,10 +233,10 @@ function init_tables(){
         tabContentsFrame[i].appendChild(_div1);
         itemListTabContainer.appendChild(tabContentsFrame[i]);
     }
-    console.log("05 Init table done...");
+    console.log("05.1 Init table done...");
 }
 
-function init_tables_add(){
+function init_add_units_contents(){
     //Init tables for all units as well
     for( let i=0; i<numOfUnits; i++ ){
         //the most outer div
@@ -253,35 +253,65 @@ function init_tables_add(){
         tabContentsItemAdd_add[i] = document.createElement('p');
         tabContentsItemAdd_add[i].setAttribute('id', unitNameArray[i]+'ItemAdd');
         //Input field setup
-        let item_id_label = document.createElement('label');
-        item_id_label.setAttribute('for', 'item_id'+i);
-        item_id_label.innerHTML = '<b>Item ID</b>';
-        let item_id_input = document.createElement('input');
-        item_id_input.setAttribute('id', 'id'+i);
-        item_id_input.setAttribute('type', 'test');
-        item_id_input.setAttribute('placeholder', 'Enter Item ID');
+        //Item ID
+            let item_id_label = document.createElement('label');
+            item_id_label.setAttribute('for', 'item_id'+i);
+            item_id_label.innerHTML = '<p>Item ID</p>';
+            let item_id_input = document.createElement('input');
+            item_id_input.setAttribute('id', 'id'+i);
+            item_id_input.setAttribute('type', 'test');
+            item_id_input.setAttribute('placeholder', 'Enter Item ID');
+        //Item Name
+            let item_name_label = document.createElement('label');
+            item_name_label.setAttribute('for', 'item_name'+i);
+            item_name_label.innerHTML = '<p>Item Name</p>';
+            let item_name_input = document.createElement('input');
+            item_name_input.setAttribute('id', 'name'+i);
+            item_name_input.setAttribute('type', 'test');
+            item_name_input.setAttribute('placeholder', 'Enter Item Name');
+        //Assign
+            let item_assign_label = document.createElement('label');
+            item_assign_label.setAttribute('for', 'item_assign'+i);
+            item_assign_label.innerHTML = '<p>Item Assign</p>';
+            let item_assign_input = document.createElement('input');
+            item_assign_input.setAttribute('id', 'assign'+i);
+            item_assign_input.setAttribute('type', 'test');
+            item_assign_input.setAttribute('placeholder', 'Enter Item Assign');
+        //Quantity
+            let item_quantity_label = document.createElement('label');
+            item_quantity_label.setAttribute('for', 'item_quantity'+i);
+            item_quantity_label.innerHTML = '<p>Item Quantity</p>';
+            let item_quantity_input = document.createElement('input');
+            item_quantity_input.setAttribute('id', 'quantity'+i);
+            item_quantity_input.setAttribute('type', 'test');
+            item_quantity_input.setAttribute('placeholder', 'Enter Item Assign');
+        //Quantity Unit    
+            let item_quantity_unit_label = document.createElement('label');
+            item_quantity_unit_label.setAttribute('for', 'item_quantity_unit'+i);
+            item_quantity_unit_label.innerHTML = '<p>Item Quantity Unit</p>';
+            let item_quantity_unit_input = document.createElement('input');
+            item_quantity_unit_input.setAttribute('id', 'quantity_unit'+i);
+            item_quantity_unit_input.setAttribute('type', 'test');
+            item_quantity_unit_input.setAttribute('placeholder', 'Enter Item Quantity Unit');
 
-/*
-         tabContentsItemTableContainer[0] = document.createElement('table');
-         tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
-         tabContentsItemTableContainer[0].setAttribute('id', unitNameArray[i-1]+'Table');
-         let listRow = document.createElement('tr');
-         let topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Assign</th><th>Item Description</th>";
-         listRow.innerHTML = topRow;
-         tabContentsItemTableContainer[0].appendChild(listRow);
- */
          //Put everything together
-         //div2.appendChild(tabContentsItemList[0]);
          div1.appendChild(tabContentsTitle);
-         tabContentsItemList[i].appendChild(item_id_label);
-         //tabContentsItemList,appendChild('<br>');
-         tabContentsItemList[i].appendChild(item_id_input);
-         div1.appendChild(tabContentsItemList[i]);
-         //div1.appendChild(div2);
+         //Add input fields
+            tabContentsItemAdd_add[i].appendChild(item_id_label);
+            tabContentsItemAdd_add[i].appendChild(item_id_input);
+            tabContentsItemAdd_add[i].appendChild(item_name_label);
+            tabContentsItemAdd_add[i].appendChild(item_name_input);
+            tabContentsItemAdd_add[i].appendChild(item_assign_label);
+            tabContentsItemAdd_add[i].appendChild(item_assign_input);
+            tabContentsItemAdd_add[i].appendChild(item_quantity_label);
+            tabContentsItemAdd_add[i].appendChild(item_quantity_input);
+            tabContentsItemAdd_add[i].appendChild(item_quantity_unit_label);
+            tabContentsItemAdd_add[i].appendChild(item_quantity_unit_input);
+         div1.appendChild(tabContentsItemAdd_add[i]);
          tabContentsFrame_add[i].appendChild(div1);
          itemAddTabContainer.appendChild(tabContentsFrame_add[i]);
      }
-     console.log("05 Init table for add items done...");
+     console.log("05.2 Init table for add items done...");
 }
 
 //Error handling

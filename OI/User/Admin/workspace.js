@@ -253,6 +253,8 @@ function init_add_units_contents(){
         tabContentsItemAdd_add[i] = document.createElement('p');
         tabContentsItemAdd_add[i].setAttribute('id', unitNameArray[i]+'ItemAdd');
         //Input field setup
+        //New line
+            let new_line = document.createElement('br');
         //Item ID
             let item_id_label = document.createElement('label');
             item_id_label.setAttribute('for', 'item_id'+i);
@@ -269,14 +271,6 @@ function init_add_units_contents(){
             item_name_input.setAttribute('id', 'name'+i);
             item_name_input.setAttribute('type', 'test');
             item_name_input.setAttribute('placeholder', 'Enter Item Name');
-        //Assign
-            let item_assign_label = document.createElement('label');
-            item_assign_label.setAttribute('for', 'item_assign'+i);
-            item_assign_label.innerHTML = '<p>Item Assign</p>';
-            let item_assign_input = document.createElement('input');
-            item_assign_input.setAttribute('id', 'assign'+i);
-            item_assign_input.setAttribute('type', 'test');
-            item_assign_input.setAttribute('placeholder', 'Enter Item Assign');
         //Quantity
             let item_quantity_label = document.createElement('label');
             item_quantity_label.setAttribute('for', 'item_quantity'+i);
@@ -293,23 +287,80 @@ function init_add_units_contents(){
             item_quantity_unit_input.setAttribute('id', 'quantity_unit'+i);
             item_quantity_unit_input.setAttribute('type', 'test');
             item_quantity_unit_input.setAttribute('placeholder', 'Enter Item Quantity Unit');
+        //Item description
+            let item_description_label = document.createElement('label');
+            item_description_label.setAttribute('for', 'item_description'+i);
+            item_description_label.innerHTML = '<p>Item Description</p>';
+            let item_description_input = document.createElement('input');
+            item_description_input.setAttribute('id', 'description'+i);
+            item_description_input.setAttribute('type', 'test');
+            item_description_input.setAttribute('placeholder', 'Enter Item Description');
+        //Item category
+            let item_category_label = document.createElement('label');
+            item_category_label.setAttribute('for', 'category'+i);
+            item_category_label.innerHTML = '<p>Item Category</p>';
+            let item_category_input = document.createElement('input');
+            item_category_input.setAttribute('id', 'category'+i);
+            item_category_input.setAttribute('type', 'test');
+            item_category_input.setAttribute('placeholder', 'Enter Item Category');
+        //Item sub-category
+            let item_subcategory_label = document.createElement('label');
+            item_subcategory_label.setAttribute('for', 'item_subcategory'+i);
+            item_subcategory_label.innerHTML = '<p>Item Sub Category</p>';
+            let item_subcategory_input = document.createElement('input');
+            item_subcategory_input.setAttribute('id', 'subcategory'+i);
+            item_subcategory_input.setAttribute('type', 'test');
+            item_subcategory_input.setAttribute('placeholder', 'Enter Item Sub Category');
+        //Assign
+            let item_assign_label = document.createElement('label');
+            item_assign_label.setAttribute('for', 'item_assign'+i);
+            item_assign_label.innerHTML = '<p>Item Assign</p>';
+            let item_assign_input = document.createElement('input');
+            item_assign_input.setAttribute('id', 'assign'+i);
+            item_assign_input.setAttribute('type', 'test');
+            item_assign_input.setAttribute('placeholder', 'Enter Item Assign');
+        //Optional detail
+            let optional_details = document.createElement('h6');
+            optional_details.innerHTML = 'Optional Detail Information:';
+        //Submit Button
+            let item_submit_button = document.createElement('button');
+            item_submit_button.setAttribute('id', 'submit_button'+i);
+            item_submit_button.innerHTML = 'Submit';
+            item_submit_button.onclick = function(e) {
+                submitButtonClicked(unitNameArray[i], i);
+            };
+
 
          //Put everything together
          div1.appendChild(tabContentsTitle);
          //Add input fields
+         //Id, Name, Quantity
             tabContentsItemAdd_add[i].appendChild(item_id_label);
             tabContentsItemAdd_add[i].appendChild(item_id_input);
             tabContentsItemAdd_add[i].appendChild(item_name_label);
             tabContentsItemAdd_add[i].appendChild(item_name_input);
-            tabContentsItemAdd_add[i].appendChild(item_assign_label);
-            tabContentsItemAdd_add[i].appendChild(item_assign_input);
             tabContentsItemAdd_add[i].appendChild(item_quantity_label);
             tabContentsItemAdd_add[i].appendChild(item_quantity_input);
+        //Quantity Unit, Description, Category
             tabContentsItemAdd_add[i].appendChild(item_quantity_unit_label);
             tabContentsItemAdd_add[i].appendChild(item_quantity_unit_input);
-         div1.appendChild(tabContentsItemAdd_add[i]);
-         tabContentsFrame_add[i].appendChild(div1);
-         itemAddTabContainer.appendChild(tabContentsFrame_add[i]);
+            tabContentsItemAdd_add[i].appendChild(item_description_label);
+            tabContentsItemAdd_add[i].appendChild(item_description_input);
+            tabContentsItemAdd_add[i].appendChild(item_category_label);
+            tabContentsItemAdd_add[i].appendChild(item_category_input);
+        //Sub Category, Assign
+            tabContentsItemAdd_add[i].appendChild(item_subcategory_label);
+            tabContentsItemAdd_add[i].appendChild(item_subcategory_input);
+            tabContentsItemAdd_add[i].appendChild(optional_details);
+            tabContentsItemAdd_add[i].appendChild(item_assign_label);
+            tabContentsItemAdd_add[i].appendChild(item_assign_input);
+
+        //Add Submit button
+            tabContentsItemAdd_add[i].appendChild(new_line);
+            tabContentsItemAdd_add[i].appendChild(item_submit_button);
+        div1.appendChild(tabContentsItemAdd_add[i]);
+        tabContentsFrame_add[i].appendChild(div1);
+        itemAddTabContainer.appendChild(tabContentsFrame_add[i]);
      }
      console.log("05.2 Init table for add items done...");
 }
@@ -579,6 +630,47 @@ function itemSelected(id, deletePath){
 /* onClick handlings Start */
 
 //Submit button handling, push data to firebase
+
+function submitButtonClicked( unitName, i ) {
+    console.log("Submit button clicked...");
+    //check mandatory input field if empty or not
+    let item = [];
+    let category = [];
+    let data = {};
+    item[0] = document.getElementById('id'+i).value;
+    category[0] = 'id';
+    item[1] = document.getElementById('name'+i).value;
+    category[1] = 'name';
+    item[2] = document.getElementById('quantity'+i).value;
+    category[2] = 'quantity';
+    item[3] = document.getElementById('quantity_unit'+i).value;
+    category[3] = 'quantity_unit';
+    item[4] = document.getElementById('description'+i).value;
+    category[4] = 'description';
+    item[5] = document.getElementById('category'+i).value;
+    category[5] = 'category';
+    item[6] = document.getElementById('subcategory'+i).value;
+    category[6] = 'subcategory';
+    item[7] = document.getElementById('assign'+i).value;
+    category[7] = 'assign';
+    console.log(unitName);
+    
+    //Iterate to gather inputs and build data to push
+    for( let j=0; j<item.length; j++ ){
+        if( item[j] != ''){
+            //Add input to data
+            data[category[j]] = item[j];
+            //Clear the input field
+            document.getElementById(category[j]+i).value = '';
+        }
+    }
+
+    //Add data to database
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+    ref.add(data)
+
+    console.log(data);
+}
 /*
 submitButton1.onclick = function(){
     //Push data to Unit

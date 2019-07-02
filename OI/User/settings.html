@@ -17,35 +17,35 @@
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
 <script src="timeout.js"></script>
 <style>
-html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-</style>
-<body class="w3-light-grey">
-
+    html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+    <body class="w3-light-grey">
+    
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-  <span class="w3-bar-item w3-right">OI</span>
-</div>
+    <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+    <span class="w3-bar-item w3-right">OI</span>
+  </div>
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-light-grey w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
 
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <h3 class="w3-padding">Admin Setting</h3>
+    <h3 class="w3-padding">Employee Setting</h3>
     <a href="main.html" class="w3-bar-item w3-button w3-padding">Employee Main Panel</a>
     <a href="user_workspace.html" class="w3-bar-item w3-button w3-padding">Employee Workspace</a>
     <!--<a href="messages.html" class="w3-bar-item w3-button w3-padding">Employee Messages</a>
@@ -58,12 +58,13 @@ table {
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-<h2>Setting</h2>
-  <header>
-        <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
-        </div>
-        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
-          <p>
+  <h2>Setting</h2>
+    <header>
+          <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
+          </div>
+          <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
+            <h4>Change Password</h4>
+            <p>
               <label for="item_id1"><b>Username</b></label><br>
               <input id="username" type="text" placeholder="Enter Username" name="id1" required>
               <br>
@@ -76,7 +77,8 @@ table {
               <button id="submitButton1">Submit</button>
           </p>
           <br>
-          <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+          <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
+            <h4>Delete Username</h4>
             <p>
               <label for="item_id4"><b>Username</b></label><br>
               <input id="username2" type="text" placeholder="Enter Username" name="id4" required>
@@ -90,7 +92,8 @@ table {
           <p id="officeItemList1"></p>
           </p>
         </div>
-        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+        <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
+            <h4>Update Profile</h4>
           <p>
             <label for="item_id6"><b>Username</b></label><br>
             <input id="username5" type="text" placeholder="Not email" name="id4" required>
@@ -100,9 +103,6 @@ table {
             <br>
             <label for="item_id8"><b>Section Number</b></label><br>
             <input id="section" type="text" placeholder="Enter SectionId" name="name4" required>
-            <br>
-            <label for="item_id9"><b>Type</b></label><br>
-            <input id="type" type="text" placeholder="Enter Type" name="name4" required>
             <br>
             <label for="item_id10"><b>Phone Number</b></label><br>
             <input id="phone" type="text" placeholder="Enter Phone Number" name="name4" required>
@@ -120,7 +120,7 @@ table {
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
 <!--<script src="login.js"></script>-->
-<script src="sp1.js"></script>
+<script src="settings.js"></script>
 <script src="shortcuts.js"></script>
 <!-- <script src="package-lock.json"></script>
 <script src="office-inventory-12f99-firebase-adminsdk-pm972-c0bb3a8888.json"></script>

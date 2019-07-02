@@ -76,7 +76,6 @@ user.delete().then(function() {
     var typeInput = document.getElementById("type");
     var telInput = document.getElementById("phone");
     var userId = userId1.value;
-    alert(userId)
    firebase.database().ref('users/' + userId).set({
     name: nameInput.value,
     sectionNum: secNum1.value,

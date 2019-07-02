@@ -12,12 +12,6 @@ firebase.initializeApp(firebaseConfig);
 var database = firebase.database();
 //reset login on window load
 window.onload = function(){
-  /*firebase.auth().signOut().then(function(){
-    //successful
-//      alert('logged out')
-  },function(error){
-    alert('still logged in')
-  })*/
 }
 //setup();
 var submitButton1 = document.getElementById("submitButton1");
@@ -76,11 +70,11 @@ user.delete().then(function() {
     var typeInput = document.getElementById("type");
     var telInput = document.getElementById("phone");
     var userId = userId1.value;
-    alert(userId)
    firebase.database().ref('users/' + userId).set({
     name: nameInput.value,
     sectionNum: secNum1.value,
-    userType: typeInput.value,
+    //userType: typeInput.value,
+    userType: 'Employee',
     userPhone: telInput.value
   });
  }

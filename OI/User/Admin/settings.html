@@ -31,6 +31,7 @@ table {
     tr:nth-child(even) {
         background-color: #dddddd;
     }
+    
 </style>
 <body class="w3-light-grey">
 
@@ -41,7 +42,7 @@ table {
 </div>
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-light-grey w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
 
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
@@ -62,7 +63,8 @@ table {
   <header>
         <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
         </div>
-        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+        <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
+          <h3>Change Password</h3>
           <p>
               <label for="item_id1"><b>Username</b></label><br>
               <input id="username" type="text" placeholder="Enter Username" name="id1" required>
@@ -76,7 +78,8 @@ table {
               <button id="submitButton1">Submit</button>
           </p>
           <br>
-          <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+          <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
+              <h3>Delete Username</h3>
             <p>
               <label for="item_id4"><b>Username</b></label><br>
               <input id="username2" type="text" placeholder="Enter Username" name="id4" required>
@@ -90,7 +93,8 @@ table {
           <p id="officeItemList1"></p>
           </p>
         </div>
-        <div id="Tab1" class="w3-container w3-white w3-padding-16 myLink">
+        <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
+            <h3>Update Profile</h3>
           <p>
             <label for="item_id6"><b>Username</b></label><br>
             <input id="username5" type="text" placeholder="Not email" name="id4" required>
@@ -120,7 +124,7 @@ table {
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
 <!--<script src="login.js"></script>-->
-<script src="sp1.js"></script>
+<script src="settings.js"></script>
 <script src="shortcuts.js"></script>
 <!-- <script src="package-lock.json"></script>
 <script src="office-inventory-12f99-firebase-adminsdk-pm972-c0bb3a8888.json"></script>

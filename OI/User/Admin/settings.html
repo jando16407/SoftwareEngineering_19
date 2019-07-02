@@ -58,11 +58,20 @@ table {
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px;margin-top:43px;">
-    <h2>Setting</h2>
-      <header>
-            <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
-            </div>
+<div class="w3-main" style="margin-left:200px;margin-top:40px;">
+  <h2>User Settings</h2>
+  <header>
+    <!--The whole workspace-->
+    <div style="display: inline-block; width:100%;">
+        <div class="w3-display-top " style="width:99%; display: inline-block;">
+          <!-- Tab buttons -->
+          <div class="w3-bar w3-black">
+            <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainTab');"></button>
+          </div>
+  
+          <!--Tab1 (Settings)-->
+          <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
+
             <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
               <h3>Change Password</h3>
               <p>

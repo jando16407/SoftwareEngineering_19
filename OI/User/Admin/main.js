@@ -3,13 +3,15 @@ var announcementsPath, ref;
 var submitButton1, deleteButton;
 var announcementContainer;
 var currentDate = new Date();
-var childNodePath;
+var childNodePath = '';
+var childNodeRef;
 var selecedItem;
 var firebase;
 
 
 firebase_setup();
-//page_setup();
+page_setup();
+renderAnnouncements();
 //renderListen();
 
 
@@ -30,17 +32,6 @@ function firebase_setup(){
     firebase.initializeApp(firebaseConfig);
     database = firebase.firestore();
 }
-database.collection("cities").add({
-  name: "Tokyo",
-  country: "Japan"
-})
-.then(function(docRef) {
-  console.log("Document written with ID: ", docRef.id);
-})
-.catch(function(error) {
-  console.error("Error adding document: ", error);
-});
-
 //initial setup for the page
 function page_setup(){
     submitButton1 = document.getElementById("submitButton1");
@@ -76,6 +67,63 @@ function renderTableContents(path){
 
 //Update the table for Annnouncements
 function renderAnnouncements(){
+  console.log("Render announcement");
+    let ref = database.collection('Office').doc('Announcement').collection('Posts');
+    
+    //let announcement = document.createElement('div');
+    //ref.orderBy('date').get().then(function(querySnapshot) {
+      //  querySnapshot.forEach(function(doc) {
+      ref.onSnapshot(function(querySnapshot) {
+  //      while(announcementContainer.children.length > 0){
+    //        announcementContainer.removeChild(announcementContainer.childNodes[0]);
+      //  }
+        console.log("ref.onSnapshot running...");
+          let i = 0;
+          let announcement = [];
+          querySnapshot.docChanges().forEach(function(change) {
+            if(change.type === "added"){console.log("New city: ", change.doc.data());
+              let k = i;
+              announcement[i] = document.createElement('div');
+              let title = document.createElement('div');
+              let date = document.createElement('p');
+              let body = document.createElement('p');
+              let id = announcementContainer.children.length + 1;
+              announcement[i].setAttribute("key", change.doc.id);
+              announcement[i].setAttribute("class", 'ui message');
+              console.log("ID: "+id);
+                  console.log("Anounc Id: "+announcement[i]);
+              announcement[i].addEventListener("click", function(e){
+                  itemSelected(id, announcement[i], e.target.parentElement.getAttribute('key'));
+                  console.log("CLICKED ID: "+id);
+                  console.log("CLICKED Anounc Id: "+announcement[i]);
+                  console.log("Attribute "+e.target.parentElement.getAttribute('key'))
+              });
+              title.setAttribute("class", 'header');
+              title.innerHTML = change.doc.data().title;
+              body.innerHTML = change.doc.data().body;
+              date.innerHTML = change.doc.data().date;
+              console.log(change.doc.id);
+              console.log(change.doc.data().title);
+              console.log(change.doc.data().date);
+              console.log(change.doc.data().body);
+              announcement[i].appendChild(title);
+              announcement[i].appendChild(date);
+              announcement[i].appendChild(body);
+              //announcementContainer.appendChild(announcement[i]);
+                i++;
+              }
+              if (change.type === "modified") {
+                console.log("Modified city: ", change.doc.data());
+            }
+            if (change.type === "removed") {
+                console.log("Removed city: ", change.doc.data());
+            }
+          });
+          for( let j=i-1; j>=0; j-- ){
+              announcementContainer.appendChild(announcement[j]);
+          }
+      });
+  /*
     ref.once("value", function(snapshot){
         let items = snapshot.val();
         let keys = Object.keys(items);
@@ -101,6 +149,7 @@ function renderAnnouncements(){
             announcementContainer.appendChild(announcement);
         }
     }, gotErr);
+    */
 }
 
 /* Rendering funcitons End */
@@ -110,11 +159,13 @@ function renderAnnouncements(){
 /* onClick handlings Start */
 
 //Handle when item in a list is clicked
-function itemSelected(id, container){
-    childNodePath = document.getElementById("pastAnnouncementsList").childNodes[id].getAttribute("key");
-    selecedItem.value = document.getElementById("pastAnnouncementsList").childNodes[id].childNodes[0].innerHTML;
-    console.log(selecedItem);
+function itemSelected(id, announcement ){
+    childNodePath = document.getElementById("pastAnnouncementsList").childNodes[id+1].getAttribute("key");
+//    childNodeRef = database.collection('Office').doc('Annoouncement').collection('Posts').doc(childNodePath);
+    selecedItem.value = document.getElementById("pastAnnouncementsList").childNodes[id+1].childNodes[0].innerHTML;
+    console.log(childNodePath);
     console.log(id);
+    
 }
 
 //Submit button handling, push data to firebase
@@ -123,9 +174,13 @@ submitButton1.onclick = function(){
     let data = {
         title: document.getElementById("title").value,
         body: document.getElementById("body").value.replace(/\r?\n/g, '<br />'),
-        date: currentDate.getMonth()+'/'+currentDate.getDate()+'/'+currentDate.getFullYear()
+        date: formatTime()//currentDate.getMonth()+'/'+currentDate.getDate()+'/'+currentDate.getFullYear()
     }
-    ref.push(data)
+    database.collection('Office').doc('Announcement').collection('Posts').add(data);
+    console.log("Data:"+ data.title);
+    console.log("Data:"+ data.body);
+    console.log("Data:"+ data.date);
+    //ref.push(data)
     document.getElementById("title").value = "";
     document.getElementById("body").value = "";
 }
@@ -133,12 +188,30 @@ submitButton1.onclick = function(){
 //Delete button handling
 deleteButton.onclick = function(){
     //Check if item is selected or not
-    let deleteRef = database.ref(announcementsPath+'/'+childNodePath);
-    deleteRef.remove();
-    childNodePath = "";
-    selecedItem.value = "";
+    if(childNodePath!='' && childNodePath!=undefined){
+      let deleteRef = database.collection('Office').doc('Announcement').collection('Posts').doc(childNodePath);
+      deleteRef.delete().then(function() {
+          console.log("Document successfully deleted!");
+      }).catch(function(error) {
+          console.error("Error removing document: ", error);
+      });
+      childNodePath = "";
+      selecedItem.value = "";
+    }
+    else{
+      console.log("Item not selected");
+    }
 }
 
+function formatTime(){
+  let time = new Date(),
+  minutes = time.getMinutes().toString().length == 1 ? '0'+time.getMinutes() : time.getMinutes(),
+  hours = time.getHours().toString().length == 1 ? '0'+time.getHours() : time.getHours(),
+  ampm = time.getHours() >= 12 ? 'pm' : 'am',
+  months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+  days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
+  }
 
 /* onClick handlings End */
 

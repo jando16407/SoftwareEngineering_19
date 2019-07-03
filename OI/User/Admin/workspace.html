@@ -150,66 +150,6 @@ table {
           </div>
           -->
           <!--Tab2 (Work Orders)-->
-          <div>
-              <form id="requestForm" class="w3-btn dark-gray">
-                  <h6 class="formTitle w3-black" style="font-weight: 600">Request Form</h6>
-                  <table>
-                    <th>Requester:</th>
-                    <tr>
-                      <td>
-                        <label class="label ">First name</label></td><td><input type="textfield" id="firstName" class="input-field w3-hover-dark-gray" style="height: 30px; width: 250px" required />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label class="label ">Middle name</label></td><td><input type="textfield" id="midName" class="input-field w3-hover-dark-gray" style="height: 30px" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label class="label ">Last name</label></td><td><input type="textfield" id="lastName" class="input-field w3-hover-dark-gray" style="height: 30px" required />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label class="label ">Section</label></td><td><input type="textfield" id="section" class="input-field w3-hover-dark-gray" style="height: 30px" required />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label class="label">Nature of request</label></td><td><select id="requestType" class="input-field w3-hover-dark-gray" style="height: 100px" required>
-                          <option value="electrical">Electrical</option>
-                          <option value="furniture">Furniture</option>
-                          <option value="officeSupply">Office Supply</option>
-                        </select>
-                      </td>
-                    </tr>
-                    <tr>
-                        <td>
-                          <label class="label ">What item are you requesting?</label></td><td><input type="textfield" id="itemName" class="input-field w3-hover-dark-gray" style="height: 30px" placeholder="  ie. folder" required />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label class="label ">Item description</label></td><td><input type="textfield" id="itemDescription" class="input-field w3-hover-dark-gray" style="height: 30px" placeholder="  ie. 3-in" required />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label class="label ">Quantity</label></td><td><input type="textfield" id="quantity" class="input-field w3-hover-dark-gray" style="height: 30px" required />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label class="label ">When do you need it by?</label></td><td><input type="textfield" id="needBy" class="input-field w3-hover-dark-gray" style="height: 30px" required />
-                        </td>
-                      </tr>
-                    <tr><td>Brief description of the problem</td><td><textarea class="input-field" style="width:300px; height: 100px; background: #ffffff" type="textfield" id="problem"></textarea></td></tr>
-                  </table>
-                  
-                  <button class="btn yellow darken-2 z-depth-0" id="submitButton">Submit</button>
-                </form>
-          </div>
           
           <div id="Tab_add2" class="w3-container w3-white w3-padding-16 myLink2">
             <div style="height: 400px; overflow: scroll;">
@@ -330,6 +270,7 @@ table {
 
 <!--<script src="tp1.js"></script>-->
 <script src="workspace.js"></script>
-
+<script src="../UserMain/workRequest.js"></script>
+<script src="../UserMain/auth.js"></script>
 </body>
 </html>

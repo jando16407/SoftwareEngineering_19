@@ -9,16 +9,24 @@ var firebaseConfig = {
     messagingSenderId: "147848186588",
     appId: "1:147848186588:web:33dbc8d727af1de4"
   };
-  
+  firebase.initializeApp(firebaseConfig);
   var storage = firebase.storage();
   var storageRef = storage.ref(); 
   var db = firebase.firestore(); 
   var file = document.getElementById('file')
 
+  // on load functions and listeners
   window.onload = async function(){
       await loadImg()
       updateUnits()
   }
+  //if change in db update units & array
+  db.collection("Office").doc("officeView")
+    .onSnapshot(function(doc) {
+        updateUnitsArray(doc.data())
+        //needs delete function
+        updateUnits()
+    });
 /**********************************Loads image, if there is no image stored wait for image to be uploaded!*************************/
 async function loadImg() {
     
@@ -90,10 +98,7 @@ async function addUnits(event){
                     id: unitNum
                 }
             })
-            //add unit in inventory too
-            /*db.collection("Office").doc("inventor").update({
-                [unitNum]:{}
-            })*/
+            tempUnits = []
         })
     }
     // go into add units mode
@@ -109,14 +114,15 @@ async function deleteUnits(event){
     if(!isAddingUnits && isDeletingUnits){
         isDeletingUnits = false
         button.innerHTML = "Delete Units"
-        console.log(deletedUnits)
         while(deletedUnits.length > 0){
             await db.collection("Office").doc("officeView").update({
                 [deletedUnits[0]]: firebase.firestore.FieldValue.delete()
             })
-            await db.collection("Office").doc("inventories").update({
-                [deletedUnits[0]]: firebase.firestore.FieldValue.delete()
-            })
+
+
+            //TODO DELETE INVENTORY HEREEEEE
+
+
             await deletedUnits.shift()
         }
     }
@@ -131,7 +137,6 @@ async function deleteUnits(event){
     }
 } 
 var officeView = document.getElementById("officeViewDiv") 
-canvas.selection = false
 canvas.hoverCursor = "default"
 //onclick function for office view
 officeView.onclick = async function(event){
@@ -142,7 +147,6 @@ officeView.onclick = async function(event){
     if(isAddingUnits){
         await getUnitNum()
         var unitNum = tempUnits[0]
-        console.log("unit numnber: " + unitNum)
         //put circle at coords of mouse on canvas
         var circ = new fabric.Circle({
             id: unitNum,
@@ -156,7 +160,7 @@ officeView.onclick = async function(event){
         canvas.add(circ)
         //show box with info here
         circ.on("mouseover", function(){
-            console.log("hey")
+            console.log(this.get("id"))
         })
     }
     else if(isDeletingUnits){
@@ -166,15 +170,14 @@ officeView.onclick = async function(event){
     }
 
 }
+canvas.on("mouseover", function(e){
+    console.log(e.target)
+})
  async function getUnitNum(){
-     console.log("unit nums so far: " + tempUnits)
     await db.collection("Office").doc("officeView").get().then(function(doc){
         if (doc.exists) {
-            console.log(" after Document data:", doc.data());
             var keys = Object.keys(doc.data())
-            console.log(keys)
             if(keys.length > 1 && tempUnits.length == 0){
-                console.log(keys[keys.length - 2])
                 tempUnits.push(++(keys[keys.length - 2]))
             }
             else{
@@ -196,7 +199,6 @@ officeView.onclick = async function(event){
 function updateUnits(){
     db.collection("Office").doc("officeView").get().then(function(doc){
         if (doc.exists) {
-            console.log("Document data:", doc.data());
             drawInUnits(doc.data())
         } else {
             // doc.data() will be undefined in this case
@@ -208,12 +210,8 @@ function updateUnits(){
 }
 function drawInUnits(units){
     const unitArray = Object.values(units)
-    console.log(unitArray[0])
-    console.log('hey')
     for ( i = 0; i < (unitArray.length -1); i++){
-        console.log("hi")
         const value = Object.values(unitArray[i])
-        console.log(value)
         var circ = new fabric.Circle({
             id: value[0],
             left: value[2],
@@ -226,9 +224,24 @@ function drawInUnits(units){
         canvas.add(circ)
         //show box with info here
         circ.on("mouseover", function(){
-            console.log("hey")
+            console.log(this.get("id"))
         })
     }
+
+}
+// updates array of unit numbers for the inventory workspace 
+function updateUnitsArray(data){
+    keys = Object.keys(data)
+    keys.pop()
+    var i
+    var unitArray = new Array()
+    for(i = 0; i < keys.length; i++){
+        var tempString = "Unit_" + keys[i]
+        unitArray.push(tempString)
+    }
+    db.collection("Office").doc("officeView").update({
+        Units: unitArray
+     })
 
 }
 

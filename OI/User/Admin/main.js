@@ -1,8 +1,7 @@
-var database;
+var db;
 var announcementsPath;
 var submitButton1, deleteButton;
 var announcementContainer;
-var currentDate = new Date();
 var childNodePath = '';
 var childNodeRef;
 var selecedItem;
@@ -29,7 +28,7 @@ function firebase_setup(){
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    database = firebase.firestore();
+    db = firebase.firestore();
 }
 //initial setup for the page
 function page_setup(){
@@ -54,7 +53,7 @@ function gotErr(err){
 
 //Update the table for Annnouncements
 function renderAnnouncements(){
-    let ref = database.collection('Office').doc('Announcement').collection('Posts');
+    let ref = db.collection('Office').doc('Announcement').collection('Posts');
     ref.orderBy('date').onSnapshot(function(querySnapshot) {
         querySnapshot.docChanges().forEach(function(change) {
             if(change.type === "added"){
@@ -124,7 +123,7 @@ submitButton1.onclick = function(){
         body: document.getElementById("body").value.replace(/\r?\n/g, '<br />'),
         date: formatTime()
     }
-    database.collection('Office').doc('Announcement').collection('Posts').add(data);
+    db.collection('Office').doc('Announcement').collection('Posts').add(data);
     document.getElementById("title").value = "";
     document.getElementById("body").value = "";
 }
@@ -133,7 +132,7 @@ submitButton1.onclick = function(){
 deleteButton.onclick = function(){
     //Check if item is selected or not
     if(childNodePath!='' && childNodePath!=undefined){
-        let deleteRef = database.collection('Office').doc('Announcement').collection('Posts').doc(childNodePath);
+        let deleteRef = db.collection('Office').doc('Announcement').collection('Posts').doc(childNodePath);
         deleteRef.delete().then(function() {
             console.log("Document successfully deleted from database!");
         }).catch(function(error) {
@@ -148,13 +147,16 @@ deleteButton.onclick = function(){
 }
 
 function formatTime(){
+    let currentDate = new Date();
     let time = new Date(),
     minutes = time.getMinutes().toString().length == 1 ? '0'+time.getMinutes() : time.getMinutes(),
     hours = time.getHours().toString().length == 1 ? '0'+time.getHours() : time.getHours(),
     ampm = time.getHours() >= 12 ? 'pm' : 'am',
-    months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    //months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    months = ['01','02','03','04','05','06','07','08','09','10','11','12'],
     days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
+    return currentDate.getFullYear()+'/'+months[time.getMonth()]+'/'+currentDate.getDate()+'   '+hours+':'+minutes+ampm+' '+currentDate.getSeconds()+' s';
+    //return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
 }
 
 /* onClick handlings End */

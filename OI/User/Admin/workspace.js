@@ -488,43 +488,45 @@ function renderUnit( unitNum ){
     let unitName = unitNameArray[unitNum]
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
     //Make the base of table setup
-    ref.orderBy('id').get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-        //snapshot.docChanges().forEach(function(doc)   {
-            // doc.data() is never undefined for query doc snapshots
-            //console.log(doc.id, " => ", doc.data().name);
-            let row = document.createElement('tr');
-            let id = document.createElement('th');
-            let name = document.createElement('th');
-            let quantity = document.createElement('th');
-            let category = document.createElement('th');
-            let subcategory = document.createElement('th');
-            let description = document.createElement('th');
-            if( doc.data().id != undefined ){
-                id.innerHTML = doc.data().id;
+    ref.orderBy('id').onSnapshot(function(querySnapshot) {
+        querySnapshot.docChanges().forEach(function(doc) {
+            if(change.type === "added"){
+                //snapshot.docChanges().forEach(function(doc)   {
+                // doc.data() is never undefined for query doc snapshots
+                //console.log(doc.id, " => ", doc.data().name);
+                let row = document.createElement('tr');
+                let id = document.createElement('th');
+                let name = document.createElement('th');
+                let quantity = document.createElement('th');
+                let category = document.createElement('th');
+                let subcategory = document.createElement('th');
+                let description = document.createElement('th');
+                if( doc.data().id != undefined ){
+                    id.innerHTML = doc.data().id;
+                }
+                if( doc.data().name != undefined ){
+                    name.innerHTML = doc.data().name;
+                }
+                if( doc.data().quantity != undefined ){
+                    quantity.innerHTML = doc.data().quantity;
+                }
+                if( doc.data().category != undefined ){
+                    category.innerHTML = doc.data().category;
+                }
+                if( doc.data().subcategory != undefined ){
+                    subcategory.innerHTML = doc.data().subcategory;
+                }
+                if( doc.data().description != undefined ){
+                    description.innerHTML = doc.data().description;
+                }
+                row.appendChild(id);
+                row.appendChild(name);
+                row.appendChild(quantity);
+                row.appendChild(category);
+                row.appendChild(subcategory);
+                row.appendChild(description);
+                tabContentsItemTableContainer[unitNum+1].appendChild(row);
             }
-            if( doc.data().name != undefined ){
-                name.innerHTML = doc.data().name;
-            }
-            if( doc.data().quantity != undefined ){
-                quantity.innerHTML = doc.data().quantity;
-            }
-            if( doc.data().category != undefined ){
-                category.innerHTML = doc.data().category;
-            }
-            if( doc.data().subcategory != undefined ){
-                subcategory.innerHTML = doc.data().subcategory;
-            }
-            if( doc.data().description != undefined ){
-                description.innerHTML = doc.data().description;
-            }
-            row.appendChild(id);
-            row.appendChild(name);
-            row.appendChild(quantity);
-            row.appendChild(category);
-            row.appendChild(subcategory);
-            row.appendChild(description);
-            tabContentsItemTableContainer[unitNum+1].appendChild(row);
         });
     });
 }

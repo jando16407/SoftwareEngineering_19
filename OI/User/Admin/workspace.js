@@ -620,64 +620,6 @@ function init_detail_view(){
 
 /* Rendering funcitons Start */
 
-//Render table, clear the table everytime it's called and display new data
-/*
-function renderTableContents(path){
-    //Rendering for MasterList
-    if(path == masterPath){
-        while(masterListContainer.children.length > 1){
-            masterListContainer.removeChild(masterListContainer.childNodes[1]);
-        }
-        renderMasterList();
-    }
-    //Rendering for Unit 1
-    else if(path == unitPath1){
-        while(listContainer1.children.length > 1){
-            listContainer1.removeChild(listContainer1.childNodes[1]);
-        }
-        renderUnit1();
-    }
-    //Rendering for Unit 2
-    else  if(path == unitPath2){
-        while(listContainer2.children.length > 1){
-            listContainer2.removeChild(listContainer2.childNodes[1]);
-        }
-        renderUnit2();
-    }
-}
-*/
-//Update the table for masterList
-/*
-function renderMasterList(){
-    refAdmin.once("value", function(snapshot){
-        let items = snapshot.val();
-        let keys = Object.keys(items);
-        for( let i=0; i<keys.length; ++i ){
-            let row = document.createElement('tr');
-            let k = keys[i];
-            let childNodeId = masterListContainer.children.length;
-            let deletePath = items[k].UnitPath+"/"+items[k].ItemKey;
-            row.addEventListener("click", function(){
-                itemSelected(childNodeId, deletePath);
-            });
-            row.setAttribute("key", keys[i]);
-            let unit = document.createElement('th');
-            let id = document.createElement('th');
-            let name = document.createElement('th');
-            let desc = document.createElement('th');
-            unit.innerHTML = items[k].UnitNum;
-            id.innerHTML = items[k].itemId;
-            name.innerHTML = items[k].itemName;
-            desc.innerHTML = items[k].itemDescription;
-            row.appendChild(unit);
-            row.appendChild(id);
-            row.appendChild(name);
-            row.appendChild(desc);
-            masterListContainer.appendChild(row);
-        }
-    }, gotErr);
-}
-*/
 //Update the table for Unit 1
 function renderUnit( unitNum ){
     let unitName = unitNameArray[unitNum]
@@ -686,14 +628,14 @@ function renderUnit( unitNum ){
     ref.orderBy('id').onSnapshot(function(querySnapshot) {
         querySnapshot.docChanges().forEach(function(change) {
             if(change.type === "added"){
-                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change));
+                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change, unitNum));
             }
             if(change.type === "modified"){
                 //console.log("Modifying detected, doc.id = "+change.doc.id);
                 for( let num=0; num<numOfUnits; num++ ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('key') == change.doc.id ){
-                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change), tabContentsItemTableContainer[num+1].children[i]);
+                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change, num), tabContentsItemTableContainer[num+1].children[i]);
                         }
                     }
                 }
@@ -713,7 +655,7 @@ function renderUnit( unitNum ){
 }
 
 //Create row in a table and it return row
-function getRowInfo(change){
+function getRowInfo(change, unitNumber){
     let row = document.createElement('tr');
     let id = document.createElement('th');
     let name = document.createElement('th');
@@ -724,7 +666,7 @@ function getRowInfo(change){
     //row.setAttribute('key', change.doc.id);
     row.setAttribute('id', change.doc.id);
     row.addEventListener('click', function(e){
-        itemSelected(change.doc.id);
+        itemSelected(change.doc.id, unitNumber);
     });
     if( change.doc.data().id != undefined ){
         id.innerHTML = change.doc.data().id;
@@ -759,10 +701,13 @@ function getRowInfo(change){
 /* Onclick function start */
 
 //Handle when item in a list is clicked
-function itemSelected(key){
+function itemSelected(key, unitNumber){
     childNodePath = key;
     let item = document.getElementById(key);
     console.log("Clicked item key = "+key+");, item name = "+item.children[1].innerHTML);
+    console.log("Unit number : "+unitNumber);
+    console.log("Unit name : "+unitNameArray[unitNumber]);
+    detailViewUpdate(key, unitNumber);
     /*
     childNodeIndex = id;
     detailViewDeleteItemPath = deletePath;
@@ -845,6 +790,26 @@ function itemSelected(key){
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
     }*/
+}
+
+function detailViewUpdate(key){
+    let item = document.getElementById(key);
+
+    let unit = document.getElementById('detail_unit');
+    let id = document.getElementById('detail_id');
+    let name = document.getElementById('detail_name');
+    let quantity = document.getElementById('detail_quantity');
+    let quantity_unit = document.getElementById('detail_quantity_unit');
+    let description = document.getElementById('detail_description');
+    let category = document.getElementById('detail_category');
+    let subcategory = document.getElementById('detail_subcategory');
+
+    id.value = item.children[0].innerHTML;
+    name.value = item.children[1].innerHTML;
+    quantity.value = item.children[2].innerHTML;
+    category.value = item.children[3].innerHTML;
+    subcategory.value = item.children[4].innerHTML;
+    description.value = item.children[5].innerHTML;
 }
 
 

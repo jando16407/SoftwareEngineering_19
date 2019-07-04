@@ -100,52 +100,50 @@ table {
               <h3>Equipment Inventory</h3>
               <ul id="equipmentList"></ul>
             </div>
-            <div style="background-color: #c3e6f3">
-                <h3>Office Locations</h3>
-                <ul id="officeList"></ul>
-              </div>
           </div>
         </div>
       </div>
     </div>
     <!-- Second Tab on the Right side -->
     <div style ="display: inline-block; vertical-align: top; width:39%;">
-      <div class="w3-display-top " style="width:100%; height: 450px; ">
-        <!-- Tab buttons -->
-        <div class="w3-bar w3-black">
-          <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'AnnouncementsTab');"></button>
-        </div>
-        <!--Tab1 (Announcements)-->
-        <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
-          <!-- Top Part (Display past announcements) -->
-          <h3>Past Announcements</h3>                
-          <div id="announce" style="height: auto;">
-            <ul id="announceAll"></ul>
-          </div><br>
-          <div style="height: auto;"> 
-            <h3>Send Announcement</h3>
-            <form id="send-msg-form">
-                <input type="text" style="width: 100%" id="msgTitle" placeholder="Subject..."><br>
-              <textarea type="input" id="msgSay" placeholder="Message..." style="width: 100%; height: 100px"></textarea><br>
-            <button id="sndBtn">Send</button>
-            </form>
+        <div class="w3-display-top " style="width:100%; height: 450px; ">
+          <!-- Tab buttons -->
+          <div class="w3-bar w3-black">
+              <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'AnnouncementsTab');"></button>
+          </div>
+          <!--Tab1 (Announcements)-->
+          <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
+            <!-- Top Part (Display past announcements) -->
+            <h3>Past Announcements</h3>                
+            <div id="pastAnnouncementsList" style="height: 360px; overflow: scroll;">
+            </div>
+            <input id="selectedAnnouncement" style="width: 300px; height: 30px;" placeholder="Click Announcement to delete"></input>
+            <button id="deleteButton" style="height: 30px">Delete</button>
+            <!-- Bottom Part (Send Announcements) -->
+            <h3>Send New Announcement</h3>
+            <div style="height: 170px; overflow: scroll;">
+              <input id="title" type="text" placeholder="Type title..." style="width: 302px; height: 40px;"/><br>
+              <!--<input id="body" type="text" placeholder="Body" style="width: 300px; height: 100px;"/>-->
+              <textarea id="body" placeholder="Type body..." cols=40 rows=5 ></textarea>
+              <button id="submitButton1">Send Announcement</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
 </div>
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <!-- !!! Move firestore script up to the head above!!! -->
 <!-- TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/etup#config-web-app -->
 
+<script src="./AdminMain/main.js"></script>
 <script src="./AdminMain/equipment.js"></script>
-<script src="./AdminMain/announce.js"></script>
 <script src="./AdminMain/juriUML.js"></script>
 <script src="./AdminMain/officeSupply.js"></script>
 <script src="./AdminMain/lowItem.js"></script>
 <script src="./AdminMain/faulty.js"></script>
-<script src="./AdminMain/workOrder.js"></script>
+<!--<script src="./AdminMain/workOrder.js"></script>-->
 <script src="shortcuts.js"></script>
+
 </body>
 </html>

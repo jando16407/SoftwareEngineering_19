@@ -14,18 +14,22 @@ var firebaseConfig = {
   var storageRef = storage.ref(); 
   var db = firebase.firestore(); 
   var file = document.getElementById('file')
+  var fabricCanvas = new fabric.Canvas("officeView")
+  var savingUnits = false
 
   // on load functions and listeners
   window.onload = async function(){
       await loadImg()
-      updateUnits()
+      //await updateUnits()
   }
   //if change in db update units & array
   db.collection("Office").doc("officeView")
-    .onSnapshot(function(doc) {
-        updateUnitsArray(doc.data())
-        //needs delete function
-        updateUnits()
+    .onSnapshot(async function(doc) {
+        if(!savingUnits){
+            await clearCanvas()
+            updateUnitsArray(doc.data())
+            updateUnits()
+        }
     });
 /**********************************Loads image, if there is no image stored wait for image to be uploaded!*************************/
 async function loadImg() {
@@ -69,7 +73,7 @@ async function readURL(input){
 /************************************************Adding & Deleting Units***********************************************************/
 var isAddingUnits = false
 var isDeletingUnits = false
-var canvas = new fabric.Canvas("officeView")
+
 var deletedUnits = new Array()
 var tempUnits = new Array()
 
@@ -83,14 +87,15 @@ async function addUnits(event){
     //save new units
     if(isAddingUnits && !isDeletingUnits){
         isAddingUnits = false
+        savingUnits = true
         button.innerHTML = "Add Units"
         //add save function here
-        await canvas.forEachObject(function(element){
+        await fabricCanvas.forEachObject(async function(element){
             var varX = element.get("left")
             var varY = element.get("top")
             var unitSize = element.get("radius")
             var unitNum = element.get("id")
-            db.collection("Office").doc("officeView").update({
+            await db.collection("Office").doc("officeView").update({
                [unitNum]: {
                     x: varX,
                     y: varY,
@@ -100,6 +105,7 @@ async function addUnits(event){
             })
             tempUnits = []
         })
+        savingUnits = false
     }
     // go into add units mode
     else if(!isAddingUnits && !isDeletingUnits){
@@ -113,6 +119,7 @@ async function deleteUnits(event){
     //save deleted units
     if(!isAddingUnits && isDeletingUnits){
         isDeletingUnits = false
+        savingUnits = true
         button.innerHTML = "Delete Units"
         while(deletedUnits.length > 0){
             await db.collection("Office").doc("officeView").update({
@@ -125,19 +132,20 @@ async function deleteUnits(event){
 
             await deletedUnits.shift()
         }
+        savingUnits = false
     }
     //go into delete mode
     else if(!isAddingUnits && !isDeletingUnits){
         alert("WARNING: If you delete a unit, it's inventory will also be deleted.")
         isDeletingUnits = true
         button.innerHTML = "Save"
-        await canvas.forEachObject( function(element){
+        await fabricCanvas.forEachObject( function(element){
             element.set("selectable", true)
         })
     }
 } 
 var officeView = document.getElementById("officeViewDiv") 
-canvas.hoverCursor = "default"
+fabricCanvas.hoverCursor = "default"
 //onclick function for office view
 officeView.onclick = async function(event){
     var size = document.getElementById("size").value
@@ -157,22 +165,21 @@ officeView.onclick = async function(event){
             opacity: 0.3,
             selectable: false,
         })
-        canvas.add(circ)
+        fabricCanvas.add(circ)
         //show box with info here
         circ.on("mouseover", function(){
             console.log(this.get("id"))
         })
     }
     else if(isDeletingUnits){
-        var temp =  canvas.getActiveObject()
+        var temp =  fabricCanvas.getActiveObject()
         deletedUnits.push(temp.get("id"))
-        canvas.remove(canvas.getActiveObject())
+        fabricCanvas.remove(fabricCanvas.getActiveObject())
     }
 
 }
-canvas.on("mouseover", function(e){
-    console.log(e.target)
-})
+
+//creates unit number based on db and # currently added
  async function getUnitNum(){
     await db.collection("Office").doc("officeView").get().then(function(doc){
         if (doc.exists) {
@@ -221,7 +228,7 @@ function drawInUnits(units){
             opacity: 0.3,
             selectable: false,
         })
-        canvas.add(circ)
+        fabricCanvas.add(circ)
         //show box with info here
         circ.on("mouseover", function(){
             console.log(this.get("id"))
@@ -242,8 +249,15 @@ function updateUnitsArray(data){
     db.collection("Office").doc("officeView").update({
         Units: unitArray
      })
-
 }
-
+//for on change in db -- clears canvas
+async function clearCanvas(){
+    console.log("im doing something")
+    var objs = fabricCanvas.getObjects()
+    for(var i = 0; i < objs.length; i++){
+    await fabricCanvas.setActiveObject(objs[i])
+    await fabricCanvas.remove(fabricCanvas.getActiveObject())
+    }
+}
 
 

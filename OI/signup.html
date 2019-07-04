@@ -30,7 +30,9 @@
                 <input id="isAdmin" type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Admin?
                 <br>
                 
-                <input id="secNumInput" type="text" placeholder="Enter Section Number" name="sectionNum" required><br>
+                <input id="secNumInput" type="text" list="options" placeholder="Enter Section Number" name="sectionNum" required><br>
+                <datalist id="options">
+                </datalist>
                 <button id="signupButton">Sign Up</button>
             </div>
         </div>
@@ -40,7 +42,7 @@
 
     <!-- Add Firebase products that you want to use -->
     <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-firestore.js"></script>
     <script src="signup.js"></script>
     
 </body>

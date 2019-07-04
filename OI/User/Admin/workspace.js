@@ -1,4 +1,5 @@
 //var database;
+/*
 var submitButton1, submitButton2;
 var unitPath1, unitPath2, masterPath;
 var ref1, ref2, refAdmin;
@@ -8,9 +9,9 @@ var tableMaster, tableUnit1, tableUnit2;
 var detailViewPath, detailViewKey, detailView_itemId;
 var detailView_itemName, detailView_itemDescription;
 var detailView_UnitPath;
-var childNodeIndex, childNodePath;
+//var childNodeIndex, childNodePath;
 var newItemKey, newItemKey2, detailViewDeleteItemPath;
-
+*/
 //Variables
 var database;
 var officeViewRef;  //Database ref to OfficeView
@@ -29,11 +30,14 @@ var itemAddTabContainer;       //mark to display itemAddTabsContents
 var tabButtons_add = [];    //Stores Tab buttons dynamically for item add
 var tabContentsFrame_add = [];      //Stores Tab contents most outer div dynamically for item add
 var tabContentsItemAdd_add = [];   //Stores Tab contents actual list dynamically for item add
+//For the detail view
+var childNodePath;
+var detailView;
 
 
 firebase_setup();
 page_setup();
-get_unit_info();
+//get_unit_info();
 //detailView_setting();
 //init_tables();
 //renderListen();
@@ -68,6 +72,7 @@ function page_setup(){
     itemAddTabButtonContainer = document.getElementById('ItemAddTabContainer');
     itemAddTabContainer = document.getElementById('ItemAddTabContents');
     console.log("02 Page setup done...")
+    get_unit_info();
 }
 
 //Get unit information and create units dynamically
@@ -96,7 +101,9 @@ async function get_unit_info(){
     await init_add_units_contents();
     await document.getElementsByClassName("tablink")[0].click();
     await document.getElementsByClassName("tttabbb")[0].click();
+    await document.getElementsByClassName("secondtablink")[0].click();
     await initial_rendering();
+    await init_detail_view();
 }
 
 
@@ -381,7 +388,135 @@ function gotErr(err){
 }
 
 //Detail view setup
-function detailView_setting(){
+function init_detail_view(){
+    
+    let div1 = document.createElement('div');
+    div1.setAttribute('style', 'overflow: scroll;');
+    let detailViewTitle = document.createElement('h4');
+    detailViewTitle.innerHTML = 'Detail View of Selected Item';
+    let div2Title = document.createElement('p');
+    div2Title.textContent = "Basic Information";
+    let div2 = document.createElement('div');
+    div2.setAttribute('id', 'detailViewBasicInfo');
+    div2.setAttribute('style', 'display: inline-block; width: 99%');
+    //div2.textContent = "Basic Information";
+    //div2.appendChild(new_line);
+    let div3 = document.createElement('div');
+    div3.setAttribute('id', 'detailViewOptionalInfor');
+    div3.setAttribute('style', 'display: inline-block; width: 99%');
+    div3.textContent = "Optional Detail Information";
+
+    //Detail view display/input field setup
+    //New line, space
+        let new_line = document.createElement('br');
+        let space = document.createElement('pre');
+        space.textContent = 'OOOOOOOOOOOOOOO';
+        space.setAttribute('style', 'display: inline-block; width: 500px;');
+    //Item ID
+        let item_id_label = document.createElement('label');
+        item_id_label.setAttribute('for', 'detail_item_id');
+        item_id_label.innerHTML = '<pre>Item ID:</pre>';
+        item_id_label.setAttribute('style', 'display: inline-block; width: 150px;')
+        let item_id_input = document.createElement('input');
+        item_id_input.setAttribute('id', 'detail_id');
+        item_id_input.setAttribute('placeholder', 'Enter Item ID');
+        item_id_input.setAttribute('style', 'display: inline-block; width: 150px;')
+    //Item Name
+        let item_name_label = document.createElement('label');
+        item_name_label.setAttribute('for', 'detail_item_name');
+        item_name_label.innerHTML = '<pre>   Item Name:</pre>';
+        item_name_label.setAttribute('style', 'display: inline-block; width: 150px;')
+        let item_name_input = document.createElement('input');
+        item_name_input.setAttribute('id', 'detail_name');
+        item_name_input.setAttribute('type', 'test');
+        item_name_input.setAttribute('placeholder', 'Enter Item Name');
+        item_name_input.setAttribute('style', 'display: inline-block; width: 150px;')
+    //Quantity
+        let item_quantity_label = document.createElement('label');
+        item_quantity_label.setAttribute('for', 'detail_item_quantity');
+        item_quantity_label.innerHTML = '<pre>   Item Quantity:</pre>';
+        item_quantity_label.setAttribute('style', 'display: inline-block; width: 150px;')
+        let item_quantity_input = document.createElement('input');
+        item_quantity_input.setAttribute('id', 'quantitydetail_');
+        item_quantity_input.setAttribute('type', 'test');
+        item_quantity_input.setAttribute('placeholder', 'Enter Item Assign');
+        item_quantity_input.setAttribute('style', 'display: inline-block; width: 150px;')
+    //Quantity Unit    
+        let item_quantity_unit_label = document.createElement('label');
+        item_quantity_unit_label.setAttribute('for', 'detail_item_quantity_unit');
+        item_quantity_unit_label.innerHTML = '<pre>Item Quantity Unit:</pre>';
+        item_quantity_unit_label.setAttribute('style', 'display: inline-block;')
+        let item_quantity_unit_input = document.createElement('input');
+        item_quantity_unit_input.setAttribute('id', 'detail_quantity_unit');
+        item_quantity_unit_input.setAttribute('type', 'test');
+        item_quantity_unit_input.setAttribute('placeholder', 'Enter Item Quantity Unit');
+        item_quantity_unit_input.setAttribute('style', 'display: inline-block;')
+    //Item description
+        let item_description_label = document.createElement('label');
+        item_description_label.setAttribute('for', 'detail_item_description');
+        item_description_label.innerHTML = '<pre>   Item Description</pre>';
+        item_description_label.setAttribute('style', 'display: inline-block;')
+        let item_description_input = document.createElement('input');
+        item_description_input.setAttribute('id', 'detail_description');
+        item_description_input.setAttribute('type', 'test');
+        item_description_input.setAttribute('placeholder', 'Enter Item Description');
+    //Item category
+        let item_category_label = document.createElement('label');
+        item_category_label.setAttribute('for', 'detail_category');
+        item_category_label.innerHTML = '<pre>   Item Category</pre>';
+        item_category_label.setAttribute('style', 'display: inline-block;')
+        let item_category_input = document.createElement('input');
+        item_category_input.setAttribute('id', 'detail_category');
+        item_category_input.setAttribute('type', 'test');
+        item_category_input.setAttribute('placeholder', 'Enter Item Category');
+        item_category_input.setAttribute('style', 'display: inline-block;')
+    //Item sub-category
+        let item_subcategory_label = document.createElement('label');
+        item_subcategory_label.setAttribute('for', 'detail_item_subcategory');
+        item_subcategory_label.innerHTML = '<pre>   Item Sub Category</pre>';
+        item_subcategory_label.setAttribute('style', 'display: inline-block;')
+        let item_subcategory_input = document.createElement('input');
+        item_subcategory_input.setAttribute('id', 'detail_subcategory');
+        item_subcategory_input.setAttribute('type', 'test');
+        item_subcategory_input.setAttribute('placeholder', 'Enter Item Sub Category');
+        item_subcategory_input.setAttribute('style', 'display: inline-block;')
+    
+
+    //Id, Name, Quantity
+        div2.appendChild(new_line);
+        //div2.appendChild(space);
+        div2.appendChild(item_id_label);
+        div2.appendChild(item_id_input);
+        //div2.appendChild(space);
+        div2.appendChild(item_name_label);
+        div2.appendChild(item_name_input);
+        //div2.appendChild(space);
+        div2.appendChild(item_quantity_label);
+        div2.appendChild(item_quantity_input);
+        div2.appendChild(new_line);
+        //div2.appendChild(space);
+    //Quantity Unit, Description, Category
+        div2.appendChild(item_quantity_unit_label);
+        div2.appendChild(item_quantity_unit_input);
+        div2.appendChild(space);
+        div2.appendChild(item_description_label);
+        div2.appendChild(item_description_input);
+        div2.appendChild(space);
+        div2.appendChild(item_category_label);
+        div2.appendChild(item_category_input);
+        div2.appendChild(space);
+    //Sub Category, Assign
+        div2.appendChild(item_subcategory_label);
+        div2.appendChild(item_subcategory_input);
+
+    //Put everything together
+    div1.appendChild(detailViewTitle);
+    div1.appendChild(div2Title);
+    div1.appendChild(div2);
+    div1.appendChild(div3);
+    detailView = document.getElementById('DetailView');
+    detailView.appendChild(div1);
+    /*
     //Delete button funciton setup
     let deleteButton = document.getElementById("deleteButton");
     deleteButton.onclick = function() {
@@ -421,6 +556,8 @@ function detailView_setting(){
             detailViewDeleteItemKey = "";
         }
     };
+    */
+    console.log('07 Init detail view done...');
 }
 /* Initialize Functions End */
 
@@ -428,6 +565,7 @@ function detailView_setting(){
 /* Rendering funcitons Start */
 
 //Render table, clear the table everytime it's called and display new data
+/*
 function renderTableContents(path){
     //Rendering for MasterList
     if(path == masterPath){
@@ -451,8 +589,9 @@ function renderTableContents(path){
         renderUnit2();
     }
 }
-
+*/
 //Update the table for masterList
+/*
 function renderMasterList(){
     refAdmin.once("value", function(snapshot){
         let items = snapshot.val();
@@ -482,7 +621,7 @@ function renderMasterList(){
         }
     }, gotErr);
 }
-
+*/
 //Update the table for Unit 1
 function renderUnit( unitNum ){
     let unitName = unitNameArray[unitNum]
@@ -491,62 +630,24 @@ function renderUnit( unitNum ){
     ref.orderBy('id').onSnapshot(function(querySnapshot) {
         querySnapshot.docChanges().forEach(function(change) {
             if(change.type === "added"){
-                //snapshot.docChanges().forEach(function(doc)   {
-                // doc.data() is never undefined for query doc snapshots
-                //console.log(doc.id, " => ", doc.data().name);
-                /*
-                let row = document.createElement('tr');
-                row.setAttribute('key', change.doc.id);
-                let id = document.createElement('th');
-                let name = document.createElement('th');
-                let quantity = document.createElement('th');
-                let category = document.createElement('th');
-                let subcategory = document.createElement('th');
-                let description = document.createElement('th');
-                if( change.doc.data().id != undefined ){
-                    id.innerHTML = change.doc.data().id;
-                }
-                if( change.doc.data().name != undefined ){
-                    name.innerHTML = change.doc.data().name;
-                }
-                if( change.doc.data().quantity != undefined ){
-                    quantity.innerHTML = change.doc.data().quantity;
-                }
-                if( change.doc.data().category != undefined ){
-                    category.innerHTML = change.doc.data().category;
-                }
-                if( change.doc.data().subcategory != undefined ){
-                    subcategory.innerHTML = change.doc.data().subcategory;
-                }
-                if( change.doc.data().description != undefined ){
-                    description.innerHTML = change.doc.data().description;
-                }
-                row.appendChild(id);
-                row.appendChild(name);
-                row.appendChild(quantity);
-                row.appendChild(category);
-                row.appendChild(subcategory);
-                row.appendChild(description);*/
                 tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change));
             }
             if(change.type === "modified"){
-                console.log("Modifying detected, doc.id = "+change.doc.id);
+                //console.log("Modifying detected, doc.id = "+change.doc.id);
                 for( let num=0; num<numOfUnits; num++ ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('key') == change.doc.id ){
                             tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change), tabContentsItemTableContainer[num+1].children[i]);
-                            console.log("FOUND IT");
                         }
                     }
                 }
             }
             if(change.type === "removed"){
-                console.log("Delete detected, doc.id = "+change.doc.id);
+                //console.log("Delete detected, doc.id = "+change.doc.id);
                 for( let num=0; num<numOfUnits; num++ ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('key') == change.doc.id ){
                             tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
-                            console.log("FOUND IT");
                         }
                     }
                 }
@@ -554,73 +655,21 @@ function renderUnit( unitNum ){
         });
     });
 }
-/*
-function renderUnit1(){
-    ref1.once("value", function(snapshot){
-        let items = snapshot.val();
-        let keys = Object.keys(items);
-        for( let i=0; i<keys.length; ++i ){
-            let row = document.createElement('tr');
-            let k = keys[i];
-            let childNodeId = listContainer1.children.length;
-            childNodeId += 100000;
-            let deletePath = masterPath+'/'+items[k].masterKey;
-            row.addEventListener("click", function(){
-                itemSelected(childNodeId, deletePath);
-            });
-            row.setAttribute("key", keys[i]);
-            let id = document.createElement('th');
-            let name = document.createElement('th');
-            let desc = document.createElement('th');
-            id.innerHTML = items[k].itemId;
-            name.innerHTML = items[k].itemName;
-            desc.innerHTML = items[k].itemDescription;
-            row.appendChild(id);
-            row.appendChild(name);
-            row.appendChild(desc);
-            listContainer1.appendChild(row);
-        }
-    }, gotErr);
-}
-*/
-//Update the table for Unit 2
-function renderUnit2(){
-    ref2.once("value", function(snapshot){
-        let items = snapshot.val();
-        let keys = Object.keys(items);
-        for( let i=0; i<keys.length; ++i ){
-            let row = document.createElement('tr');
-            let k = keys[i];
-            let childNodeId = listContainer2.children.length;
-            childNodeId += 200000;
-            let deletePath = masterPath+'/'+items[k].masterKey;
-            row.addEventListener("click", function(){
-                itemSelected(childNodeId, deletePath);
-            });
-            row.setAttribute("key", keys[i]);
-            let id = document.createElement('th');
-            let name = document.createElement('th');
-            let desc = document.createElement('th');
-            id.innerHTML = items[k].itemId;
-            name.innerHTML = items[k].itemName;
-            desc.innerHTML = items[k].itemDescription;
-            row.appendChild(id);
-            row.appendChild(name);
-            row.appendChild(desc);
-            listContainer2.appendChild(row);
-        }
-    }, gotErr);
-}
 
+//Create row in a table and it return row
 function getRowInfo(change){
     let row = document.createElement('tr');
-    row.setAttribute('key', change.doc.id);
     let id = document.createElement('th');
     let name = document.createElement('th');
     let quantity = document.createElement('th');
     let category = document.createElement('th');
     let subcategory = document.createElement('th');
     let description = document.createElement('th');
+    //row.setAttribute('key', change.doc.id);
+    row.setAttribute('id', change.doc.id);
+    row.addEventListener('click', function(e){
+        itemSelected(change.doc.id);
+    });
     if( change.doc.data().id != undefined ){
         id.innerHTML = change.doc.data().id;
     }
@@ -654,8 +703,11 @@ function getRowInfo(change){
 /* Onclick function start */
 
 //Handle when item in a list is clicked
-function itemSelected(id, deletePath){
-    
+function itemSelected(key){
+    childNodePath = key;
+    let item = document.getElementById(key);
+    console.log("Clicked item key = "+key+");, item name = "+item.children[1].innerHTML);
+    /*
     childNodeIndex = id;
     detailViewDeleteItemPath = deletePath;
     //when item is in masterlist
@@ -736,7 +788,7 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewId").onchange = detailViewItemChanged;
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
-    }
+    }*/
 }
 
 
@@ -847,6 +899,7 @@ submitButton2.onclick = function(){
 /* Database modify handling start */
 
 //Listen to any value changes on the database
+/*
 function renderListen(){
     //Any item modification, adding, deleting will update the 
     //list in MasterList
@@ -876,7 +929,8 @@ function renderListen(){
         newItemKey = snapshot.key;
     }, gotErr);
 }
-
+*/
+/*
 function detailViewItemChangedMaster(){
     if(document.getElementById("detailViewTable").getAttribute("path") != ""){
         let unitNodePath;
@@ -889,7 +943,8 @@ function detailViewItemChangedMaster(){
         modifyUnitList(detailView_UnitPath, unitNodePath);
     }
 }
-
+*/
+/*
 function detailViewItemChanged(){
     if(document.getElementById("detailViewTable").getAttribute("path") != ""){
         /*console.log("Change detected");
@@ -900,6 +955,7 @@ function detailViewItemChanged(){
             itemName : document.getElementById("detailViewName").value,
             itemDescription : document.getElementById("detailViewDescription").value,
         });*/
+        /*
         let unitNodePath;
         //Modify unit list first
         unitNodePath = modifyUnitList(detailViewPath, childNodePath);
@@ -908,7 +964,8 @@ function detailViewItemChanged(){
         modifyMasterList(detailView_UnitPath, unitNodePath)
     }
 }
-
+*/
+/*
 function modifyMasterList(mPath, cPath){
         console.log("Modifing MaterList");
         let path = mPath;
@@ -948,7 +1005,8 @@ function modifyMasterList(mPath, cPath){
         console.log("Modifying MasterList Done...")
         return ItemKey;
 }
-
+*/
+/*
 function modifyUnitList(uPath, cPath){
     console.log("Modifing UnitList");
         let path = uPath;
@@ -989,7 +1047,7 @@ function modifyUnitList(uPath, cPath){
         return masterKey;
 }
 
-
+*/
 /* Database modify handling end */
 
 
@@ -1051,6 +1109,21 @@ function openLink2(evt, linkName) {
   document.getElementById(linkName).style.display = "block";
   evt.currentTarget.className += " w3-red";
 }
+
+//Detail view tab
+function secondopenLink(evt, linkName) {
+    var i, x, tttabbb;
+    x = document.getElementsByClassName("secondmyLink");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+    }
+    tttabbb = document.getElementsByClassName("secondtablink");
+    for (i = 0; i < x.length; i++) {
+      tttabbb[i].className = tttabbb[i].className.replace(" w3-red", "");
+    }
+    document.getElementById(linkName).style.display = "block";
+    evt.currentTarget.className += " w3-red";
+  }
 
 
 // Click on the first tablink on load

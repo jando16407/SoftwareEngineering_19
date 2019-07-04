@@ -13,14 +13,6 @@ var firebaseConfig = {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  firebase.auth().onAuthStateChanged(user =>{
-    console.log(user);
-    if(user){
-      console.log('user logged in...', user);
-    } else {
-      console.log('user logged out...');
-    }
-  })
   var database = firebase.database();
   //reset login on window load
   window.onload = function(){
@@ -34,8 +26,7 @@ var firebaseConfig = {
   //did user hit login?
   var login = document.getElementById("loginButton")
 
-  login.onclick = function(e){
-    e.preventDefault();
+  login.onclick = function(){
         //get email & password from fields
         var emailInput = document.getElementById("emailInput")
         var passwordInput = document.getElementById("passwordInput")

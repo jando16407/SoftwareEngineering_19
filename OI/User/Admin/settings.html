@@ -12,8 +12,6 @@
 <script src="../../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-firestore.js"></script>
-<script src="hotkeys.min.js"></script>
-<script src="timeout.js"></script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -60,78 +58,11 @@ table {
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:200px;margin-top:40px;">
-  <h2>User Settings</h2>
-  <header>
-    <!--The whole workspace-->
-    <div style="display: inline-block; width:100%;">
-        <div class="w3-display-top " style="width:99%; display: inline-block;">
-          <!-- Tab buttons -->
-          <div class="w3-bar w3-black">
-            <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainTab');"></button>
-          </div>
-  
-          <!--Tab1 (Settings)-->
-          <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
+<div class="w3-main" style="margin-left:200px;margin-top:43px;">
+<h2>Settings</h2>
+ 
+  <!-- End page content -->
+</div>
 
-            <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
-              <h3>Change Password</h3>
-              <p>
-                  <label for="item_id1"><b>Username</b></label><br>
-                  <input id="username" type="text" placeholder="Enter Username" name="id1" required>
-                  <br>
-                  <label for="item_id2"><b>Old Password</b></label><br>
-                  <input id="oldpass" type="password" placeholder="Enter Old Password" name="name1" required>
-                  <br>
-                  <label for="item_id3"><b>New Password</b></label><br>
-                  <input id="newpass" type="password" placeholder="Enter New Password" name="description1" required>
-                  <br>
-                  <button id="submitButton1">Submit</button>
-              </p>
-              <br>
-              <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
-                  <h3>Delete Username</h3>
-                <p>
-                  <label for="item_id4"><b>Username</b></label><br>
-                  <input id="username2" type="text" placeholder="Enter Username" name="id4" required>
-                  <br>
-                  <label for="item_id5"><b>Password</b></label><br>
-                  <input id="password2" type="password" placeholder="Enter Password" name="name4" required>
-                  <br>
-                  <button id="submitButton2">Submit</button>
-                </p>
-    
-              <p id="officeItemList1"></p>
-              </p>
-            </div>
-            <div id="Tab1" class="w3-container w3-grey w3-padding-16 myLink">
-                <h3>Update Profile</h3>
-              <p>
-                <label for="item_id6"><b>Username</b></label><br>
-                <input id="username5" type="text" placeholder="Not email" name="id4" required>
-                <br>
-                <label for="item_id7"><b>Name</b></label><br>
-                <input id="name" type="text" placeholder="Enter name" name="name4" required>
-                <br>
-                <label for="item_id8"><b>Section Number</b></label><br>
-                <input id="section" type="text" placeholder="Enter SectionId" name="name4" required>
-                <br>
-                <label for="item_id9"><b>Type</b></label><br>
-                <input id="type" type="text" placeholder="Enter Type" name="name4" required>
-                <br>
-                <label for="item_id10"><b>Phone Number</b></label><br>
-                <input id="phone" type="text" placeholder="Enter Phone Number" name="name4" required>
-                <br>
-                <button id="submitButton3">Submit</button>
-              </p>
-    
-            <p id="officeItemList1"></p>
-            </p>
-          </div>
-          </div>
-        </header>
-    </div>
-  <script src="settings.js"></script>
-  <script src="shortcuts.js"></script>
 </body>
 </html>

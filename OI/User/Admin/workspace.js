@@ -286,7 +286,7 @@ function init_add_units_contents(){
             let item_quantity_input = document.createElement('input');
             item_quantity_input.setAttribute('id', 'quantity'+i);
             item_quantity_input.setAttribute('type', 'test');
-            item_quantity_input.setAttribute('placeholder', 'Enter Item Assign');
+            item_quantity_input.setAttribute('placeholder', 'Enter Quantity');
         //Quantity Unit    
             let item_quantity_unit_label = document.createElement('label');
             item_quantity_unit_label.setAttribute('for', 'item_quantity_unit'+i);
@@ -359,7 +359,7 @@ function init_add_units_contents(){
         //Sub Category, Assign
             tabContentsItemAdd_add[i].appendChild(item_subcategory_label);
             tabContentsItemAdd_add[i].appendChild(item_subcategory_input);
-            tabContentsItemAdd_add[i].appendChild(optional_details);
+//            tabContentsItemAdd_add[i].appendChild(optional_details);
             tabContentsItemAdd_add[i].appendChild(item_assign_label);
             tabContentsItemAdd_add[i].appendChild(item_assign_input);
 
@@ -389,73 +389,114 @@ function gotErr(err){
 
 //Detail view setup
 function init_detail_view(){
-    
+    //Containers
     let div1 = document.createElement('div');
     div1.setAttribute('style', 'overflow: scroll;');
     let detailViewTitle = document.createElement('h4');
     detailViewTitle.innerHTML = 'Detail View of Selected Item';
-    let div2Title = document.createElement('p');
-    div2Title.textContent = "Basic Information";
     let div2 = document.createElement('div');
     div2.setAttribute('id', 'detailViewBasicInfo');
     div2.setAttribute('style', 'display: inline-block; width: 99%');
-    //div2.textContent = "Basic Information";
-    //div2.appendChild(new_line);
     let div3 = document.createElement('div');
     div3.setAttribute('id', 'detailViewOptionalInfor');
     div3.setAttribute('style', 'display: inline-block; width: 99%');
-    div3.textContent = "Optional Detail Information";
+    //div3.textContent = "Optional Detail Information";
+    
+    //Container for each field
+    let div4Left = document.createElement('div');
+    let div4Middle = document.createElement('div');
+    let div4Right = document.createElement('div');
+    let div4LeftLabel = document.createElement('div');
+    let div4LeftInput = document.createElement('div');
+    let div4MiddleLabel = document.createElement('div');
+    let div4MiddleInput = document.createElement('div');
+    let div4RightLabel = document.createElement('div');
+    let div4RightInput = document.createElement('div');
+    //div4
+    div4Left.setAttribute('style', 'display: inline-block;');
+    div4Middle.setAttribute('style', 'display: inline-block;');
+    div4Right.setAttribute('style', 'display: inline-block;');
+    div4LeftLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div4LeftInput.setAttribute('style', 'display: inline-block; width: 200px');
+    div4MiddleLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div4MiddleInput.setAttribute('style', 'display: inline-block; width: 200px');
+    div4RightLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div4RightInput.setAttribute('style', 'display: inline-block; width: 200px');
+    //Cotainer for optional detail info
+    let div5Left = document.createElement('div');
+    let div5Middle = document.createElement('div');
+    let div5Right = document.createElement('div');
+    let div5LeftLabel = document.createElement('div');
+    let div5LeftInput = document.createElement('div');
+    let div5MiddleLabel = document.createElement('div');
+    let div5MiddleInput = document.createElement('div');
+    let div5RightLabel = document.createElement('div');
+    let div5RightInput = document.createElement('div');
+    //div5
+    div5Left.setAttribute('style', 'display: inline-block;');
+    div5Middle.setAttribute('style', 'display: inline-block;');
+    div5Right.setAttribute('style', 'display: inline-block;');
+    div5LeftLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div5LeftInput.setAttribute('style', 'display: inline-block; width: 200px');
+    div5MiddleLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div5MiddleInput.setAttribute('style', 'display: inline-block; width: 200px');
+    div5RightLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div5RightInput.setAttribute('style', 'display: inline-block; width: 200px');
 
     //Detail view display/input field setup
-    //New line, space
-        let new_line = document.createElement('br');
-        let space = document.createElement('pre');
-        space.textContent = 'OOOOOOOOOOOOOOO';
-        space.setAttribute('style', 'display: inline-block; width: 500px;');
+    //Item Unit
+        let item_unit_label = document.createElement('label');
+        item_unit_label.setAttribute('for', 'detail_item_unit');
+        item_unit_label.innerHTML = '<p>Item Unit</p>';
+  //      item_unit_label.setAttribute('style', 'height: 30px');
+        let item_unit_input = document.createElement('input');
+        item_unit_input.setAttribute('id', 'detail_unit');
+        item_unit_input.setAttribute('placeholder', 'Enter Item Unit');
+      //  item_unit_input.setAttribute('style', 'height: 30px');
     //Item ID
         let item_id_label = document.createElement('label');
         item_id_label.setAttribute('for', 'detail_item_id');
-        item_id_label.innerHTML = '<pre>Item ID:</pre>';
-        item_id_label.setAttribute('style', 'display: inline-block; width: 150px;')
+        item_id_label.innerHTML = '<p>Item ID</p>';
+    //    item_id_label.setAttribute('style', 'height: 30px');
         let item_id_input = document.createElement('input');
         item_id_input.setAttribute('id', 'detail_id');
         item_id_input.setAttribute('placeholder', 'Enter Item ID');
-        item_id_input.setAttribute('style', 'display: inline-block; width: 150px;')
+   //     item_id_input.setAttribute('style', 'height: 30px');
     //Item Name
         let item_name_label = document.createElement('label');
         item_name_label.setAttribute('for', 'detail_item_name');
-        item_name_label.innerHTML = '<pre>   Item Name:</pre>';
-        item_name_label.setAttribute('style', 'display: inline-block; width: 150px;')
+        item_name_label.innerHTML = '<p>Item Name</p>';
+    //    item_name_label.setAttribute('style', 'height: 30px');
         let item_name_input = document.createElement('input');
         item_name_input.setAttribute('id', 'detail_name');
         item_name_input.setAttribute('type', 'test');
         item_name_input.setAttribute('placeholder', 'Enter Item Name');
-        item_name_input.setAttribute('style', 'display: inline-block; width: 150px;')
+     //   item_name_input.setAttribute('style', 'height: 30px');
     //Quantity
         let item_quantity_label = document.createElement('label');
         item_quantity_label.setAttribute('for', 'detail_item_quantity');
-        item_quantity_label.innerHTML = '<pre>   Item Quantity:</pre>';
-        item_quantity_label.setAttribute('style', 'display: inline-block; width: 150px;')
+        item_quantity_label.innerHTML = '<p>Item Quantity</p>';
+        //item_quantity_label.setAttribute('style', 'display: inline-block; width: 150px;')
         let item_quantity_input = document.createElement('input');
-        item_quantity_input.setAttribute('id', 'quantitydetail_');
+        item_quantity_input.setAttribute('id', 'detail_quantity');
         item_quantity_input.setAttribute('type', 'test');
-        item_quantity_input.setAttribute('placeholder', 'Enter Item Assign');
-        item_quantity_input.setAttribute('style', 'display: inline-block; width: 150px;')
+        item_quantity_input.setAttribute('placeholder', 'Enter Quantity');
+        //item_quantity_input.setAttribute('style', 'display: inline-block; width: 150px;')
     //Quantity Unit    
         let item_quantity_unit_label = document.createElement('label');
         item_quantity_unit_label.setAttribute('for', 'detail_item_quantity_unit');
-        item_quantity_unit_label.innerHTML = '<pre>Item Quantity Unit:</pre>';
-        item_quantity_unit_label.setAttribute('style', 'display: inline-block;')
+        item_quantity_unit_label.innerHTML = '<p>Item Quantity Unit</p>';
+        //item_quantity_unit_label.setAttribute('style', 'display: inline-block;')
         let item_quantity_unit_input = document.createElement('input');
         item_quantity_unit_input.setAttribute('id', 'detail_quantity_unit');
         item_quantity_unit_input.setAttribute('type', 'test');
         item_quantity_unit_input.setAttribute('placeholder', 'Enter Item Quantity Unit');
-        item_quantity_unit_input.setAttribute('style', 'display: inline-block;')
+        //item_quantity_unit_input.setAttribute('style', 'display: inline-block;')
     //Item description
         let item_description_label = document.createElement('label');
         item_description_label.setAttribute('for', 'detail_item_description');
-        item_description_label.innerHTML = '<pre>   Item Description</pre>';
-        item_description_label.setAttribute('style', 'display: inline-block;')
+        item_description_label.innerHTML = '<p>Item Description</p>';
+        //item_description_label.setAttribute('style', 'display: inline-block;')
         let item_description_input = document.createElement('input');
         item_description_input.setAttribute('id', 'detail_description');
         item_description_input.setAttribute('type', 'test');
@@ -463,57 +504,72 @@ function init_detail_view(){
     //Item category
         let item_category_label = document.createElement('label');
         item_category_label.setAttribute('for', 'detail_category');
-        item_category_label.innerHTML = '<pre>   Item Category</pre>';
-        item_category_label.setAttribute('style', 'display: inline-block;')
+        item_category_label.innerHTML = '<p>Item Category</p>';
+        //item_category_label.setAttribute('style', 'display: inline-block;')
         let item_category_input = document.createElement('input');
         item_category_input.setAttribute('id', 'detail_category');
         item_category_input.setAttribute('type', 'test');
         item_category_input.setAttribute('placeholder', 'Enter Item Category');
-        item_category_input.setAttribute('style', 'display: inline-block;')
+        //item_category_input.setAttribute('style', 'display: inline-block;')
     //Item sub-category
         let item_subcategory_label = document.createElement('label');
         item_subcategory_label.setAttribute('for', 'detail_item_subcategory');
-        item_subcategory_label.innerHTML = '<pre>   Item Sub Category</pre>';
-        item_subcategory_label.setAttribute('style', 'display: inline-block;')
+        item_subcategory_label.innerHTML = '<p>Item Sub Category</p>';
+        //item_subcategory_label.setAttribute('style', 'display: inline-block;')
         let item_subcategory_input = document.createElement('input');
         item_subcategory_input.setAttribute('id', 'detail_subcategory');
         item_subcategory_input.setAttribute('type', 'test');
         item_subcategory_input.setAttribute('placeholder', 'Enter Item Sub Category');
-        item_subcategory_input.setAttribute('style', 'display: inline-block;')
+        //item_subcategory_input.setAttribute('style', 'display: inline-block;')
     
 
-    //Id, Name, Quantity
-        div2.appendChild(new_line);
-        //div2.appendChild(space);
-        div2.appendChild(item_id_label);
-        div2.appendChild(item_id_input);
-        //div2.appendChild(space);
-        div2.appendChild(item_name_label);
-        div2.appendChild(item_name_input);
-        //div2.appendChild(space);
-        div2.appendChild(item_quantity_label);
-        div2.appendChild(item_quantity_input);
-        div2.appendChild(new_line);
-        //div2.appendChild(space);
-    //Quantity Unit, Description, Category
-        div2.appendChild(item_quantity_unit_label);
-        div2.appendChild(item_quantity_unit_input);
-        div2.appendChild(space);
-        div2.appendChild(item_description_label);
-        div2.appendChild(item_description_input);
-        div2.appendChild(space);
-        div2.appendChild(item_category_label);
-        div2.appendChild(item_category_input);
-        div2.appendChild(space);
-    //Sub Category, Assign
-        div2.appendChild(item_subcategory_label);
-        div2.appendChild(item_subcategory_input);
+    //Unit, Id, Name Label
+        div4LeftLabel.appendChild(item_unit_label);
+        div4LeftLabel.appendChild(item_id_label);
+        div4LeftLabel.appendChild(item_name_label);
+    //Id, Name, Quantity Input
+        div4LeftInput.appendChild(item_unit_input);
+        div4LeftInput.appendChild(item_id_input);
+        div4LeftInput.appendChild(item_name_input);
+    //Quantity Label, Quantity Unit, Description Label
+        div4MiddleLabel.appendChild(item_quantity_label);
+        div4MiddleLabel.appendChild(item_quantity_unit_label);
+        div4MiddleLabel.appendChild(item_description_label);
+    //Quantity Label, Quantity Unit, Description Input
+        div4MiddleInput.appendChild(item_quantity_input);
+        div4MiddleInput.appendChild(item_quantity_unit_input);
+        div4MiddleInput.appendChild(item_description_input);
+    //Category, Sub Category, Assign Label
+        div4RightLabel.appendChild(item_category_label);
+        div4RightLabel.appendChild(item_subcategory_label);
+    //Category, Sub Category, Assign Input
+        div4RightInput.appendChild(item_category_input);
+        div4RightInput.appendChild(item_subcategory_input);
 
-    //Put everything together
+    //Put all columns to div4 and div5
+    div4Left.appendChild(div4LeftLabel);
+    div4Left.appendChild(div4LeftInput);
+    div4Middle.appendChild(div4MiddleLabel);
+    div4Middle.appendChild(div4MiddleInput);
+    div4Right.appendChild(div4RightLabel);
+    div4Right.appendChild(div4RightInput);
+    div5Left.appendChild(div5LeftLabel);
+    div5Left.appendChild(div5LeftInput);
+    div5Middle.appendChild(div5MiddleLabel);
+    div5Middle.appendChild(div5MiddleInput);
+    div5Right.appendChild(div5RightLabel);
+    div5Right.appendChild(div5RightInput);
+    //Put all columns to div
+    div2.appendChild(div4Left);
+    div2.appendChild(div4Middle);
+    div2.appendChild(div4Right);
+    div2.appendChild(div5Left);
+    div2.appendChild(div5Middle);
+    div2.appendChild(div5Right);
+    //Put everything toge ther
     div1.appendChild(detailViewTitle);
-    div1.appendChild(div2Title);
     div1.appendChild(div2);
-    div1.appendChild(div3);
+ //   div1.appendChild(div3);
     detailView = document.getElementById('DetailView');
     detailView.appendChild(div1);
     /*

@@ -1,13 +1,11 @@
 var database;
-var announcementsPath, ref;
-
+var announcementsPath;
 var announcementContainer;
 
 
 firebase_setup();
 page_setup();
-renderListen();
-
+renderAnnouncements();
 
 /* Initialize Functions Start */
 
@@ -24,13 +22,12 @@ function firebase_setup(){
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    database = firebase.database();
+    database = firebase.firestore();
 }
 
 //initial setup for the page
 function page_setup(){
     announcementsPath = "Announcements"
-    ref = database.ref(announcementsPath);
     announcementContainer = document.getElementById("pastAnnouncementsList");
 }
 
@@ -46,59 +43,57 @@ function gotErr(err){
 
 /* Rendering funcitons Start */
 
-//Render table, clear the table everytime it's called and display new data
-function renderTableContents(path){
-    //Rendering for Annnouncements
-    if(path == announcementsPath){
-        while(announcementContainer.children.length > 0){
-            announcementContainer.removeChild(announcementContainer.childNodes[1]);
-        }
-        renderAnnouncements();
-    }
-}
-
 //Update the table for Annnouncements
 function renderAnnouncements(){
-    ref.once("value", function(snapshot){
-        let items = snapshot.val();
-        let keys = Object.keys(items);
-        for( let i=keys.length-1; i>=0; --i ){
-            let k = keys[i];
-            let announcement = document.createElement('div');
-            let title = document.createElement('div');
-            let date = document.createElement('p');
-            let body = document.createElement('p');
-            let id = announcementContainer.children.length + 1;
-            announcement.setAttribute("key", keys[i]);
-            announcement.setAttribute("class", 'ui message');
-            title.setAttribute("class", 'header');
-            title.innerHTML = items[k].title;
-            body.innerHTML = items[k].body;
-            date.innerHTML = items[k].date;
-            announcement.appendChild(title);
-            announcement.appendChild(date);
-            announcement.appendChild(body);
-            announcementContainer.appendChild(announcement);
-        }
-    }, gotErr);
+    let ref = database.collection('Office').doc('Announcement').collection('Posts');
+    ref.orderBy('date').onSnapshot(function(querySnapshot) {
+        querySnapshot.docChanges().forEach(function(change) {
+            if(change.type === "added"){
+                let announcement;
+                announcement = document.createElement('div');
+                let title = document.createElement('div');
+                let date = document.createElement('p');
+                let body = document.createElement('p');
+                announcement.setAttribute("key", change.doc.id);
+                announcement.setAttribute("class", 'ui message');
+                announcement.setAttribute('id', change.doc.id);
+                announcement.addEventListener("click", function(e){
+                    itemSelected(change.doc.id);
+                });
+                title.setAttribute("class", 'header');
+                title.innerHTML = change.doc.data().title;
+                body.innerHTML = change.doc.data().body;
+                date.innerHTML = change.doc.data().date;
+                announcement.appendChild(title);
+                announcement.appendChild(date);
+                announcement.appendChild(body);
+                let temp_container = [];
+                for( let i=0; i<announcementContainer.children.length; i++ ){
+                    temp_container[i] = announcementContainer.children[i];
+                }
+                while(announcementContainer.children.length > 0){
+                    announcementContainer.removeChild(announcementContainer.childNodes[0]);
+                }
+                announcementContainer.appendChild(announcement);
+                for( let i=0; i<temp_container.length; i++){// let j=announcementContainer.children.length-1; j>=0; j--){
+                    announcementContainer.appendChild(temp_container[i]);//console.log("adding child i = "+temp_container.children[i]);
+                }
+                temp_container = []
+            }
+            if (change.type === "removed") {
+                for( let i=0; i<announcementContainer.children.length; i++){
+                    if(announcementContainer.children[i].getAttribute('key') == change.doc.id){
+                        announcementContainer.removeChild(announcementContainer.children[i]);
+                    }
+
+                }
+            }
+        });
+    });
+    console.log('Render Announcements done...');
 }
 
 /* Rendering funcitons End */
-
-
-
-/* Database modify handling start */
-
-//Listen to any value changes on the database
-function renderListen(){
-    //Any item modification, adding, deleting will update the 
-    //list in Announcement
-    ref.on("value", function(snapshot){
-        renderTableContents(announcementsPath);
-    }, gotErr);
-}
-
-/* Database modify handling end */
 
 
 
@@ -112,34 +107,34 @@ var overlayBg = document.getElementById("myOverlay");
 
 // Toggle between showing and hiding the sidebar, and add overlay effect
 function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
+    if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+    } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+    }
 }
 
 // Close the sidebar with the close button
 function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
 }
 
 // Tabs
 function openLink(evt, linkName) {
-  var i, x, tablinks;
-  x = document.getElementsByClassName("myLink");
-  for (i = 0; i < x.length; i++) {
-    x[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablink");
-  for (i = 0; i < x.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
-  }
-  document.getElementById(linkName).style.display = "block";
-  evt.currentTarget.className += " w3-red";
+    var i, x, tablinks;
+    x = document.getElementsByClassName("myLink");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < x.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+    }
+    document.getElementById(linkName).style.display = "block";
+    evt.currentTarget.className += " w3-red";
 }
 
 

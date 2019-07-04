@@ -489,43 +489,67 @@ function renderUnit( unitNum ){
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
     //Make the base of table setup
     ref.orderBy('id').onSnapshot(function(querySnapshot) {
-        querySnapshot.docChanges().forEach(function(doc) {
+        querySnapshot.docChanges().forEach(function(change) {
             if(change.type === "added"){
                 //snapshot.docChanges().forEach(function(doc)   {
                 // doc.data() is never undefined for query doc snapshots
                 //console.log(doc.id, " => ", doc.data().name);
+                /*
                 let row = document.createElement('tr');
+                row.setAttribute('key', change.doc.id);
                 let id = document.createElement('th');
                 let name = document.createElement('th');
                 let quantity = document.createElement('th');
                 let category = document.createElement('th');
                 let subcategory = document.createElement('th');
                 let description = document.createElement('th');
-                if( doc.data().id != undefined ){
-                    id.innerHTML = doc.data().id;
+                if( change.doc.data().id != undefined ){
+                    id.innerHTML = change.doc.data().id;
                 }
-                if( doc.data().name != undefined ){
-                    name.innerHTML = doc.data().name;
+                if( change.doc.data().name != undefined ){
+                    name.innerHTML = change.doc.data().name;
                 }
-                if( doc.data().quantity != undefined ){
-                    quantity.innerHTML = doc.data().quantity;
+                if( change.doc.data().quantity != undefined ){
+                    quantity.innerHTML = change.doc.data().quantity;
                 }
-                if( doc.data().category != undefined ){
-                    category.innerHTML = doc.data().category;
+                if( change.doc.data().category != undefined ){
+                    category.innerHTML = change.doc.data().category;
                 }
-                if( doc.data().subcategory != undefined ){
-                    subcategory.innerHTML = doc.data().subcategory;
+                if( change.doc.data().subcategory != undefined ){
+                    subcategory.innerHTML = change.doc.data().subcategory;
                 }
-                if( doc.data().description != undefined ){
-                    description.innerHTML = doc.data().description;
+                if( change.doc.data().description != undefined ){
+                    description.innerHTML = change.doc.data().description;
                 }
                 row.appendChild(id);
                 row.appendChild(name);
                 row.appendChild(quantity);
                 row.appendChild(category);
                 row.appendChild(subcategory);
-                row.appendChild(description);
-                tabContentsItemTableContainer[unitNum+1].appendChild(row);
+                row.appendChild(description);*/
+                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change));
+            }
+            if(change.type === "modified"){
+                console.log("Modifying detected, doc.id = "+change.doc.id);
+                for( let num=0; num<numOfUnits; num++ ){
+                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
+                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('key') == change.doc.id ){
+                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change), tabContentsItemTableContainer[num+1].children[i]);
+                            console.log("FOUND IT");
+                        }
+                    }
+                }
+            }
+            if(change.type === "removed"){
+                console.log("Delete detected, doc.id = "+change.doc.id);
+                for( let num=0; num<numOfUnits; num++ ){
+                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
+                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('key') == change.doc.id ){
+                            tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
+                            console.log("FOUND IT");
+                        }
+                    }
+                }
             }
         });
     });
@@ -588,6 +612,41 @@ function renderUnit2(){
     }, gotErr);
 }
 
+function getRowInfo(change){
+    let row = document.createElement('tr');
+    row.setAttribute('key', change.doc.id);
+    let id = document.createElement('th');
+    let name = document.createElement('th');
+    let quantity = document.createElement('th');
+    let category = document.createElement('th');
+    let subcategory = document.createElement('th');
+    let description = document.createElement('th');
+    if( change.doc.data().id != undefined ){
+        id.innerHTML = change.doc.data().id;
+    }
+    if( change.doc.data().name != undefined ){
+        name.innerHTML = change.doc.data().name;
+    }
+    if( change.doc.data().quantity != undefined ){
+        quantity.innerHTML = change.doc.data().quantity;
+    }
+    if( change.doc.data().category != undefined ){
+        category.innerHTML = change.doc.data().category;
+    }
+    if( change.doc.data().subcategory != undefined ){
+        subcategory.innerHTML = change.doc.data().subcategory;
+    }
+    if( change.doc.data().description != undefined ){
+        description.innerHTML = change.doc.data().description;
+    }
+    row.appendChild(id);
+    row.appendChild(name);
+    row.appendChild(quantity);
+    row.appendChild(category);
+    row.appendChild(subcategory);
+    row.appendChild(description);
+    return row;
+}
 
 /* Rendering funcitons End */
 

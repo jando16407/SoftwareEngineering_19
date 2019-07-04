@@ -53,11 +53,11 @@ function formatTime(timestamp){
         cross.addEventListener('click', (e)=>{
             //e.stopPropagation();
             let id = e.target.parentElement.getAttribute('data-id');
-            db.collection('Watis/NusiCkayiV6LuuMOu94U/CompletedWork').doc(id).add();
-            db.collection('Watis/NusiCkayiV6LuuMOu94U/workOrder').doc(id).delete();
+            //db.collection('Office/Completed/CompletedWork').doc(id).add();
+            db.collection('Office/Workorder/workOrder').doc(id).delete();
         })
     }
-    db.collection('Watis/NusiCkayiV6LuuMOu94U/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
+    db.collection('Office/Workorder/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
         let changes = snapshot.docChanges();
         changes.forEach(change =>{
             console.log(change.doc.data())
@@ -78,7 +78,7 @@ function formatTime(timestamp){
     // Post this for everyone
     form.addEventListener('submit', (e)=>{
         e.preventDefault();
-        db.collection('Watis/NusiCkayiV6LuuMOu94U/workOrder').add({
+        db.collection('Office/Completed/completedWork').add({
             comment: form.comment.value,
             completedBy: form.completedBy.value,
             completedDate: formatTime(),

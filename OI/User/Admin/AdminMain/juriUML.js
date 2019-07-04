@@ -23,7 +23,7 @@ function renderOfficeList(doc){
 
     printOffice.appendChild(li);
 }
-db.collection('Office').get().then((snapShot) =>{
+db.collection('Office/officeView/').get().then((snapShot) =>{
     snapShot.docs.forEach((doc) => {
         console.log(doc.data())
         renderOfficeList(doc);

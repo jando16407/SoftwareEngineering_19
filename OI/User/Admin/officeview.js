@@ -15,15 +15,17 @@ var firebaseConfig = {
   var db = firebase.firestore(); 
   var file = document.getElementById('file')
 
-  window.onload = function(){
-      loadImg()
+  window.onload = async function(){
+      await loadImg()
+      updateUnits()
   }
 /**********************************Loads image, if there is no image stored wait for image to be uploaded!*************************/
 async function loadImg() {
-    console.log('bloop')
+    
 imageDownloadRef = storageRef.child('officeView/officeView')
 await imageDownloadRef.getDownloadURL().then( function(url) {
     // This can be downloaded directly:
+    console.log('bloop')
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'blob';
     xhr.onload = function(event) {
@@ -35,13 +37,14 @@ await imageDownloadRef.getDownloadURL().then( function(url) {
     var canvas = document.getElementById("officeView")
     var background = new Image()
     background.src = url
-    background.onload = async function(){
+     background.onload = async function(){
         canvas.style.backgroundRepeat ="no-repeat"
         canvas.style.backgroundImage = "url('" + url + "')"
         canvas.style.backgroundSize = "contain"
     }
   }).catch(function(error) {
     // image is not there so get one!!!
+    console.log(error.message)
     alert("No image detected for Office View. Please select one in the settings.")
   });
 }
@@ -60,6 +63,7 @@ var isAddingUnits = false
 var isDeletingUnits = false
 var canvas = new fabric.Canvas("officeView")
 var deletedUnits = new Array()
+var tempUnits = new Array()
 
 //TODO: set innerhtml of unitNum input value to highest unit num in db
 
@@ -87,9 +91,9 @@ async function addUnits(event){
                 }
             })
             //add unit in inventory too
-            db.collection("Office").doc("inventories").update({
+            /*db.collection("Office").doc("inventor").update({
                 [unitNum]:{}
-            })
+            })*/
         })
     }
     // go into add units mode
@@ -110,12 +114,15 @@ async function deleteUnits(event){
             await db.collection("Office").doc("officeView").update({
                 [deletedUnits[0]]: firebase.firestore.FieldValue.delete()
             })
+            await db.collection("Office").doc("inventories").update({
+                [deletedUnits[0]]: firebase.firestore.FieldValue.delete()
+            })
             await deletedUnits.shift()
         }
-        //add save function here
     }
     //go into delete mode
     else if(!isAddingUnits && !isDeletingUnits){
+        alert("WARNING: If you delete a unit, it's inventory will also be deleted.")
         isDeletingUnits = true
         button.innerHTML = "Save"
         await canvas.forEachObject( function(element){
@@ -127,13 +134,15 @@ var officeView = document.getElementById("officeViewDiv")
 canvas.selection = false
 canvas.hoverCursor = "default"
 //onclick function for office view
-officeView.onclick = function(event){
+officeView.onclick = async function(event){
     var size = document.getElementById("size").value
     var rect = officeView.getBoundingClientRect()
     var x = event.clientX - rect.left - size
     var y = event.clientY - rect.top - size
     if(isAddingUnits){
-        var unitNum = document.getElementById("unitNum").value
+        await getUnitNum()
+        var unitNum = tempUnits[0]
+        console.log("unit numnber: " + unitNum)
         //put circle at coords of mouse on canvas
         var circ = new fabric.Circle({
             id: unitNum,
@@ -149,7 +158,6 @@ officeView.onclick = function(event){
         circ.on("mouseover", function(){
             console.log("hey")
         })
-        document.getElementById("unitNum").value++  
     }
     else if(isDeletingUnits){
         var temp =  canvas.getActiveObject()
@@ -158,4 +166,71 @@ officeView.onclick = function(event){
     }
 
 }
+ async function getUnitNum(){
+     console.log("unit nums so far: " + tempUnits)
+    await db.collection("Office").doc("officeView").get().then(function(doc){
+        if (doc.exists) {
+            console.log(" after Document data:", doc.data());
+            var keys = Object.keys(doc.data())
+            console.log(keys)
+            if(keys.length > 1 && tempUnits.length == 0){
+                console.log(keys[keys.length - 2])
+                tempUnits.push(++(keys[keys.length - 2]))
+            }
+            else{
+                if(tempUnits.length == 0)
+                    tempUnits.push(100)
+                else
+                    tempUnits.push((tempUnits[0])++)
+            }
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    })
+}
 /**********************************************************************************************************************************/
+/*************************************************Update Units*********************************************************************/
+function updateUnits(){
+    db.collection("Office").doc("officeView").get().then(function(doc){
+        if (doc.exists) {
+            console.log("Document data:", doc.data());
+            drawInUnits(doc.data())
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    })
+}
+function drawInUnits(units){
+    const unitArray = Object.values(units)
+    console.log(unitArray[0])
+    console.log('hey')
+    for ( i = 0; i < (unitArray.length -1); i++){
+        console.log("hi")
+        const value = Object.values(unitArray[i])
+        console.log(value)
+        var circ = new fabric.Circle({
+            id: value[0],
+            left: value[2],
+            top: value[3],
+            fill:'green',
+            radius: value[1],
+            opacity: 0.3,
+            selectable: false,
+        })
+        canvas.add(circ)
+        //show box with info here
+        circ.on("mouseover", function(){
+            console.log("hey")
+        })
+    }
+
+}
+
+
+

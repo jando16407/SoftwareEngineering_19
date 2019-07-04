@@ -65,10 +65,10 @@ function formatTime(){
         cross.addEventListener('click', (e)=>{
             //e.stopPropagation();
             let id = e.target.parentElement.getAttribute('data-id');
-            db.collection('Watis/NusiCkayiV6LuuMOu94U/workOrder').doc(id).delete();
+            db.collection('Office/Workorder/workOrder').doc(id).delete();
         })
     }
-    db.collection('Watis/NusiCkayiV6LuuMOu94U/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
+    db.collection('Office/Workorder/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
         let changes = snapshot.docChanges();
         changes.forEach(change =>{
             if(change.type == 'added'){
@@ -87,7 +87,7 @@ function formatTime(){
     // Post this for everyone
     form.addEventListener('submit', (e)=>{
         e.preventDefault();
-        db.collection('Watis/NusiCkayiV6LuuMOu94U/workOrder').add({
+        db.collection('Office/Workorder/workOrder').add({
             firstName: form.firstName.value,
             midName: form.midName.value,
             lastName: form.lastName.value,

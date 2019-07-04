@@ -703,7 +703,7 @@ function itemSelected(key, unitNumber){
     console.log("Clicked item key = "+key+");, item name = "+item.children[1].innerHTML);
     console.log("Unit number : "+unitNumber);
     console.log("Unit name : "+unitNameArray[unitNumber]);
-    detailViewUpdate(key, unitNumber);
+    detailViewUpdate(key, unitNameArray[unitNumber]);
     /*
     childNodeIndex = id;
     detailViewDeleteItemPath = deletePath;
@@ -788,10 +788,11 @@ function itemSelected(key, unitNumber){
     }*/
 }
 
-function detailViewUpdate(key){
+function detailViewUpdate(key, unitName){
     let item = document.getElementById(key);
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item').doc(key);
 
-    let unit = document.getElementById('detail_unit');
+    let unit = ref.unit;
     let id = document.getElementById('detail_id');
     let name = document.getElementById('detail_name');
     let quantity = document.getElementById('detail_quantity');
@@ -799,6 +800,15 @@ function detailViewUpdate(key){
     let description = document.getElementById('detail_description');
     let category = document.getElementById('detail_category');
     let subcategory = document.getElementById('detail_subcategory');
+/*
+    let id = ref.id;
+    let name = ref.name;
+    let quantity = ref.quantity;
+    let quantity_unit = ref.quantity_unit;
+    let description = ref.description;
+    let category = ref.category;
+    let subcategory = ref.subcategory;
+    */
 
     id.value = item.children[0].innerHTML;
     name.value = item.children[1].innerHTML;
@@ -806,6 +816,39 @@ function detailViewUpdate(key){
     category.value = item.children[3].innerHTML;
     subcategory.value = item.children[4].innerHTML;
     description.value = item.children[5].innerHTML;
+    
+    //Set onchange values to modify item information
+    id.onchange = function(){
+        if( id.value != ref.id ){
+            ref.update({id: id.value});
+        }
+    }
+    name.onchange = function(){
+        if( name.value != ref.name ){
+            ref.update({name: name.value});
+        }
+    }
+    quantity.onchange = function(){
+        if( quantity.value != ref.quantity ){
+            ref.update({quantity: quantity.value});
+        }
+    }
+    category.onchange = function(){
+        if( category.value != ref.category ){
+            ref.update({category: category.value});
+        }
+    }
+    subcategory.onchange = function(){
+        if( subcategory.value != ref.subcategory ){
+            ref.update({subcategory: subcategory.value});
+        }
+    }
+    description.onchange = function(){
+        if( description.value != ref.description ){
+            ref.update({description: description.value});
+        }
+    }
+
 }
 
 

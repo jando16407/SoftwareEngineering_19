@@ -458,7 +458,7 @@ function init_detail_view(){
   //      item_unit_label.setAttribute('style', 'height: 30px');
         let item_unit_input = document.createElement('input');
         item_unit_input.setAttribute('id', 'detail_unit');
-        item_unit_input.setAttribute('placeholder', 'Enter Item Unit');
+        item_unit_input.setAttribute('placeholder', 'Unit Name');
       //  item_unit_input.setAttribute('style', 'height: 30px');
     //Item ID
         let item_id_label = document.createElement('label');
@@ -467,7 +467,7 @@ function init_detail_view(){
     //    item_id_label.setAttribute('style', 'height: 30px');
         let item_id_input = document.createElement('input');
         item_id_input.setAttribute('id', 'detail_id');
-        item_id_input.setAttribute('placeholder', 'Enter Item ID');
+        item_id_input.setAttribute('placeholder', 'ID');
    //     item_id_input.setAttribute('style', 'height: 30px');
     //Item Name
         let item_name_label = document.createElement('label');
@@ -477,7 +477,7 @@ function init_detail_view(){
         let item_name_input = document.createElement('input');
         item_name_input.setAttribute('id', 'detail_name');
         item_name_input.setAttribute('type', 'test');
-        item_name_input.setAttribute('placeholder', 'Enter Item Name');
+        item_name_input.setAttribute('placeholder', 'Name');
      //   item_name_input.setAttribute('style', 'height: 30px');
     //Quantity
         let item_quantity_label = document.createElement('label');
@@ -487,7 +487,7 @@ function init_detail_view(){
         let item_quantity_input = document.createElement('input');
         item_quantity_input.setAttribute('id', 'detail_quantity');
         item_quantity_input.setAttribute('type', 'test');
-        item_quantity_input.setAttribute('placeholder', 'Enter Quantity');
+        item_quantity_input.setAttribute('placeholder', 'Quantity');
         //item_quantity_input.setAttribute('style', 'display: inline-block; width: 150px;')
     //Quantity Unit    
         let item_quantity_unit_label = document.createElement('label');
@@ -497,7 +497,7 @@ function init_detail_view(){
         let item_quantity_unit_input = document.createElement('input');
         item_quantity_unit_input.setAttribute('id', 'detail_quantity_unit');
         item_quantity_unit_input.setAttribute('type', 'test');
-        item_quantity_unit_input.setAttribute('placeholder', 'Enter Item Quantity Unit');
+        item_quantity_unit_input.setAttribute('placeholder', 'Quantity Unit');
         //item_quantity_unit_input.setAttribute('style', 'display: inline-block;')
     //Item description
         let item_description_label = document.createElement('label');
@@ -507,7 +507,7 @@ function init_detail_view(){
         let item_description_input = document.createElement('input');
         item_description_input.setAttribute('id', 'detail_description');
         item_description_input.setAttribute('type', 'test');
-        item_description_input.setAttribute('placeholder', 'Enter Item Description');
+        item_description_input.setAttribute('placeholder', 'Description');
     //Item category
         let item_category_label = document.createElement('label');
         item_category_label.setAttribute('for', 'detail_category');
@@ -516,7 +516,7 @@ function init_detail_view(){
         let item_category_input = document.createElement('input');
         item_category_input.setAttribute('id', 'detail_category');
         item_category_input.setAttribute('type', 'test');
-        item_category_input.setAttribute('placeholder', 'Enter Item Category');
+        item_category_input.setAttribute('placeholder', 'Category');
         //item_category_input.setAttribute('style', 'display: inline-block;')
     //Item sub-category
         let item_subcategory_label = document.createElement('label');
@@ -526,7 +526,7 @@ function init_detail_view(){
         let item_subcategory_input = document.createElement('input');
         item_subcategory_input.setAttribute('id', 'detail_subcategory');
         item_subcategory_input.setAttribute('type', 'test');
-        item_subcategory_input.setAttribute('placeholder', 'Enter Item Sub Category');
+        item_subcategory_input.setAttribute('placeholder', 'Sub Category');
         //item_subcategory_input.setAttribute('style', 'display: inline-block;')
     
 

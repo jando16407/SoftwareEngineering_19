@@ -32,6 +32,7 @@ var tabContentsFrame_add = [];      //Stores Tab contents most outer div dynamic
 var tabContentsItemAdd_add = [];   //Stores Tab contents actual list dynamically for item add
 //For the detail view
 var childNodePath;
+var deletePath;
 var detailView;
 
 
@@ -389,18 +390,24 @@ function gotErr(err){
 
 //Detail view setup
 function init_detail_view(){
-    //Containers
+    //Init stuff
     let div1 = document.createElement('div');
     div1.setAttribute('style', 'overflow: scroll;');
     let detailViewTitle = document.createElement('h4');
     detailViewTitle.innerHTML = 'Detail View of Selected Item';
+    let deleteButton = document.createElement('button');
+    deleteButton.setAttribute('id', 'deleteButton');
+    deleteButton.setAttribute('style', 'display: inline-block;');
+    deleteButton.textContent = 'Delete';
+    let space = document.createElement('div');
+    space.innerHTML = '    ';
+    space.setAttribute('style', 'width: 50px; display: inline-block;');
     let div2 = document.createElement('div');
     div2.setAttribute('id', 'detailViewBasicInfo');
     div2.setAttribute('style', 'display: inline-block; width: 99%');
     let div3 = document.createElement('div');
     div3.setAttribute('id', 'detailViewOptionalInfor');
     div3.setAttribute('style', 'display: inline-block; width: 99%');
-    //div3.textContent = "Optional Detail Information";
     
     //Container for each field
     let div4Left = document.createElement('div');
@@ -567,52 +574,38 @@ function init_detail_view(){
     div2.appendChild(div5Middle);
     div2.appendChild(div5Right);
     //Put everything toge ther
+    detailViewTitle.appendChild(space);
+    detailViewTitle.appendChild(deleteButton);
     div1.appendChild(detailViewTitle);
+    //div1.appendChild(deleteButton);
     div1.appendChild(div2);
  //   div1.appendChild(div3);
     detailView = document.getElementById('DetailView');
     detailView.appendChild(div1);
-    /*
+    
     //Delete button funciton setup
-    let deleteButton = document.getElementById("deleteButton");
+    //let deleteButton = document.getElementById("deleteButton");
     deleteButton.onclick = function() {
-        if(detailViewPath != ""){
-            //Delete for masterlist
-            if(detailViewPath == masterPath){
-                console.log("Master");
-                //Delete items in each unit as well
-                database.ref(detailViewDeleteItemPath).remove();
-                let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
-                deleteRef.remove();
-            }
-            //Delete for all other unit
-            else {
-                console.log("Other");
-                database.ref(detailViewDeleteItemPath).remove();
-                let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
-                deleteRef.remove();
-                console.log("deleteRef = "+deleteRef);
-                console.log("detailViewDeletePath = "+detailViewDeleteItemPath);
-            }
-            //let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
-            //deleteRef.remove();
-            //Clear path of DetailView Table and others
-            document.getElementById("detailViewTable").setAttribute("path", "");
-            detailViewPath = "";
-            childNodePath = "";
-            //Clear childnode values
-            childNodeIndex = 0;
-            //clear itemkeys
-            newItemKey = "";
-            newItemKey2 = "";
-            //Clear values of detailView elements
-            document.getElementById("detailViewId").value = "";
-            document.getElementById("detailViewName").value = "";
-            document.getElementById("detailViewDescription").value = "";
-            detailViewDeleteItemKey = "";
+        if(deletePath != '' && childNodePath != ''){
+            let deleteRef = database.collection('Office').doc('Inventory').collection('Units').doc(deletePath).collection('Item').doc(childNodePath);
+            deleteRef.delete().then(function() {
+                console.log("Item deleted successfully");
+                childNodePath = '';
+                deletePath = '';
+                document.getElementById('detail_unit').value = '';
+                document.getElementById('detail_id').value = '';
+                document.getElementById('detail_name').value = '';
+                document.getElementById('detail_quantity').value = '';
+                document.getElementById('detail_quantity_unit').value = '';
+                document.getElementById('detail_description').value = '';
+                document.getElementById('detail_category').value = '';
+                document.getElementById('detail_subcategory').value = '';
+            }).catch(function(error) {
+                console.error("Error removing item from database: "+error);
+            });
         }
     };
-    */
+    
     console.log('07 Init detail view done...');
 }
 /* Initialize Functions End */
@@ -634,7 +627,7 @@ function renderUnit( unitNum ){
                 //console.log("Modifying detected, doc.id = "+change.doc.id);
                 for( let num=0; num<numOfUnits; num++ ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
-                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('key') == change.doc.id ){
+                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
                             tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change, num), tabContentsItemTableContainer[num+1].children[i]);
                         }
                     }
@@ -644,8 +637,10 @@ function renderUnit( unitNum ){
                 //console.log("Delete detected, doc.id = "+change.doc.id);
                 for( let num=0; num<numOfUnits; num++ ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
-                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('key') == change.doc.id ){
+                        //console.log("CHECKING : "+tabContentsItemTableContainer[num+1].children[i].getAttribute('id'));
+                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
                             tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
+                            //console.log("FOUNT IT");
                         }
                     }
                 }
@@ -703,6 +698,7 @@ function getRowInfo(change, unitNumber){
 //Handle when item in a list is clicked
 function itemSelected(key, unitNumber){
     childNodePath = key;
+    deletePath = unitNameArray[unitNumber];
     let item = document.getElementById(key);
     console.log("Clicked item key = "+key+");, item name = "+item.children[1].innerHTML);
     console.log("Unit number : "+unitNumber);

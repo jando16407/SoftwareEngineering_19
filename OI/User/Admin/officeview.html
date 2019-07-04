@@ -13,8 +13,6 @@
 <script src="../../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-firestore.js"></script>
-<script src="hotkeys.min.js"></script>
-<script src="timeout.js"></script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -76,14 +74,8 @@ table {
                 <canvas id="officeView" width="1000px" height="500px" onclick="console.log('hi');"></canvas>
                 </div>
                 <div style ="display: inline-block; vertical-align: top">
-                  <h3>Edit Options</h3>
                   <button id="addUnit" class="w3-bar-item w3-button tablink" onclick="addUnits(event);">Add Units</button><br><br>
                   <button id="deleteUnit" class="w3-bar-item w3-button tablink" onclick="deleteUnits(event);">Delete Units</button><br><br>
-                  <h3>Options</h3>
-                  <p>Unit Size</p>
-                  <input id="size" type="number" value="10"><br><br>
-                  <p>Unit Number</p>
-                  <input id="unitNum" type="number" value="100"><br>
                 </div>
                 <br>
                 <input id="file" class="custom-file-input" type="file" title=" "onchange="readURL(this)" />
@@ -94,9 +86,7 @@ table {
 </div>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-storage.js"></script>
-<script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-firestore.js"></script>
 <script src ="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.0.0/fabric.min.js"></script>
 <script src="officeview.js"></script>
-<script src="shortcuts.js"></script>
 </body>
 </html>

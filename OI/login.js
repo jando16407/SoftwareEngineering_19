@@ -1,6 +1,3 @@
-//var firebase = require("firebase")
-//require("firebase/auth")
-//require("firebase/database")
 
 var firebaseConfig = {
     apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
@@ -21,7 +18,6 @@ var firebaseConfig = {
       console.log('user logged out...');
     }
   })
-  var database = firebase.database();
   //reset login on window load
   window.onload = function(){
     firebase.auth().signOut().then(function(){
@@ -65,19 +61,28 @@ var firebaseConfig = {
     }
   });
 
-function identifyUser(email){
+async function identifyUser(email){
   var userId = email.match(/^(.+)@/)[1]
   //save userId to send to next page
   localStorage.setItem('user', userId)
 
   //check db for admin or employee
-  var userType = firebase.database().ref('users/' + userId + '/userType').once('value').then(function(snapshot){
-    var type = snapshot.val() 
+  var type
+  await firebase.firestore().collection("Office").doc("Users").get().then(function(doc){
+    if (doc.exists) {
+       type = (doc.data())[userId].userType
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }
+}).catch(function(error) {
+    console.log("Error getting document:", error);
+})
     //send user to their page based on userType
     if(type == 'Admin')
       window.location.href = "User/Admin/main.html"
     else
       window.location.href = "User/main.html"
-  })
+
   
 }

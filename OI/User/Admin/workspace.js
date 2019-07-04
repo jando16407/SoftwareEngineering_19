@@ -34,6 +34,7 @@ var tabContentsItemAdd_add = [];   //Stores Tab contents actual list dynamically
 var childNodePath;
 var deletePath;
 var detailView;
+var listenData = '';
 
 
 firebase_setup();
@@ -276,10 +277,32 @@ function init_add_units_contents(){
             let item_name_label = document.createElement('label');
             item_name_label.setAttribute('for', 'item_name'+i);
             item_name_label.innerHTML = '<p>Item Name</p>';
-            let item_name_input = document.createElement('input');
+            ////// Replace this to dropdown selection
+            let item_name_input = document.createElement('div');
             item_name_input.setAttribute('id', 'name'+i);
             item_name_input.setAttribute('type', 'test');
+            item_name_input.setAttribute('class', 'ui fluid search selection dropdown');
             item_name_input.setAttribute('placeholder', 'Enter Item Name');
+            /////
+            let item_name_input_input = document.createElement('input');
+            item_name_input_input.setAttribute('type', 'hidden');
+            let item_name_input_i = document.createElement('i');
+            item_name_input_i.setAttribute('class', 'dropdown icon')
+            let item_name_input_hint = document.createElement('div');
+            item_name_input_hint.setAttribute('class', 'default text');
+            item_name_input_hint.textContent = 'Select item name';
+            let item_name_input_menu = document.createElement('div');
+            item_name_input_menu.setAttribute('class', 'menu');
+
+            item_name_input.appendChild(item_name_input_input);
+            item_name_input.appendChild(item_name_input_i);
+            item_name_input.appendChild(item_name_input_hint);
+            item_name_input.appendChild(item_name_input_menu);
+            //Add selections
+            add_selections_name(unitNameArray[i]);
+      //      item_name_input.appendChild(add_selections_name(unitNameArray[i]));
+
+            ////
         //Quantity
             let item_quantity_label = document.createElement('label');
             item_quantity_label.setAttribute('for', 'item_quantity'+i);
@@ -610,6 +633,21 @@ function init_detail_view(){
 }
 /* Initialize Functions End */
 
+/* Get data from database function start */
+
+function add_selections_name(unitName){
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+    ///let names = [];
+    //let query = ref.where('name', 'array-contains', '');
+    //query.forEach(function(doc) {
+      //  console.log("QUERY : "+doc.id);
+    //});
+    
+
+    return '';
+}
+
+/* Get data from database function end */
 
 /* Rendering funcitons Start */
 
@@ -789,10 +827,11 @@ function itemSelected(key, unitNumber){
 }
 
 function detailViewUpdate(key, unitName){
-    let item = document.getElementById(key);
-    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item').doc(key);
-
-    let unit = ref.unit;
+    if( listenData != ''){
+        listenData();
+        console.log("Detached listener");
+    }
+    let unit = document.getElementById('detail_unit');
     let id = document.getElementById('detail_id');
     let name = document.getElementById('detail_name');
     let quantity = document.getElementById('detail_quantity');
@@ -800,6 +839,39 @@ function detailViewUpdate(key, unitName){
     let description = document.getElementById('detail_description');
     let category = document.getElementById('detail_category');
     let subcategory = document.getElementById('detail_subcategory');
+    let item = document.getElementById(key);
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item').doc(key);
+    listenData = ref.onSnapshot(function(doc){
+        if(doc.type === "modified"){
+            console.log("DATA modified: "+doc.data().unit_name);
+            unit.value = doc.data().unit_name;
+            id.value = doc.data().id;
+            name.value = doc.data().name;
+            quantity.value = doc.data().quantity;
+            quantity_unit = doc.data().quantity_unit;
+            category.value = doc.data().category;
+            subcategory.value = doc.data().subcategory;
+            description.value = doc.data().description;
+        }
+        else if(doc.type === "removed"){
+            console.log("DATA removed: "+doc.data().unit_name);
+            unit.value = '';
+            id.value = '';
+            name.value = '';
+            quantity.value = '';
+            quantity_unit = '';
+            category.value = '';
+            subcategory.value = '';
+            description.value = '';
+        }
+        else {
+            unit.value = doc.data().unit_name;
+            quantity_unit.value = doc.data().quantity_unit;
+            console.log("qu uni: "+quantity_unit);
+        }
+    });
+    
+    
 /*
     let id = ref.id;
     let name = ref.name;
@@ -817,7 +889,15 @@ function detailViewUpdate(key, unitName){
     subcategory.value = item.children[4].innerHTML;
     description.value = item.children[5].innerHTML;
     
+    //unit.value = ref.unit_name;
+    //quantity_unit.value = ref.quantity_unit;
+    
     //Set onchange values to modify item information
+    unit.onchange = function(){
+        if( unit.value != ref.unit_name ){
+            ref.update({unit_name: unit.value});
+        }
+    }
     id.onchange = function(){
         if( id.value != ref.id ){
             ref.update({id: id.value});
@@ -831,6 +911,11 @@ function detailViewUpdate(key, unitName){
     quantity.onchange = function(){
         if( quantity.value != ref.quantity ){
             ref.update({quantity: quantity.value});
+        }
+    }
+    quantity_unit.onchange = function(){
+        if( quantity_unit.value != ref.quantity_unit ){
+            ref.update({quantity_unit: quantity_unit.value});
         }
     }
     category.onchange = function(){
@@ -866,8 +951,10 @@ function submitButtonClicked( unitName, i ) {
     let data = {};
     item[0] = document.getElementById('id'+i).value;
     category[0] = 'id';
-    item[1] = document.getElementById('name'+i).value;
-    category[1] = 'name';
+//    item[1] = document.getElementById('name'+i).value;
+//    category[1] = 'name';
+    item[1] = unitName;
+    category[1] = 'unit_name';
     item[2] = document.getElementById('quantity'+i).value;
     category[2] = 'quantity';
     item[3] = document.getElementById('quantity_unit'+i).value;
@@ -880,6 +967,7 @@ function submitButtonClicked( unitName, i ) {
     category[6] = 'subcategory';
     item[7] = document.getElementById('assign'+i).value;
     category[7] = 'assign';
+    
     console.log(unitName);
     
     //Iterate to gather inputs and build data to push
@@ -888,7 +976,7 @@ function submitButtonClicked( unitName, i ) {
             //Add input to data
             data[category[j]] = item[j];
             //Clear the input field
-            document.getElementById(category[j]+i).value = '';
+        //    document.getElementById(category[j]+i).value = '';
         }
     }
 

@@ -16,3 +16,17 @@ function logOut(){
       console.log(error);
   }); 
 }
+firebase.auth().onAuthStateChanged(user =>{
+  console.log(user);
+  if(user){
+    console.log('user logged in...', user);
+  } else {
+    console.log('user logged out...');
+  }
+})
+// adding this function for logout and not allow the user to see anything after log out.
+const logout = document.querySelector('#logout');
+logout.addEventListener('click', (e) => {
+  e.preventDefault();
+  firebase.auth().signOut();
+})

@@ -38,7 +38,7 @@ function renderList(doc){
     printOut.appendChild(li);
 }
 
-db.collection('Watis/NusiCkayiV6LuuMOu94U/Inventory').orderBy('itemName').onSnapshot((snapshot) =>{
+db.collection('Office/Inventory/Units').orderBy('itemName').onSnapshot((snapshot) =>{
   let changes = snapshot.docChanges();
   changes.forEach(change =>{
       if(change.type == 'added'){

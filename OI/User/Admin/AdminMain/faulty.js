@@ -29,7 +29,7 @@ function renderFaulty(doc){
     printFaulty.appendChild(li);
 }
 
-db.collection('Watis/NusiCkayiV6LuuMOu94U/Inventory').orderBy('itemName').onSnapshot((snapshot) =>{
+db.collection('Office/Workorder/workOrder').orderBy('itemName').onSnapshot((snapshot) =>{
   let changes = snapshot.docChanges();
   changes.forEach(change =>{
     console.log(change.doc.data());

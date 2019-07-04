@@ -422,6 +422,10 @@ function init_detail_view(){
     deleteButton.setAttribute('id', 'deleteButton');
     deleteButton.setAttribute('style', 'display: inline-block;');
     deleteButton.textContent = 'Delete';
+    let randomGenButton = document.createElement('button');
+    randomGenButton.setAttribute('id', 'randomGenButton');
+    randomGenButton.setAttribute('style', 'display: inline-block;');
+    randomGenButton.textContent = 'Generate';
     let space = document.createElement('div');
     space.innerHTML = '    ';
     space.setAttribute('style', 'width: 50px; display: inline-block;');
@@ -599,6 +603,7 @@ function init_detail_view(){
     //Put everything toge ther
     detailViewTitle.appendChild(space);
     detailViewTitle.appendChild(deleteButton);
+    detailViewTitle.appendChild(randomGenButton);
     div1.appendChild(detailViewTitle);
     //div1.appendChild(deleteButton);
     div1.appendChild(div2);
@@ -628,6 +633,11 @@ function init_detail_view(){
             });
         }
     };
+
+    randomGenButton.onclick = function(){
+        console.log("Random Gen clicked");
+        randomGen();
+    }
     
     console.log('07 Init detail view done...');
 }
@@ -637,11 +647,18 @@ function init_detail_view(){
 
 function add_selections_name(unitName){
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
-    ///let names = [];
-    //let query = ref.where('name', 'array-contains', '');
-    //query.forEach(function(doc) {
-      //  console.log("QUERY : "+doc.id);
-    //});
+    let names = [];
+    ref.where('unit_name', '==', unitName).get().then(function (querySnapshot){
+        console.log("unitname: "+ unitName);
+        if(querySnapshot.empty){
+            console.log("Noting found");
+        }
+        querySnapshot.forEach(function(doc) {
+            console.log("QUERY : "+doc.data().category);
+            names.push(doc.data().name);
+        });
+    });
+    
     
 
     return '';
@@ -829,7 +846,7 @@ function itemSelected(key, unitNumber){
 function detailViewUpdate(key, unitName){
     if( listenData != ''){
         listenData();
-        console.log("Detached listener");
+        //console.log("Detached listener");
     }
     let unit = document.getElementById('detail_unit');
     let id = document.getElementById('detail_id');
@@ -871,27 +888,13 @@ function detailViewUpdate(key, unitName){
         }
     });
     
-    
-/*
-    let id = ref.id;
-    let name = ref.name;
-    let quantity = ref.quantity;
-    let quantity_unit = ref.quantity_unit;
-    let description = ref.description;
-    let category = ref.category;
-    let subcategory = ref.subcategory;
-    */
-
     id.value = item.children[0].innerHTML;
     name.value = item.children[1].innerHTML;
     quantity.value = item.children[2].innerHTML;
     category.value = item.children[3].innerHTML;
     subcategory.value = item.children[4].innerHTML;
     description.value = item.children[5].innerHTML;
-    
-    //unit.value = ref.unit_name;
-    //quantity_unit.value = ref.quantity_unit;
-    
+
     //Set onchange values to modify item information
     unit.onchange = function(){
         if( unit.value != ref.unit_name ){
@@ -1043,161 +1046,41 @@ submitButton2.onclick = function(){
 */
 /* onClick handlings End */
 
+/* Randomly generate and add items to units starts */
 
-/* Database modify handling start */
+function randomGen(){
+    console.log('Generating random database...');
+    for( let i=0; i<numOfUnits; i++ ){
+        let unitName = unitNameArray[i];
+        let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+        let data = {};
+        //Add 10 data
+        for( let j=0; j<10; j++ ){
+            let id = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            let name = ['Desk', 'Chair', 'Pen', 'Laptop', 'Desktop', 'Stapler', 'Cords', 'Tape', 'Lamp', 'Delicious Ramen box'];
+            let quantity = Math.floor(Math.random() * 2000);
+            let quantity_unit = 'ea.';
+            let description = ['description0', 'description1', 'description2', 'description3', 'description4', 'description5', 'description6', 'description7', 'description8', 'description9'];
+            let category =['Office Supply', 'Electric', 'Others', 'Furniture'];
+            let subcategory = [1, 2, 3, 4, 5];
+            data['id'] = id[Math.floor(Math.random() * 10)];
+            data['name'] = name[Math.floor(Math.random() * 10)];
+            data['quantity'] = quantity;
+            data['quantity_unit'] = quantity_unit;
+            data['description'] = description[Math.floor(Math.random() * 10)];
+            data['category'] = category[Math.floor(Math.random() * 4)];
+            data['subcategory'] = subcategory[Math.floor(Math.random() * 5)];
 
-//Listen to any value changes on the database
-/*
-function renderListen(){
-    //Any item modification, adding, deleting will update the 
-    //list in MasterList
-    refAdmin.on("value", function(snapshot){
-        renderTableContents(masterPath);
-    }, gotErr);
-    //Any item modification, adding, deleting will update the 
-    //list in unit 1
-    ref1.on("value", function(snapshot){
-        renderTableContents(unitPath1);
-    }, gotErr);
-    //Any item modification, adding, deleting will update the 
-    //list in unit 2
-    ref2.on("value", function(snapshot){
-        renderTableContents(unitPath2);
-    }, gotErr);
-    //when item is added to masterlist
-    refAdmin.on("child_added", function(snapshot){
-        newItemKey2 = snapshot.key;
-    }, gotErr);
-    //when item is added to unit 1
-    ref1.on("child_added", function(snapshot){
-        newItemKey = snapshot.key;
-    }, gotErr);
-    //when item is added to unit 2
-    ref2.on("child_added", function(snapshot){
-        newItemKey = snapshot.key;
-    }, gotErr);
-}
-*/
-/*
-function detailViewItemChangedMaster(){
-    if(document.getElementById("detailViewTable").getAttribute("path") != ""){
-        let unitNodePath;
-        //Modify master list and it'll return the unit's unique ID
-        unitNodePath = modifyMasterList(masterPath, childNodePath);
-        //console.log("ItemKey: "+unitNodePath);
-        //console.log("Path: "+detailView_UnitPath);
-        
-        //Then modify unit list
-        modifyUnitList(detailView_UnitPath, unitNodePath);
+        }
+        data['unit_name'] = unitName;
+
+        ref.add(data);
+
     }
-}
-*/
-/*
-function detailViewItemChanged(){
-    if(document.getElementById("detailViewTable").getAttribute("path") != ""){
-        /*console.log("Change detected");
-        let path = document.getElementById("detailViewTable").getAttribute("path");
-        console.log("Path = "+path);
-        database.ref(path).set({
-            itemId : document.getElementById("detailViewId").value,
-            itemName : document.getElementById("detailViewName").value,
-            itemDescription : document.getElementById("detailViewDescription").value,
-        });*/
-        /*
-        let unitNodePath;
-        //Modify unit list first
-        unitNodePath = modifyUnitList(detailViewPath, childNodePath);
-
-        //Modify masterlist
-        modifyMasterList(detailView_UnitPath, unitNodePath)
-    }
-}
-*/
-/*
-function modifyMasterList(mPath, cPath){
-        console.log("Modifing MaterList");
-        let path = mPath;
-        let itemPath = cPath;
-        let placeNum, ItemKey, UnitNum, UnitPath, itemDescription, itemId, itemName;
-        //console.log("Path = "+path);
-        let ref = database.ref(path);
-        //update the master list
-        ref.once("value", function(snapshot){
-            let items = snapshot.val();
-            let keys = Object.keys(items);
-            //Get number in which keys
-            for( let i=0; i<keys.length; i++){
-                if( Object.keys(items)[i] == itemPath ){
-                    //console.log("PlaceNum = "+i);
-                    placeNum = i;
-                }
-            }
-            ItemKey = items[keys[placeNum]].ItemKey;
-            UnitNum = items[keys[placeNum]].UnitNum;
-            UnitPath = items[keys[placeNum]].UnitPath;
-            itemDescription = items[keys[placeNum]].itemDescription;
-            itemId = items[keys[placeNum]].itemId;
-            itemName = items[keys[placeNum]].itemName;
-            //console.log("ITEM IS : "+items[keys[placeNum]].ItemKey);
-            //update the masterlist
-            detailView_UnitPath = UnitPath;
-            database.ref(path+'/'+itemPath).set({
-                ItemKey: ItemKey,
-                UnitNum: UnitNum,
-                UnitPath: UnitPath,
-                itemDescription: document.getElementById("detailViewDescription").value,
-                itemId: document.getElementById("detailViewId").value,
-                itemName: document.getElementById("detailViewName").value
-            });
-        });
-        console.log("Modifying MasterList Done...")
-        return ItemKey;
-}
-*/
-/*
-function modifyUnitList(uPath, cPath){
-    console.log("Modifing UnitList");
-        let path = uPath;
-        let itemPath = cPath;
-        let placeNum, itemDescription, itemId, itemName, masterKey;
-        //console.log("Path = "+path);
-        let ref = database.ref(path);
-        //update the master list
-        ref.once("value", function(snapshot){
-            let items = snapshot.val();
-            let keys = Object.keys(items);
-//            console.log("keys: "+keys);
-            //Get number in which keys
-            for( let i=0; i<keys.length; i++){
-                if( Object.keys(items)[i] == itemPath ){
-                    //console.log("PlaceNum = "+i);
-                    placeNum = i;
-                }
-            }
-//            console.log("PlaceNum = "+placeNum);
-            itemDescription = items[keys[placeNum]].itemDescription;
-            itemId = items[keys[placeNum]].itemId;
-            itemName = items[keys[placeNum]].itemName;
-            masterKey = items[keys[placeNum]].masterKey;
-//            console.log("itemId : "+items[keys[placeNum]].itemId);
-//            console.log("itemName : "+items[keys[placeNum]].itemName);
-//            console.log("masterKey : "+items[keys[placeNum]].masterKey);
-            //update the unitList
-            detailView_UnitPath = "MasterList";
-            database.ref(path+'/'+itemPath).set({
-                itemDescription: document.getElementById("detailViewDescription").value,
-                itemId: document.getElementById("detailViewId").value,
-                itemName: document.getElementById("detailViewName").value,
-                masterKey: masterKey
-            });
-        });
-        console.log("Modifying UnitList Done...")
-        return masterKey;
+    console.log("Generating random database done...");
 }
 
-*/
-/* Database modify handling end */
-
+/* Randomly generate and add items to units end */
 
 
 /* Page Display Stuff (Originally in tp2.js) */

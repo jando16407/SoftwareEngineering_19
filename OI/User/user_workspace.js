@@ -24,6 +24,7 @@ renderListen();
 
 //Basic firebase setups
 function firebase_setup(){
+    /*
     var firebaseConfig = {
         apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
         authDomain: "office-inventory-12f99.firebaseapp.com",
@@ -34,7 +35,7 @@ function firebase_setup(){
         appId: "1:147848186588:web:33dbc8d727af1de4"
     };
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);*/
     database = firebase.database();
 }
 

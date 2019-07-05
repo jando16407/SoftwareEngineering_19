@@ -30,6 +30,11 @@ table {
     tr:nth-child(even) {
         background-color: #dddddd;
     }
+.input{
+  border-radius: 5%;
+  width: 100%;
+  align-self:'center';
+}
 </style>
 </header>
 <body class="w3-light-grey">
@@ -49,8 +54,8 @@ table {
     <h3 class="w3-padding">Admin Dashboard</h3>
     <a href="main.html" class="w3-bar-item w3-button w3-padding">Admin Main Panel</a>
     <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
-    <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
+    <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
     <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
 
   </div>
@@ -119,15 +124,15 @@ table {
             <h3>Past Announcements</h3>                
             <div id="pastAnnouncementsList" style="height: 360px; overflow: scroll;">
             </div>
-            <input id="selectedAnnouncement" style="width: 300px; height: 30px;" placeholder="Click Announcement to delete"></input>
-            <button id="deleteButton" style="height: 30px">Delete</button>
+            <input id="selectedAnnouncement"class="input" style="width:80%; height: 30px;" placeholder="Click Announcement to delete"></input>
+            <button id="deleteButton" class="w3-bar-item w3-button tablink" style="width:15%;">Delete</button>
             <!-- Bottom Part (Send Announcements) -->
             <h3>Send New Announcement</h3>
-            <div style="height: 170px; overflow: scroll;">
-              <input id="title" type="text" placeholder="Type title..." style="width: 302px; height: 40px;"/><br>
+            <div style="height: 170px;">
+              <input id="title" class="input" type="text" placeholder="Type title..." style="height: 40px;"/><br>
               <!--<input id="body" type="text" placeholder="Body" style="width: 300px; height: 100px;"/>-->
-              <textarea id="body" placeholder="Type body..." cols=40 rows=5 ></textarea>
-              <button id="submitButton1">Send Announcement</button>
+              <textarea id="body" class="input" placeholder="Type body..." cols=40 rows=5 ></textarea>
+              <button id="submitButton1"class="w3-bar-item w3-button tablink" >Send Announcement</button>
             </div>
           </div>
         </div>

@@ -68,7 +68,7 @@ async function identifyUser(email){
 
   //check db for admin or employee
   var type
-  await firebase.firestore().collection("Office").doc("Users").get().then(function(doc){
+  await firebase.firestore().collection("Office").doc("Users").collection('Users').doc(userId).get().then(function(doc){
     if (doc.exists) {
        type = (doc.data())[userId].userType
     } else {

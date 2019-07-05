@@ -68,7 +68,7 @@ signup.onclick = async function(){
             name: nameInput.value,
             sectionNum: secNum,
             userType: type
- //       }
+//        }
     })
     //update section if employee
     if(secNum != 0){

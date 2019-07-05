@@ -13,20 +13,24 @@ firebase.initializeApp(firebaseConfig);
 getState()
 
 async function checkAuth(userId){
-    var type
-await firebase.firestore().collection("Office").doc("Users").get().then(function(doc){
+  let userType;
+    var type = await firebase.firestore().collection("Office").doc("Users").collection('Users').get().then(function(snapshot){
+  snapshot.forEach(function(doc){
       if (doc.exists) {
         console.log("hey", userId)
-         type = (doc.data())[userId].userType
+        // type = (doc.data())[userId].userType
+        userType = doc.data().userType;
       } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
       }
   })
-  if(type != "Employee"){
+});
+  if(userType != "Employee"){
     alert("Access restricted.")
     document.location.href = "../index.html"
   }
+
 }
  function getState(){
  firebase.auth().onAuthStateChanged( async function(user) {

@@ -63,26 +63,32 @@ var firebaseConfig = {
 
 async function identifyUser(email){
   var userId = email.match(/^(.+)@/)[1]
+  console.log("userID :"+userId);
   //save userId to send to next page
   localStorage.setItem('user', userId)
 
   //check db for admin or employee
-  var type
-  await firebase.firestore().collection("Office").doc("Users").collection('Users').doc(userId).get().then(function(doc){
-    if (doc.exists) {
-       type = (doc.data())[userId].userType
-    } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-    }
-}).catch(function(error) {
-    console.log("Error getting document:", error);
-})
-    //send user to their page based on userType
-    if(type == 'Admin')
-      window.location.href = "User/Admin/main.html"
-    else
-      window.location.href = "User/main.html"
+  var type = await firebase.firestore().collection("Office").doc("Users").collection('Users').get().then(function(snapshot){
+    snapshot.forEach(function(doc) {
+      //console.log("doc.id = "+doc.id);
+        if (doc.id == userId) {
+          //send user to their page based on userType
+        if(doc.data().userType == 'Admin')
+              window.location.href = "User/Admin/main.html";
+            else
+              window.location.href = "User/main.html";
+
+             //console.log("TYPE :"+doc.data().userType);
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    })
+  }).catch(function(error) {
+      console.log("Error getting document:", error);
+  });
+    
+    
 
   
 }

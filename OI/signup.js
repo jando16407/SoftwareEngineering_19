@@ -63,7 +63,7 @@ signup.onclick = async function(){
         type = "Employee"
     }
     //update users
-    await firebase.firestore().collection("Office").doc("Users").collection('Users').doc(userID).set({
+    await firebase.firestore().collection("Office").doc("Users").collection('Users').doc(userId).set({
 //        [userId]:{
             name: nameInput.value,
             sectionNum: secNum,

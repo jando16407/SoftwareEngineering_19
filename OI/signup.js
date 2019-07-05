@@ -72,10 +72,8 @@ signup.onclick = async function(){
     })
     //update section if employee
     if(secNum != 0){
-        await firebase.firestore().collection("Office").doc("Users").update({
-            [secNum]:{
-                user: nameInput.value
-            }
+        await firebase.firestore().collection("Office").doc("officeView").update({
+            [secNum + '.user']: nameInput.value
         })
     }
       
@@ -100,7 +98,7 @@ async function addOptions(){
     for(var i = 0; i < keys.length -1; i++){
         console.log("hi")
         console.log(data[i])
-        if((data[i]).user == null){
+        if((data[i]).user == ""){
             console.log(keys[i])
             var option = document.createElement("OPTION")
             option.value = keys[i]

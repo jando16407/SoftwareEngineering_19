@@ -1,0 +1,26 @@
+/* Tooltip container */
+.tooltip {
+    position: absolute;
+    display: inline-block;
+    vertical-align: top;
+    left: 55%;
+  }
+  
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    visibility: visible;
+    width: 300px;
+    background-color: rgb(243, 242, 242);
+    color:black;
+    text-align: left;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border-radius: 10%;
+    position: absolute;
+    z-index: 5;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }

@@ -99,6 +99,7 @@ async function addUnits(event){
                [unitNum]: {
                     x: varX,
                     y: varY,
+                    user: "",
                     size: unitSize,
                     id: unitNum
                 }
@@ -169,7 +170,9 @@ officeView.onclick = async function(event){
         //show box with info here
         circ.on("mouseover", function(){
             console.log(this.get("id"))
+            createToolTip(this)
         })
+        circ.on("mouseout", cancelTip)
     }
     else if(isDeletingUnits){
         var temp =  fabricCanvas.getActiveObject()
@@ -221,8 +224,8 @@ function drawInUnits(units){
         const value = Object.values(unitArray[i])
         var circ = new fabric.Circle({
             id: value[0],
-            left: value[2],
-            top: value[3],
+            left: value[3],
+            top: value[4],
             fill:'green',
             radius: value[1],
             opacity: 0.3,
@@ -232,6 +235,10 @@ function drawInUnits(units){
         //show box with info here
         circ.on("mouseover", function(){
             console.log(this.get("id"))
+            createToolTip(this)
+        })
+        circ.on("mouseout", function(){
+            cancelTip()
         })
     }
 
@@ -259,5 +266,54 @@ async function clearCanvas(){
     await fabricCanvas.remove(fabricCanvas.getActiveObject())
     }
 }
+var string
+//creates tooltip for mouseover event on circles
+async function createToolTip(circle){
+    var tooltip = document.createElement("DIV")
+    tooltip.id = "tooltip"
+    tooltip.classList.add("tooltip")
+    var text = document.createElement("SPAN")
+    text.classList.add("tooltiptext")
+    await getUnitInfo(circle.get("id"), text)
+    var div = document.getElementById("officeViewDiv")
+    div.insertBefore(tooltip, div.firstChild)
+    tooltip.appendChild(text)
+}
+//removes tooltip
+function cancelTip(circle){
+    var div = document.getElementById("officeViewDiv")
+    while(div.firstChild.id == "tooltip"){
+        div.removeChild(div.firstChild)
+    }
+}
+//gets information and formats it for tooltip
+async function getUnitInfo(num, elem){
+     var string = "<br>Unit:   " + num + "<br><br>"  
+    await firebase.firestore().collection("Office").doc("officeView").get().then(function(doc){
+        if (doc.exists) {
+           var name = (doc.data())[[num]].user
+            string = string.concat("Employee:   ", name, "<br><br>")
 
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    })
+    var isFaults = false
+    string = string.concat("Faults:   ")
+    await firebase.firestore().collection("Office").doc("Workorder").collection("workOrder").get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            if(doc.data().section == num){
+                string = string.concat(doc.data().itemDescription, "<br><br>")
+                isFaults = true
+            }
+        })
+    })
+    if(!isFaults){
+        string = string.concat("none<br><br>")
+    }
+    elem.innerHTML = string
+}
 

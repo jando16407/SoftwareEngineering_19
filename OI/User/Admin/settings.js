@@ -1,3 +1,4 @@
+
 var firebaseConfig = {
   apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
   authDomain: "office-inventory-12f99.firebaseapp.com",
@@ -9,6 +10,9 @@ var firebaseConfig = {
 };  
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+console.log("Firebase : "+firebase);
+//let cu = firebase.auth().currentUser();
+//console.log("Current user: "+cu);
 var database = firebase.firestore();
 //reset login on window load
 window.onload = function(){
@@ -62,7 +66,7 @@ submitButton2.onclick = function(){
  });
  
  var user = firebase.auth().currentUser;
- 
+ //console.log("user : "+user);
  user.delete().then(function() {
    alert('User Deleted successfully');
  }).catch(function(error) {
@@ -74,10 +78,23 @@ submitButton2.onclick = function(){
 
 /*******************************Change Section ***************************/
 submitButton3.onclick = function(){ 
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      // User is signed in.
+      console.log("Clicked: "+user);
+    } else {
+      // No user is signed in.
+      console.log("did not work");
+    }
+
+  });
     //var userId1 = document.getElementById("username5");
     var nameInput = document.getElementById("name");
     var secNum1 = document.getElementById("section");
     var typeInput = document.getElementById("type");
+    var userId = user;///firebase.auth().currentUser;//.email;
+    console.log('UserId: '+userId);
+    //email.value.match(/^(.+)@/)[1]
     //var telInput = document.getElementById("phone");
     if( nameInput != '' && nameInput != undefined ){
       database.collection('Office').doc('Users').collection('Users').doc('aa').update({

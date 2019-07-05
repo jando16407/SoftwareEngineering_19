@@ -5,7 +5,7 @@ async function checkAuth(userId){
   let userType;
     var type = await firebase.firestore().collection("Office").doc("Users").collection('Users').get().then(function(snapshot){
         snapshot.forEach(function(doc){
-            if (doc.exists) {
+            if (doc.id == userId) {
               console.log("hey", userId)
               userType = doc.data().userType;// = (doc.data())[userId].userType
 

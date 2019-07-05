@@ -9,7 +9,8 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-var database = firebase.database();
+var database = firebase.firestore();
+//var database = firebase.firestore();
 //reset login on window load
 window.onload = function(){
 }
@@ -67,18 +68,25 @@ report.innerHTML = 'Account of user ' + '(' +itemDelete.value  + ')' + ' is dele
 }
 /*******************************Change Section ***************************/
   submitButton3.onclick = function(){ 
-    var userId1 = document.getElementById("username5");
+    //var userId1 = document.getElementById("username5");
     var nameInput = document.getElementById("name");
     var secNum1 = document.getElementById("section");
     var typeInput = document.getElementById("type");
     var telInput = document.getElementById("phone");
     var userId = userId1.value;
+    database.collection('Office').doc('Users').collection('Users').doc('users/' + userId).add({
+      name: nameInput.value,
+      sectionNum: secNum1.value,
+      userType: typeInput.value,
+      userPhone: telInput.value,
+    });
+/*
    firebase.database().ref('users/' + userId).set({
     name: nameInput.value,
     sectionNum: secNum1.value,
     userType: typeInput.value,
     userPhone: telInput.value,
-  });
+  });*/
   const report = document.getElementById('Message');
   const report1 = document.getElementById('Message1');
   const report2 = document.getElementById('Message2');

@@ -702,6 +702,7 @@ async function get_selections(){
     console.log("Get Selection start");
     let unitName1 = unitNameArray[0];
     let names = [], quantityUnits = [], categories = [], subcategories = [];
+    //let ref = database.collection('Office').doc('Inventory').collection('Units');
     let ref = database.collection('Office').doc('Inventory').collection('Units');
     //console.log("Ref is :"+ref);
     ref.get().then(function(snapshot){

@@ -16,20 +16,39 @@ var firebaseConfig = {
   var file = document.getElementById('file')
   var fabricCanvas = new fabric.Canvas("officeView")
   var savingUnits = false
+  var isOnLoad = true
 
   // on load functions and listeners
   window.onload = async function(){
       await loadImg()
-      //await updateUnits()
+      await clearCanvas()
+      await updateUnits()
+      await db.collection("Office").doc("Workorder").collection("workOrder")
+      .get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            updateColor(doc.data())
+        });
+    });
+    isOnLoad = false
+    console.log("done")
   }
   //if change in db update units & array
   db.collection("Office").doc("officeView")
     .onSnapshot(async function(doc) {
-        if(!savingUnits){
+        if(!savingUnits && !isOnLoad){
             await clearCanvas()
             updateUnitsArray(doc.data())
-            updateUnits()
+            await updateUnits()
         }
+    });
+  //if change to work order
+  db.collection("Office").doc("Workorder").collection("workOrder")
+    .onSnapshot(async function(querySnapshot) {
+        console.log("change detected!!")
+        querySnapshot.forEach(function(doc) {
+            console.log(doc.data())
+            updateColor(doc.data());
+        });
     });
 /**********************************Loads image, if there is no image stored wait for image to be uploaded!*************************/
 async function loadImg() {
@@ -315,5 +334,36 @@ async function getUnitInfo(num, elem){
         string = string.concat("none<br><br>")
     }
     elem.innerHTML = string
+}
+function updateColor(listUnits){
+    var objs = fabricCanvas.getObjects()
+    var color
+    console.log(objs.length)
+    for(var i = 0; i < objs.length; i++){
+        if(objs[i].get("id") == listUnits.section){
+            console.log(listUnits.condition)
+            if(listUnits.condition == "mild")
+                color = "yellow"
+            else if(listUnits.condition == "severe")
+                color ="red"
+            else
+                color = "green"
+             console.log(color)
+             //objs[i].fill = color
+             var circ = new fabric.Circle({
+                id: objs[i].get("id"),
+                left: objs[i].get("left"),
+                top: objs[i].get("top"),
+                fill: color,
+                radius: objs[i].get("radius"),
+                opacity: 0.3,
+                selectable: false,
+            })
+            fabricCanvas.add(circ) 
+            fabricCanvas.remove(objs[i]) 
+        
+            
+        }
+    }
 }
 

@@ -31,6 +31,7 @@ var tabButtons_add = [];    //Stores Tab buttons dynamically for item add
 var tabContentsFrame_add = [];      //Stores Tab contents most outer div dynamically for item add
 var tabContentsItemAdd_add = [];   //Stores Tab contents actual list dynamically for item add
 var nameSelection = null;
+var quantityUnitSelection = null;
 //For the detail view
 var childNodePath;
 var deletePath;
@@ -101,13 +102,16 @@ async function get_unit_info(){
     await init_tabs();
     await init_tables();
     await init_tabs_add();
-    await get_selections();
+    //await get_selections();
+    
     await init_add_units_contents();
     await document.getElementsByClassName("tablink")[0].click();
     await document.getElementsByClassName("tttabbb")[0].click();
     await document.getElementsByClassName("secondtablink")[0].click();
     await initial_rendering();
     await init_detail_view();
+    await get_selections();
+    await add_options();
 }
 
 
@@ -279,6 +283,14 @@ function init_add_units_contents(){
             let item_name_label = document.createElement('label');
             item_name_label.setAttribute('for', 'item_name'+i);
             item_name_label.innerHTML = '<p>Item Name</p>';
+            let item_name_input = document.createElement('input');
+            item_name_input.setAttribute('id', 'name'+i);
+            item_name_input.setAttribute('list', 'option_name'+i);
+            item_name_input.setAttribute('placeholder', 'Enter Item Name');
+//            let item_name_options = document.createElement("datalist");
+//            item_name_options.setAttribute('id', 'option'+i);
+//            item_name_options = add_selections_name(item_name_options);
+            /*
             ////// Replace this to dropdown selection
             let item_name_input = document.createElement('div');
             item_name_input.setAttribute('id', 'name'+i);
@@ -296,6 +308,7 @@ function init_add_units_contents(){
             let item_name_input_menu = document.createElement('div');
             item_name_input_menu.setAttribute('class', 'menu');
             //let selection = document.createElement('div');
+            
             item_name_input_menu = add_selections_name(item_name_input_menu);
             //Add selections
             
@@ -308,6 +321,7 @@ function init_add_units_contents(){
             item_name_input.appendChild(item_name_input_menu);
            // item_name_input.appendChild(add_selections_name(item_name_input_menu));
       //      item_name_input.appendChild(add_selections_name(unitNameArray[i]));
+*/
 
             ////
         //Quantity
@@ -325,6 +339,7 @@ function init_add_units_contents(){
             let item_quantity_unit_input = document.createElement('input');
             item_quantity_unit_input.setAttribute('id', 'quantity_unit'+i);
             item_quantity_unit_input.setAttribute('type', 'test');
+            item_quantity_unit_input.setAttribute('list', 'option_quantity_unit'+i);
             item_quantity_unit_input.setAttribute('placeholder', 'Enter Item Quantity Unit');
         //Item description
             let item_description_label = document.createElement('label');
@@ -378,6 +393,7 @@ function init_add_units_contents(){
             tabContentsItemAdd_add[i].appendChild(item_id_input);
             tabContentsItemAdd_add[i].appendChild(item_name_label);
             tabContentsItemAdd_add[i].appendChild(item_name_input);
+            //tabContentsItemAdd_add[i].appendChild(item_name_options);
             tabContentsItemAdd_add[i].appendChild(item_quantity_label);
             tabContentsItemAdd_add[i].appendChild(item_quantity_input);
         //Quantity Unit, Description, Category
@@ -654,6 +670,7 @@ function init_detail_view(){
 
 async function get_selections(){
     let names = [];
+    let quantityUnits = [];
     for( let i=0; i<numOfUnits; i++ ){
         let unitName = unitNameArray[i];
         let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
@@ -665,6 +682,7 @@ async function get_selections(){
             snapshot.forEach(function(doc) {
             //    console.log("QUERY : "+doc.data().name);
                 names.push(doc.data().name);
+                quantityUnits.push(doc.data().quantity_unit);
             });
         });
     }
@@ -680,27 +698,48 @@ async function get_selections(){
         });
     });
     */
-    let uniqueArray = [];
-    uniqueArray = getUniq(names);
+    let namesUniqueArray = [];
+    namesUniqueArray = getUniq(names);
+    let quantityUnitsUniqueArray = [];
+    quantityUnitsUniqueArray = getUniq(quantityUnits);
+    
+    await console.log("namesUniqueArray: "+namesUniqueArray);
+    nameSelection = namesUniqueArray;
+    await console.log("quantityUnitsUniqueArray: "+quantityUnitsUniqueArray);
+    quantityUnitSelection = quantityUnitsUniqueArray;
+
     function getUniq(arr){
         let uniqueArr = {};
         return arr.filter(function(item) {
             return uniqueArr.hasOwnProperty(item) ? false : uniqueArr[item] = true;
         });
     };
-    await console.log("UniqueArray: "+uniqueArray);
-    nameSelection = uniqueArray;
 }
 
-function add_selections_name(item_name_input){
-    for( let i=0; i<nameSelection.length; i++ ){
-        let div1 = document.createElement('div');
-        div1.setAttribute('class', 'item');
-        div1.textContent = nameSelection[i];
-        item_name_input.appendChild(div1);
-    }
-    return item_name_input;
+function add_options(){
+    for( let i=0; i<numOfUnits; i++ ){
+        let item_name_options = document.createElement("datalist");
+        item_name_options.setAttribute('id', 'option_name'+i);
+        item_name_options = add_selections(item_name_options, nameSelection);
+        tabContentsItemAdd_add[i].appendChild(item_name_options);
 
+        let item_quantity_unit_options = document.createElement("datalist");
+        item_quantity_unit_options.setAttribute('id', 'option_quantity_unit'+i);
+        item_quantity_unit_options = add_selections(item_quantity_unit_options, quantityUnitSelection);
+        tabContentsItemAdd_add[i].appendChild(item_quantity_unit_options);
+    }
+}
+
+function add_selections(item_options, itemSelection){
+    for( let i=0; i<itemSelection.length; i++ ){
+        //let div1 = document.createElement('div');
+        //div1.setAttribute('class', 'item');
+        let option = document.createElement("OPTION");
+        option.value = itemSelection[i];
+        //div1.textContent = nameSelection[i];
+        item_options.appendChild(option);
+    }
+    return item_options;
 }
 
 /* Get data from database function end */

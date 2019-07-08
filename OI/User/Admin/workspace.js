@@ -32,6 +32,8 @@ var tabContentsFrame_add = [];      //Stores Tab contents most outer div dynamic
 var tabContentsItemAdd_add = [];   //Stores Tab contents actual list dynamically for item add
 var nameSelection = null;
 var quantityUnitSelection = null;
+var categorySelection = null;
+
 //For the detail view
 var childNodePath;
 var deletePath;
@@ -356,6 +358,7 @@ function init_add_units_contents(){
             let item_category_input = document.createElement('input');
             item_category_input.setAttribute('id', 'category'+i);
             item_category_input.setAttribute('type', 'test');
+            item_category_input.setAttribute('list', 'option_category'+i);
             item_category_input.setAttribute('placeholder', 'Enter Item Category');
         //Item sub-category
             let item_subcategory_label = document.createElement('label');
@@ -669,44 +672,32 @@ function init_detail_view(){
 /* Get data from database function start */
 
 async function get_selections(){
-    let names = [];
-    let quantityUnits = [];
+    let names = [], quantityUnits = [], categories = [];
     for( let i=0; i<numOfUnits; i++ ){
         let unitName = unitNameArray[i];
         let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
         await ref.get().then(function(snapshot){
-        //    console.log("unitname: "+ unitName);
             if(snapshot.empty){
-          //      console.log("Noting found");
             }
             snapshot.forEach(function(doc) {
-            //    console.log("QUERY : "+doc.data().name);
                 names.push(doc.data().name);
                 quantityUnits.push(doc.data().quantity_unit);
+                categories.push(doc.data().category);
             });
         });
     }
-    /*
-    await ref.where('unit_name', '==', unitName).get().then(function (querySnapshot){
-        console.log("unitname: "+ unitName);
-        if(querySnapshot.empty){
-            console.log("Noting found");
-        }
-        querySnapshot.forEach(function(doc) {
-            console.log("QUERY : "+doc.data().category);
-            names.push(doc.data().name);
-        });
-    });
-    */
-    let namesUniqueArray = [];
+    let namesUniqueArray = [], quantityUnitsUniqueArray = [], categoriesUniqueArray = [];
     namesUniqueArray = getUniq(names);
-    let quantityUnitsUniqueArray = [];
     quantityUnitsUniqueArray = getUniq(quantityUnits);
+    categoriesUniqueArray = getUniq(categories);
+    
     
     await console.log("namesUniqueArray: "+namesUniqueArray);
     nameSelection = namesUniqueArray;
     await console.log("quantityUnitsUniqueArray: "+quantityUnitsUniqueArray);
     quantityUnitSelection = quantityUnitsUniqueArray;
+    await console.log("categoriesUniqueArray: "+categoriesUniqueArray);
+    categorySelection = categoriesUniqueArray;
 
     function getUniq(arr){
         let uniqueArr = {};
@@ -727,16 +718,18 @@ function add_options(){
         item_quantity_unit_options.setAttribute('id', 'option_quantity_unit'+i);
         item_quantity_unit_options = add_selections(item_quantity_unit_options, quantityUnitSelection);
         tabContentsItemAdd_add[i].appendChild(item_quantity_unit_options);
+
+        let item_category_options = document.createElement("datalist");
+        item_category_options.setAttribute('id', 'option_category'+i);
+        item_category_options = add_selections(item_category_options, categorySelection);
+        tabContentsItemAdd_add[i].appendChild(item_category_options);
     }
 }
 
 function add_selections(item_options, itemSelection){
     for( let i=0; i<itemSelection.length; i++ ){
-        //let div1 = document.createElement('div');
-        //div1.setAttribute('class', 'item');
         let option = document.createElement("OPTION");
         option.value = itemSelection[i];
-        //div1.textContent = nameSelection[i];
         item_options.appendChild(option);
     }
     return item_options;

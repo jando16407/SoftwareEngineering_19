@@ -134,7 +134,7 @@ function page_setup(){
 */
 
 //Dynamically create tabs
-function init_tabs(){
+async function init_tabs(){
     //Add Main List tab
     tabButtons[0]= document.createElement('button');
     tabButtons[0].setAttribute('class', 'w3-bar-item w3-button tablink');
@@ -153,6 +153,21 @@ function init_tabs(){
         tabButtons[i].innerHTML = unitNameArray[i-1];
         itemListTabButtonContainer.appendChild(tabButtons[i]);
         //console.log("Added tab: "+tabButtons[i]);
+    }
+    //Make sure all unit docs exists, if not create new one
+    for( let i=0; i<numOfUnits; i++ ){
+        let unitName = unitNameArray[i];
+        let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName);
+        await ref.get().then(function(doc){
+            if(doc.exists){
+                console.log("\tdoc: "+doc.id+" exists.");
+            }
+            else{
+                console.log("\tdoc: "+unitName+" does not exist");
+                let newref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName);
+                newref.set({unit: unitName});
+            }
+        });
     }
     console.log("04.1 Init tab done...");
 }
@@ -684,21 +699,49 @@ function init_detail_view(){
 /* Get data from database function start */
 
 async function get_selections(){
+    console.log("Get Selection start");
+    let unitName1 = unitNameArray[0];
     let names = [], quantityUnits = [], categories = [], subcategories = [];
-    for( let i=0; i<numOfUnits; i++ ){
-        let unitName = unitNameArray[i];
-        let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
-        await ref.get().then(function(snapshot){
-            if(snapshot.empty){
+    let ref = database.collection('Office').doc('Inventory').collection('Units');
+    //console.log("Ref is :"+ref);
+    ref.get().then(function(snapshot){
+        if(snapshot.empty){
+            console.log("\n\tSnapshot is empty\n\n");
+        }
+        //console.log("Going to snapshot for each");
+        snapshot.forEach(function(doc){
+       //     console.log("doc.id: "+doc.id);
+            for( let i=0; i<numOfUnits; i++ ){
+                let unitName = unitNameArray[i];
+                if(doc.id==unitName){
+            //        console.log("Found the unit: "+doc.id);
+            console.log("doc.id : "+doc.id);
+            console.log("doc.data() : "+doc.data());
+            console.log("doc.data().collection : "+doc.data().collection('Items'));
+            /*
+                    names.push(doc.data().name);
+                    quantityUnits.push(doc.data().quantity_unit);
+                    categories.push(doc.data().category);
+                    subcategories.push(doc.data().subcategory);
+                    */
+                }/*
+                //let ref = database.collection('Office').doc('Inventory').collection('Units');//.doc(unitName).collection('Item');
+                await ref.get().then(function(snapshot){
+                    if(snapshot.empty){
+                    }
+                    snapshot.forEach(function(doc) {
+                        names.push(doc.data().name);
+                        quantityUnits.push(doc.data().quantity_unit);
+                        categories.push(doc.data().category);
+                        subcategories.push(doc.data().subcategory);
+                    });
+                });*/
             }
-            snapshot.forEach(function(doc) {
-                names.push(doc.data().name);
-                quantityUnits.push(doc.data().quantity_unit);
-                categories.push(doc.data().category);
-                subcategories.push(doc.data().subcategory);
-            });
         });
-    }
+    }).catch((err)=>{
+        console.log("Failed to read ref\nUnit does not exist.");
+    });
+    console.log("Name array : "+names);
     let namesUniqueArray = [], quantityUnitsUniqueArray = [], categoriesUniqueArray = [], subcategoriesUniqueArray = [];
     namesUniqueArray = getUniq(names);
     quantityUnitsUniqueArray = getUniq(quantityUnits);

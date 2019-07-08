@@ -39,7 +39,7 @@
 			if (unsortedValues.length === 0) return;
 
 			//click on a different column
-			if (this.index !== th.index()) {
+	/*		if (this.index !== th.index()) {
 				this.direction = 'asc';
 				this.index = th.index();
 			}
@@ -47,7 +47,7 @@
 				this.direction = this.direction === 'asc' ? 'desc' : 'asc';
 			else
 				this.direction = direction;
-
+*/
 			direction = this.direction == 'asc' ? 1 : -1;
 
 			self.$table.trigger('tablesort:start', [self]);

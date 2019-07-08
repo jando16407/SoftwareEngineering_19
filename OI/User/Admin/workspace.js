@@ -33,12 +33,14 @@ var tabContentsItemAdd_add = [];   //Stores Tab contents actual list dynamically
 var nameSelection = null;
 var quantityUnitSelection = null;
 var categorySelection = null;
+var subcategorySelection = null;
 
 //For the detail view
 var childNodePath;
 var deletePath;
 var detailView;
 var listenData = '';
+var selectedUnitNumber = 0;
 
 
 firebase_setup();
@@ -281,6 +283,11 @@ function init_add_units_contents(){
             item_id_input.setAttribute('id', 'id'+i);
             item_id_input.setAttribute('type', 'test');
             item_id_input.setAttribute('placeholder', 'Enter Item ID');
+            item_id_input.setAttribute('readonly', true);
+            //Get the max ID in the unit
+            //item_id_input.textContent = 
+            get_max_id(item_id_input, i);
+            
         //Item Name
             let item_name_label = document.createElement('label');
             item_name_label.setAttribute('for', 'item_name'+i);
@@ -367,6 +374,7 @@ function init_add_units_contents(){
             let item_subcategory_input = document.createElement('input');
             item_subcategory_input.setAttribute('id', 'subcategory'+i);
             item_subcategory_input.setAttribute('type', 'test');
+            item_subcategory_input.setAttribute('list', 'option_subcategory'+i);
             item_subcategory_input.setAttribute('placeholder', 'Enter Item Sub Category');
         //Assign
             let item_assign_label = document.createElement('label');
@@ -512,6 +520,8 @@ function init_detail_view(){
         let item_unit_input = document.createElement('input');
         item_unit_input.setAttribute('id', 'detail_unit');
         item_unit_input.setAttribute('placeholder', 'Unit Name');
+        item_unit_input.setAttribute('readonly', true);
+        //item_unit_input.setAttribute('list', 'option_unit');
       //  item_unit_input.setAttribute('style', 'height: 30px');
     //Item ID
         let item_id_label = document.createElement('label');
@@ -672,7 +682,7 @@ function init_detail_view(){
 /* Get data from database function start */
 
 async function get_selections(){
-    let names = [], quantityUnits = [], categories = [];
+    let names = [], quantityUnits = [], categories = [], subcategories = [];
     for( let i=0; i<numOfUnits; i++ ){
         let unitName = unitNameArray[i];
         let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
@@ -683,13 +693,15 @@ async function get_selections(){
                 names.push(doc.data().name);
                 quantityUnits.push(doc.data().quantity_unit);
                 categories.push(doc.data().category);
+                subcategories.push(doc.data().subcategory);
             });
         });
     }
-    let namesUniqueArray = [], quantityUnitsUniqueArray = [], categoriesUniqueArray = [];
+    let namesUniqueArray = [], quantityUnitsUniqueArray = [], categoriesUniqueArray = [], subcategoriesUniqueArray = [];
     namesUniqueArray = getUniq(names);
     quantityUnitsUniqueArray = getUniq(quantityUnits);
     categoriesUniqueArray = getUniq(categories);
+    subcategoriesUniqueArray = getUniq(subcategories);
     
     
     await console.log("namesUniqueArray: "+namesUniqueArray);
@@ -698,6 +710,8 @@ async function get_selections(){
     quantityUnitSelection = quantityUnitsUniqueArray;
     await console.log("categoriesUniqueArray: "+categoriesUniqueArray);
     categorySelection = categoriesUniqueArray;
+    await console.log("subcategoriesUniqueArray: "+subcategoriesUniqueArray);
+    subcategorySelection = subcategoriesUniqueArray;
 
     function getUniq(arr){
         let uniqueArr = {};
@@ -709,20 +723,26 @@ async function get_selections(){
 
 function add_options(){
     for( let i=0; i<numOfUnits; i++ ){
+        //Name
         let item_name_options = document.createElement("datalist");
         item_name_options.setAttribute('id', 'option_name'+i);
         item_name_options = add_selections(item_name_options, nameSelection);
         tabContentsItemAdd_add[i].appendChild(item_name_options);
-
+        //Quantity Unit
         let item_quantity_unit_options = document.createElement("datalist");
         item_quantity_unit_options.setAttribute('id', 'option_quantity_unit'+i);
         item_quantity_unit_options = add_selections(item_quantity_unit_options, quantityUnitSelection);
         tabContentsItemAdd_add[i].appendChild(item_quantity_unit_options);
-
+        //Category
         let item_category_options = document.createElement("datalist");
         item_category_options.setAttribute('id', 'option_category'+i);
         item_category_options = add_selections(item_category_options, categorySelection);
         tabContentsItemAdd_add[i].appendChild(item_category_options);
+        //Sub Category
+        let item_subcategory_options = document.createElement("datalist");
+        item_subcategory_options.setAttribute('id', 'option_subcategory'+i);
+        item_subcategory_options = add_selections(item_subcategory_options, subcategorySelection);
+        tabContentsItemAdd_add[i].appendChild(item_subcategory_options);
     }
 }
 
@@ -733,6 +753,20 @@ function add_selections(item_options, itemSelection){
         item_options.appendChild(option);
     }
     return item_options;
+}
+
+async function get_max_id(item_input, unitNum){
+    let maxIdRef = database.collection('Office').doc('Inventory').collection('Units').doc(unitNameArray[unitNum]).collection('Item');
+    let maxIdQuery = maxIdRef.orderBy("id", "desc").limit(1);
+    let maxIdValue; 
+    await maxIdQuery.get().then(function(snapshot){
+        snapshot.forEach(function(doc){
+            console.log("RTN value is : "+doc.data().id);
+            maxIdValue = doc.data().id;
+            item_input.value = maxIdValue;
+        });
+    });
+    return maxIdValue;
 }
 
 /* Get data from database function end */
@@ -825,6 +859,7 @@ function getRowInfo(change, unitNumber){
 function itemSelected(key, unitNumber){
     childNodePath = key;
     deletePath = unitNameArray[unitNumber];
+    selectedUnitNumber = unitNumber;
     let item = document.getElementById(key);
     console.log("Clicked item key = "+key+");, item name = "+item.children[1].innerHTML);
     console.log("Unit number : "+unitNumber);
@@ -1017,7 +1052,7 @@ function detailViewUpdate(key, unitName){
 
 //Submit button handling, push data to firebase
 
-function submitButtonClicked( unitName, i ) {
+async function submitButtonClicked( unitName, i ) {
     console.log("Submit button clicked...");
     //check mandatory input field if empty or not
     let item = [];
@@ -1025,10 +1060,10 @@ function submitButtonClicked( unitName, i ) {
     let data = {};
     item[0] = document.getElementById('id'+i).value;
     category[0] = 'id';
-//    item[1] = document.getElementById('name'+i).value;
-//    category[1] = 'name';
-    item[1] = unitName;
-    category[1] = 'unit_name';
+    item[1] = document.getElementById('name'+i).value;
+    category[1] = 'name';
+    //item[1] = unitName;
+    //category[1] = 'unit_name';
     item[2] = document.getElementById('quantity'+i).value;
     category[2] = 'quantity';
     item[3] = document.getElementById('quantity_unit'+i).value;
@@ -1041,6 +1076,8 @@ function submitButtonClicked( unitName, i ) {
     category[6] = 'subcategory';
     item[7] = document.getElementById('assign'+i).value;
     category[7] = 'assign';
+    item[8] = unitName;
+    category[8] = 'unit_name';
     
     console.log(unitName);
     
@@ -1050,13 +1087,21 @@ function submitButtonClicked( unitName, i ) {
             //Add input to data
             data[category[j]] = item[j];
             //Clear the input field
-        //    document.getElementById(category[j]+i).value = '';
+            if( j != 8 ){
+                document.getElementById(category[j]+i).value = '';
+            }
         }
     }
 
     //Add data to database
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
     ref.add(data)
+
+    //Set the ID
+    console.log("i="+i+", element = "+document.getElementById('id'+i));
+    let maxId = await get_max_id(document.getElementById('id'+i), i);
+    document.getElementById('id'+i).value = ++maxId;
+    console.log("maxId = "+maxId);
 
     console.log(data);
 }

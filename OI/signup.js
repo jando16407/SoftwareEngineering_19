@@ -1,13 +1,13 @@
 
 //connect to firebase
-var firebaseConfig = {
-    apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
-    authDomain: "office-inventory-12f99.firebaseapp.com",
-    databaseURL: "https://office-inventory-12f99.firebaseio.com",
-    projectId: "office-inventory-12f99",
-    storageBucket: "office-inventory-12f99.appspot.com",
-    messagingSenderId: "147848186588",
-    appId: "1:147848186588:web:33dbc8d727af1de4"
+const firebaseConfig = {
+    apiKey: "AIzaSyAlLw14J9Wf8Tr3y26a3cQWOzTmiPN4-2w",
+    authDomain: "officeinventory2.firebaseapp.com",
+    databaseURL: "https://officeinventory2.firebaseio.com",
+    projectId: "officeinventory2",
+    storageBucket: "",
+    messagingSenderId: "530222064086",
+    appId: "1:530222064086:web:aaaf8b2c2a00f136"
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);

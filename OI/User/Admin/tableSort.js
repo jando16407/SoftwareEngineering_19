@@ -59,7 +59,7 @@
 			// `tablesort:start` callback. Also avoids locking up the browser too much.
 			setTimeout(function() {
 				self.$sortCells.removeClass(self.settings.asc + ' ' + self.settings.desc);
-				for (var i = 0, length = unsortedValues.length; i < length; i++)
+				for (var i = 1, length = unsortedValues.length; i < length; i++)
 				{
 					sortedMap.push({
 						index: i,

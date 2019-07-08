@@ -193,7 +193,7 @@ function init_tables(){
     tabContentsItemList[0].setAttribute('id', 'masterItemList');
     //Inside Table setup
     tabContentsItemTableContainer[0] = document.createElement('table');
-    //tabContentsItemTableContainer[0].setAttribute('class', "ui sortable celled table");
+    tabContentsItemTableContainer[0].setAttribute('class', "ui sortable celled table");
     tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
     tabContentsItemTableContainer[0].setAttribute('id', 'masterTable');
     let listRow = document.createElement('tr');
@@ -1103,7 +1103,8 @@ async function submitButtonClicked( unitName, i ) {
     //Set the ID
     console.log("i="+i+", element = "+document.getElementById('id'+i));
     let maxId = await get_max_id(document.getElementById('id'+i), i);
-    document.getElementById('id'+i).value = ++maxId;
+    maxId++;
+    document.getElementById('id'+i).value = ("00000"+maxId);//.slice(-5,0);
     console.log("maxId = "+maxId);
 
     console.log(data);
@@ -1177,7 +1178,7 @@ async function randomGen(){
         let maxId = await get_max_id(document.getElementById('id'+i), i);
         for( let j=0; j<10; j++, maxId++ ){
             let data = {};
-            let id = maxId;
+            let id = ("00000"+maxId).slice(-5);
             let name = ['Desk', 'Chair', 'Pen', 'Laptop', 'Desktop', 'Stapler', 'Cords', 'Tape', 'Lamp', 'Delicious Ramen box'];
             let quantity = Math.floor(Math.random() * 2000);
             let quantity_unit = 'ea.';

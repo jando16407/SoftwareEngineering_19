@@ -30,6 +30,7 @@ var itemAddTabContainer;       //mark to display itemAddTabsContents
 var tabButtons_add = [];    //Stores Tab buttons dynamically for item add
 var tabContentsFrame_add = [];      //Stores Tab contents most outer div dynamically for item add
 var tabContentsItemAdd_add = [];   //Stores Tab contents actual list dynamically for item add
+var nameSelection = null;
 //For the detail view
 var childNodePath;
 var deletePath;
@@ -100,6 +101,7 @@ async function get_unit_info(){
     await init_tabs();
     await init_tables();
     await init_tabs_add();
+    await get_selections();
     await init_add_units_contents();
     await document.getElementsByClassName("tablink")[0].click();
     await document.getElementsByClassName("tttabbb")[0].click();
@@ -282,7 +284,7 @@ function init_add_units_contents(){
             item_name_input.setAttribute('id', 'name'+i);
             item_name_input.setAttribute('type', 'test');
             item_name_input.setAttribute('class', 'ui fluid search selection dropdown');
-            item_name_input.setAttribute('placeholder', 'Enter Item Name');
+            //item_name_input.setAttribute('placeholder', 'Enter Item Name');
             /////
             let item_name_input_input = document.createElement('input');
             item_name_input_input.setAttribute('type', 'hidden');
@@ -293,13 +295,18 @@ function init_add_units_contents(){
             item_name_input_hint.textContent = 'Select item name';
             let item_name_input_menu = document.createElement('div');
             item_name_input_menu.setAttribute('class', 'menu');
+            //let selection = document.createElement('div');
+            item_name_input_menu = add_selections_name(item_name_input_menu);
+            //Add selections
+            
+            //item_name_input_menu.setAttribute('class', 'menu');
+            //item_name_input_menu.appendChild(selection);
 
             item_name_input.appendChild(item_name_input_input);
             item_name_input.appendChild(item_name_input_i);
             item_name_input.appendChild(item_name_input_hint);
             item_name_input.appendChild(item_name_input_menu);
-            //Add selections
-            add_selections_name(unitNameArray[i]);
+           // item_name_input.appendChild(add_selections_name(item_name_input_menu));
       //      item_name_input.appendChild(add_selections_name(unitNameArray[i]));
 
             ////
@@ -645,10 +652,24 @@ function init_detail_view(){
 
 /* Get data from database function start */
 
-function add_selections_name(unitName){
-    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+async function get_selections(){
     let names = [];
-    ref.where('unit_name', '==', unitName).get().then(function (querySnapshot){
+    for( let i=0; i<numOfUnits; i++ ){
+        let unitName = unitNameArray[i];
+        let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+        await ref.get().then(function(snapshot){
+        //    console.log("unitname: "+ unitName);
+            if(snapshot.empty){
+          //      console.log("Noting found");
+            }
+            snapshot.forEach(function(doc) {
+            //    console.log("QUERY : "+doc.data().name);
+                names.push(doc.data().name);
+            });
+        });
+    }
+    /*
+    await ref.where('unit_name', '==', unitName).get().then(function (querySnapshot){
         console.log("unitname: "+ unitName);
         if(querySnapshot.empty){
             console.log("Noting found");
@@ -658,10 +679,28 @@ function add_selections_name(unitName){
             names.push(doc.data().name);
         });
     });
-    
-    
+    */
+    let uniqueArray = [];
+    uniqueArray = getUniq(names);
+    function getUniq(arr){
+        let uniqueArr = {};
+        return arr.filter(function(item) {
+            return uniqueArr.hasOwnProperty(item) ? false : uniqueArr[item] = true;
+        });
+    };
+    await console.log("UniqueArray: "+uniqueArray);
+    nameSelection = uniqueArray;
+}
 
-    return '';
+function add_selections_name(item_name_input){
+    for( let i=0; i<nameSelection.length; i++ ){
+        let div1 = document.createElement('div');
+        div1.setAttribute('class', 'item');
+        div1.textContent = nameSelection[i];
+        item_name_input.appendChild(div1);
+    }
+    return item_name_input;
+
 }
 
 /* Get data from database function end */
@@ -1053,28 +1092,30 @@ function randomGen(){
     for( let i=0; i<numOfUnits; i++ ){
         let unitName = unitNameArray[i];
         let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
-        let data = {};
+        
         //Add 10 data
         for( let j=0; j<10; j++ ){
-            let id = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            let data = {};
+            let id = Math.floor(Math.random() * 2000);
             let name = ['Desk', 'Chair', 'Pen', 'Laptop', 'Desktop', 'Stapler', 'Cords', 'Tape', 'Lamp', 'Delicious Ramen box'];
             let quantity = Math.floor(Math.random() * 2000);
             let quantity_unit = 'ea.';
             let description = ['description0', 'description1', 'description2', 'description3', 'description4', 'description5', 'description6', 'description7', 'description8', 'description9'];
             let category =['Office Supply', 'Electric', 'Others', 'Furniture'];
             let subcategory = [1, 2, 3, 4, 5];
-            data['id'] = id[Math.floor(Math.random() * 10)];
+            data['id'] = id;
             data['name'] = name[Math.floor(Math.random() * 10)];
             data['quantity'] = quantity;
             data['quantity_unit'] = quantity_unit;
             data['description'] = description[Math.floor(Math.random() * 10)];
             data['category'] = category[Math.floor(Math.random() * 4)];
             data['subcategory'] = subcategory[Math.floor(Math.random() * 5)];
-
+            data['unit_name'] = unitName;
+            ref.add(data);
         }
-        data['unit_name'] = unitName;
+        
 
-        ref.add(data);
+        
 
     }
     console.log("Generating random database done...");

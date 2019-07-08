@@ -1,4 +1,5 @@
 //var database;
+/*
 var submitButton1, submitButton2;
 var unitPath1, unitPath2, masterPath;
 var ref1, ref2, refAdmin;
@@ -8,9 +9,9 @@ var tableMaster, tableUnit1, tableUnit2;
 var detailViewPath, detailViewKey, detailView_itemId;
 var detailView_itemName, detailView_itemDescription;
 var detailView_UnitPath;
-var childNodeIndex, childNodePath;
+//var childNodeIndex, childNodePath;
 var newItemKey, newItemKey2, detailViewDeleteItemPath;
-
+*/
 //Variables
 var database;
 var officeViewRef;  //Database ref to OfficeView
@@ -29,11 +30,16 @@ var itemAddTabContainer;       //mark to display itemAddTabsContents
 var tabButtons_add = [];    //Stores Tab buttons dynamically for item add
 var tabContentsFrame_add = [];      //Stores Tab contents most outer div dynamically for item add
 var tabContentsItemAdd_add = [];   //Stores Tab contents actual list dynamically for item add
+//For the detail view
+var childNodePath;
+var deletePath;
+var detailView;
+var listenData = '';
 
 
 firebase_setup();
 page_setup();
-get_unit_info();
+//get_unit_info();
 //detailView_setting();
 //init_tables();
 //renderListen();
@@ -68,6 +74,7 @@ function page_setup(){
     itemAddTabButtonContainer = document.getElementById('ItemAddTabContainer');
     itemAddTabContainer = document.getElementById('ItemAddTabContents');
     console.log("02 Page setup done...")
+    get_unit_info();
 }
 
 //Get unit information and create units dynamically
@@ -96,7 +103,9 @@ async function get_unit_info(){
     await init_add_units_contents();
     await document.getElementsByClassName("tablink")[0].click();
     await document.getElementsByClassName("tttabbb")[0].click();
+    await document.getElementsByClassName("secondtablink")[0].click();
     await initial_rendering();
+    await init_detail_view();
 }
 
 
@@ -268,10 +277,32 @@ function init_add_units_contents(){
             let item_name_label = document.createElement('label');
             item_name_label.setAttribute('for', 'item_name'+i);
             item_name_label.innerHTML = '<p>Item Name</p>';
-            let item_name_input = document.createElement('input');
+            ////// Replace this to dropdown selection
+            let item_name_input = document.createElement('div');
             item_name_input.setAttribute('id', 'name'+i);
             item_name_input.setAttribute('type', 'test');
+            item_name_input.setAttribute('class', 'ui fluid search selection dropdown');
             item_name_input.setAttribute('placeholder', 'Enter Item Name');
+            /////
+            let item_name_input_input = document.createElement('input');
+            item_name_input_input.setAttribute('type', 'hidden');
+            let item_name_input_i = document.createElement('i');
+            item_name_input_i.setAttribute('class', 'dropdown icon')
+            let item_name_input_hint = document.createElement('div');
+            item_name_input_hint.setAttribute('class', 'default text');
+            item_name_input_hint.textContent = 'Select item name';
+            let item_name_input_menu = document.createElement('div');
+            item_name_input_menu.setAttribute('class', 'menu');
+
+            item_name_input.appendChild(item_name_input_input);
+            item_name_input.appendChild(item_name_input_i);
+            item_name_input.appendChild(item_name_input_hint);
+            item_name_input.appendChild(item_name_input_menu);
+            //Add selections
+            add_selections_name(unitNameArray[i]);
+      //      item_name_input.appendChild(add_selections_name(unitNameArray[i]));
+
+            ////
         //Quantity
             let item_quantity_label = document.createElement('label');
             item_quantity_label.setAttribute('for', 'item_quantity'+i);
@@ -279,7 +310,7 @@ function init_add_units_contents(){
             let item_quantity_input = document.createElement('input');
             item_quantity_input.setAttribute('id', 'quantity'+i);
             item_quantity_input.setAttribute('type', 'test');
-            item_quantity_input.setAttribute('placeholder', 'Enter Item Assign');
+            item_quantity_input.setAttribute('placeholder', 'Enter Quantity');
         //Quantity Unit    
             let item_quantity_unit_label = document.createElement('label');
             item_quantity_unit_label.setAttribute('for', 'item_quantity_unit'+i);
@@ -352,7 +383,7 @@ function init_add_units_contents(){
         //Sub Category, Assign
             tabContentsItemAdd_add[i].appendChild(item_subcategory_label);
             tabContentsItemAdd_add[i].appendChild(item_subcategory_input);
-            tabContentsItemAdd_add[i].appendChild(optional_details);
+//            tabContentsItemAdd_add[i].appendChild(optional_details);
             tabContentsItemAdd_add[i].appendChild(item_assign_label);
             tabContentsItemAdd_add[i].appendChild(item_assign_input);
 
@@ -381,211 +412,338 @@ function gotErr(err){
 }
 
 //Detail view setup
-function detailView_setting(){
+function init_detail_view(){
+    //Init stuff
+    let div1 = document.createElement('div');
+    div1.setAttribute('style', 'overflow: scroll;');
+    let detailViewTitle = document.createElement('h4');
+    detailViewTitle.innerHTML = 'Detail View of Selected Item';
+    let deleteButton = document.createElement('button');
+    deleteButton.setAttribute('id', 'deleteButton');
+    deleteButton.setAttribute('style', 'display: inline-block;');
+    deleteButton.textContent = 'Delete';
+    let randomGenButton = document.createElement('button');
+    randomGenButton.setAttribute('id', 'randomGenButton');
+    randomGenButton.setAttribute('style', 'display: inline-block;');
+    randomGenButton.textContent = 'Generate';
+    let space = document.createElement('div');
+    space.innerHTML = '    ';
+    space.setAttribute('style', 'width: 50px; display: inline-block;');
+    let div2 = document.createElement('div');
+    div2.setAttribute('id', 'detailViewBasicInfo');
+    div2.setAttribute('style', 'display: inline-block; width: 99%');
+    let div3 = document.createElement('div');
+    div3.setAttribute('id', 'detailViewOptionalInfor');
+    div3.setAttribute('style', 'display: inline-block; width: 99%');
+    
+    //Container for each field
+    let div4Left = document.createElement('div');
+    let div4Middle = document.createElement('div');
+    let div4Right = document.createElement('div');
+    let div4LeftLabel = document.createElement('div');
+    let div4LeftInput = document.createElement('div');
+    let div4MiddleLabel = document.createElement('div');
+    let div4MiddleInput = document.createElement('div');
+    let div4RightLabel = document.createElement('div');
+    let div4RightInput = document.createElement('div');
+    //div4
+    div4Left.setAttribute('style', 'display: inline-block;');
+    div4Middle.setAttribute('style', 'display: inline-block;');
+    div4Right.setAttribute('style', 'display: inline-block;');
+    div4LeftLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div4LeftInput.setAttribute('style', 'display: inline-block; width: 200px');
+    div4MiddleLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div4MiddleInput.setAttribute('style', 'display: inline-block; width: 200px');
+    div4RightLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div4RightInput.setAttribute('style', 'display: inline-block; width: 200px');
+    //Cotainer for optional detail info
+    let div5Left = document.createElement('div');
+    let div5Middle = document.createElement('div');
+    let div5Right = document.createElement('div');
+    let div5LeftLabel = document.createElement('div');
+    let div5LeftInput = document.createElement('div');
+    let div5MiddleLabel = document.createElement('div');
+    let div5MiddleInput = document.createElement('div');
+    let div5RightLabel = document.createElement('div');
+    let div5RightInput = document.createElement('div');
+    //div5
+    div5Left.setAttribute('style', 'display: inline-block;');
+    div5Middle.setAttribute('style', 'display: inline-block;');
+    div5Right.setAttribute('style', 'display: inline-block;');
+    div5LeftLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div5LeftInput.setAttribute('style', 'display: inline-block; width: 200px');
+    div5MiddleLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div5MiddleInput.setAttribute('style', 'display: inline-block; width: 200px');
+    div5RightLabel.setAttribute('style', 'display: inline-block; width: 150px');
+    div5RightInput.setAttribute('style', 'display: inline-block; width: 200px');
+
+    //Detail view display/input field setup
+    //Item Unit
+        let item_unit_label = document.createElement('label');
+        item_unit_label.setAttribute('for', 'detail_item_unit');
+        item_unit_label.innerHTML = '<p>Item Unit</p>';
+  //      item_unit_label.setAttribute('style', 'height: 30px');
+        let item_unit_input = document.createElement('input');
+        item_unit_input.setAttribute('id', 'detail_unit');
+        item_unit_input.setAttribute('placeholder', 'Unit Name');
+      //  item_unit_input.setAttribute('style', 'height: 30px');
+    //Item ID
+        let item_id_label = document.createElement('label');
+        item_id_label.setAttribute('for', 'detail_item_id');
+        item_id_label.innerHTML = '<p>Item ID</p>';
+    //    item_id_label.setAttribute('style', 'height: 30px');
+        let item_id_input = document.createElement('input');
+        item_id_input.setAttribute('id', 'detail_id');
+        item_id_input.setAttribute('placeholder', 'ID');
+   //     item_id_input.setAttribute('style', 'height: 30px');
+    //Item Name
+        let item_name_label = document.createElement('label');
+        item_name_label.setAttribute('for', 'detail_item_name');
+        item_name_label.innerHTML = '<p>Item Name</p>';
+    //    item_name_label.setAttribute('style', 'height: 30px');
+        let item_name_input = document.createElement('input');
+        item_name_input.setAttribute('id', 'detail_name');
+        item_name_input.setAttribute('type', 'test');
+        item_name_input.setAttribute('placeholder', 'Name');
+     //   item_name_input.setAttribute('style', 'height: 30px');
+    //Quantity
+        let item_quantity_label = document.createElement('label');
+        item_quantity_label.setAttribute('for', 'detail_item_quantity');
+        item_quantity_label.innerHTML = '<p>Item Quantity</p>';
+        //item_quantity_label.setAttribute('style', 'display: inline-block; width: 150px;')
+        let item_quantity_input = document.createElement('input');
+        item_quantity_input.setAttribute('id', 'detail_quantity');
+        item_quantity_input.setAttribute('type', 'test');
+        item_quantity_input.setAttribute('placeholder', 'Quantity');
+        //item_quantity_input.setAttribute('style', 'display: inline-block; width: 150px;')
+    //Quantity Unit    
+        let item_quantity_unit_label = document.createElement('label');
+        item_quantity_unit_label.setAttribute('for', 'detail_item_quantity_unit');
+        item_quantity_unit_label.innerHTML = '<p>Item Quantity Unit</p>';
+        //item_quantity_unit_label.setAttribute('style', 'display: inline-block;')
+        let item_quantity_unit_input = document.createElement('input');
+        item_quantity_unit_input.setAttribute('id', 'detail_quantity_unit');
+        item_quantity_unit_input.setAttribute('type', 'test');
+        item_quantity_unit_input.setAttribute('placeholder', 'Quantity Unit');
+        //item_quantity_unit_input.setAttribute('style', 'display: inline-block;')
+    //Item description
+        let item_description_label = document.createElement('label');
+        item_description_label.setAttribute('for', 'detail_item_description');
+        item_description_label.innerHTML = '<p>Item Description</p>';
+        //item_description_label.setAttribute('style', 'display: inline-block;')
+        let item_description_input = document.createElement('input');
+        item_description_input.setAttribute('id', 'detail_description');
+        item_description_input.setAttribute('type', 'test');
+        item_description_input.setAttribute('placeholder', 'Description');
+    //Item category
+        let item_category_label = document.createElement('label');
+        item_category_label.setAttribute('for', 'detail_category');
+        item_category_label.innerHTML = '<p>Item Category</p>';
+        //item_category_label.setAttribute('style', 'display: inline-block;')
+        let item_category_input = document.createElement('input');
+        item_category_input.setAttribute('id', 'detail_category');
+        item_category_input.setAttribute('type', 'test');
+        item_category_input.setAttribute('placeholder', 'Category');
+        //item_category_input.setAttribute('style', 'display: inline-block;')
+    //Item sub-category
+        let item_subcategory_label = document.createElement('label');
+        item_subcategory_label.setAttribute('for', 'detail_item_subcategory');
+        item_subcategory_label.innerHTML = '<p>Item Sub Category</p>';
+        //item_subcategory_label.setAttribute('style', 'display: inline-block;')
+        let item_subcategory_input = document.createElement('input');
+        item_subcategory_input.setAttribute('id', 'detail_subcategory');
+        item_subcategory_input.setAttribute('type', 'test');
+        item_subcategory_input.setAttribute('placeholder', 'Sub Category');
+        //item_subcategory_input.setAttribute('style', 'display: inline-block;')
+    
+
+    //Unit, Id, Name Label
+        div4LeftLabel.appendChild(item_unit_label);
+        div4LeftLabel.appendChild(item_id_label);
+        div4LeftLabel.appendChild(item_name_label);
+    //Id, Name, Quantity Input
+        div4LeftInput.appendChild(item_unit_input);
+        div4LeftInput.appendChild(item_id_input);
+        div4LeftInput.appendChild(item_name_input);
+    //Quantity Label, Quantity Unit, Description Label
+        div4MiddleLabel.appendChild(item_quantity_label);
+        div4MiddleLabel.appendChild(item_quantity_unit_label);
+        div4MiddleLabel.appendChild(item_description_label);
+    //Quantity Label, Quantity Unit, Description Input
+        div4MiddleInput.appendChild(item_quantity_input);
+        div4MiddleInput.appendChild(item_quantity_unit_input);
+        div4MiddleInput.appendChild(item_description_input);
+    //Category, Sub Category, Assign Label
+        div4RightLabel.appendChild(item_category_label);
+        div4RightLabel.appendChild(item_subcategory_label);
+    //Category, Sub Category, Assign Input
+        div4RightInput.appendChild(item_category_input);
+        div4RightInput.appendChild(item_subcategory_input);
+
+    //Put all columns to div4 and div5
+    div4Left.appendChild(div4LeftLabel);
+    div4Left.appendChild(div4LeftInput);
+    div4Middle.appendChild(div4MiddleLabel);
+    div4Middle.appendChild(div4MiddleInput);
+    div4Right.appendChild(div4RightLabel);
+    div4Right.appendChild(div4RightInput);
+    div5Left.appendChild(div5LeftLabel);
+    div5Left.appendChild(div5LeftInput);
+    div5Middle.appendChild(div5MiddleLabel);
+    div5Middle.appendChild(div5MiddleInput);
+    div5Right.appendChild(div5RightLabel);
+    div5Right.appendChild(div5RightInput);
+    //Put all columns to div
+    div2.appendChild(div4Left);
+    div2.appendChild(div4Middle);
+    div2.appendChild(div4Right);
+    div2.appendChild(div5Left);
+    div2.appendChild(div5Middle);
+    div2.appendChild(div5Right);
+    //Put everything toge ther
+    detailViewTitle.appendChild(space);
+    detailViewTitle.appendChild(deleteButton);
+    detailViewTitle.appendChild(randomGenButton);
+    div1.appendChild(detailViewTitle);
+    //div1.appendChild(deleteButton);
+    div1.appendChild(div2);
+ //   div1.appendChild(div3);
+    detailView = document.getElementById('DetailView');
+    detailView.appendChild(div1);
+    
     //Delete button funciton setup
-    let deleteButton = document.getElementById("deleteButton");
+    //let deleteButton = document.getElementById("deleteButton");
     deleteButton.onclick = function() {
-        if(detailViewPath != ""){
-            //Delete for masterlist
-            if(detailViewPath == masterPath){
-                console.log("Master");
-                //Delete items in each unit as well
-                database.ref(detailViewDeleteItemPath).remove();
-                let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
-                deleteRef.remove();
-            }
-            //Delete for all other unit
-            else {
-                console.log("Other");
-                database.ref(detailViewDeleteItemPath).remove();
-                let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
-                deleteRef.remove();
-                console.log("deleteRef = "+deleteRef);
-                console.log("detailViewDeletePath = "+detailViewDeleteItemPath);
-            }
-            //let deleteRef = database.ref(detailViewPath+'/'+childNodePath);
-            //deleteRef.remove();
-            //Clear path of DetailView Table and others
-            document.getElementById("detailViewTable").setAttribute("path", "");
-            detailViewPath = "";
-            childNodePath = "";
-            //Clear childnode values
-            childNodeIndex = 0;
-            //clear itemkeys
-            newItemKey = "";
-            newItemKey2 = "";
-            //Clear values of detailView elements
-            document.getElementById("detailViewId").value = "";
-            document.getElementById("detailViewName").value = "";
-            document.getElementById("detailViewDescription").value = "";
-            detailViewDeleteItemKey = "";
+        if(deletePath != '' && childNodePath != ''){
+            let deleteRef = database.collection('Office').doc('Inventory').collection('Units').doc(deletePath).collection('Item').doc(childNodePath);
+            deleteRef.delete().then(function() {
+                console.log("Item deleted successfully");
+                childNodePath = '';
+                deletePath = '';
+                document.getElementById('detail_unit').value = '';
+                document.getElementById('detail_id').value = '';
+                document.getElementById('detail_name').value = '';
+                document.getElementById('detail_quantity').value = '';
+                document.getElementById('detail_quantity_unit').value = '';
+                document.getElementById('detail_description').value = '';
+                document.getElementById('detail_category').value = '';
+                document.getElementById('detail_subcategory').value = '';
+            }).catch(function(error) {
+                console.error("Error removing item from database: "+error);
+            });
         }
     };
+
+    randomGenButton.onclick = function(){
+        console.log("Random Gen clicked");
+        randomGen();
+    }
+    
+    console.log('07 Init detail view done...');
 }
 /* Initialize Functions End */
 
+/* Get data from database function start */
+
+function add_selections_name(unitName){
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+    let names = [];
+    ref.where('unit_name', '==', unitName).get().then(function (querySnapshot){
+        console.log("unitname: "+ unitName);
+        if(querySnapshot.empty){
+            console.log("Noting found");
+        }
+        querySnapshot.forEach(function(doc) {
+            console.log("QUERY : "+doc.data().category);
+            names.push(doc.data().name);
+        });
+    });
+    
+    
+
+    return '';
+}
+
+/* Get data from database function end */
 
 /* Rendering funcitons Start */
-
-//Render table, clear the table everytime it's called and display new data
-function renderTableContents(path){
-    //Rendering for MasterList
-    if(path == masterPath){
-        while(masterListContainer.children.length > 1){
-            masterListContainer.removeChild(masterListContainer.childNodes[1]);
-        }
-        renderMasterList();
-    }
-    //Rendering for Unit 1
-    else if(path == unitPath1){
-        while(listContainer1.children.length > 1){
-            listContainer1.removeChild(listContainer1.childNodes[1]);
-        }
-        renderUnit1();
-    }
-    //Rendering for Unit 2
-    else  if(path == unitPath2){
-        while(listContainer2.children.length > 1){
-            listContainer2.removeChild(listContainer2.childNodes[1]);
-        }
-        renderUnit2();
-    }
-}
-
-//Update the table for masterList
-function renderMasterList(){
-    refAdmin.once("value", function(snapshot){
-        let items = snapshot.val();
-        let keys = Object.keys(items);
-        for( let i=0; i<keys.length; ++i ){
-            let row = document.createElement('tr');
-            let k = keys[i];
-            let childNodeId = masterListContainer.children.length;
-            let deletePath = items[k].UnitPath+"/"+items[k].ItemKey;
-            row.addEventListener("click", function(){
-                itemSelected(childNodeId, deletePath);
-            });
-            row.setAttribute("key", keys[i]);
-            let unit = document.createElement('th');
-            let id = document.createElement('th');
-            let name = document.createElement('th');
-            let desc = document.createElement('th');
-            unit.innerHTML = items[k].UnitNum;
-            id.innerHTML = items[k].itemId;
-            name.innerHTML = items[k].itemName;
-            desc.innerHTML = items[k].itemDescription;
-            row.appendChild(unit);
-            row.appendChild(id);
-            row.appendChild(name);
-            row.appendChild(desc);
-            masterListContainer.appendChild(row);
-        }
-    }, gotErr);
-}
 
 //Update the table for Unit 1
 function renderUnit( unitNum ){
     let unitName = unitNameArray[unitNum]
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
     //Make the base of table setup
-    ref.orderBy('id').get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-        //snapshot.docChanges().forEach(function(doc)   {
-            // doc.data() is never undefined for query doc snapshots
-            //console.log(doc.id, " => ", doc.data().name);
-            let row = document.createElement('tr');
-            let id = document.createElement('th');
-            let name = document.createElement('th');
-            let quantity = document.createElement('th');
-            let category = document.createElement('th');
-            let subcategory = document.createElement('th');
-            let description = document.createElement('th');
-            if( doc.data().id != undefined ){
-                id.innerHTML = doc.data().id;
+    ref.orderBy('id').onSnapshot(function(querySnapshot) {
+        querySnapshot.docChanges().forEach(function(change) {
+            if(change.type === "added"){
+                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change, unitNum));
             }
-            if( doc.data().name != undefined ){
-                name.innerHTML = doc.data().name;
+            if(change.type === "modified"){
+                //console.log("Modifying detected, doc.id = "+change.doc.id);
+                for( let num=0; num<numOfUnits; num++ ){
+                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
+                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
+                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change, num), tabContentsItemTableContainer[num+1].children[i]);
+                        }
+                    }
+                }
             }
-            if( doc.data().quantity != undefined ){
-                quantity.innerHTML = doc.data().quantity;
+            if(change.type === "removed"){
+                //console.log("Delete detected, doc.id = "+change.doc.id);
+                for( let num=0; num<numOfUnits; num++ ){
+                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
+                        //console.log("CHECKING : "+tabContentsItemTableContainer[num+1].children[i].getAttribute('id'));
+                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
+                            tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
+                            //console.log("FOUNT IT");
+                        }
+                    }
+                }
             }
-            if( doc.data().category != undefined ){
-                category.innerHTML = doc.data().category;
-            }
-            if( doc.data().subcategory != undefined ){
-                subcategory.innerHTML = doc.data().subcategory;
-            }
-            if( doc.data().description != undefined ){
-                description.innerHTML = doc.data().description;
-            }
-            row.appendChild(id);
-            row.appendChild(name);
-            row.appendChild(quantity);
-            row.appendChild(category);
-            row.appendChild(subcategory);
-            row.appendChild(description);
-            tabContentsItemTableContainer[unitNum+1].appendChild(row);
         });
     });
 }
-/*
-function renderUnit1(){
-    ref1.once("value", function(snapshot){
-        let items = snapshot.val();
-        let keys = Object.keys(items);
-        for( let i=0; i<keys.length; ++i ){
-            let row = document.createElement('tr');
-            let k = keys[i];
-            let childNodeId = listContainer1.children.length;
-            childNodeId += 100000;
-            let deletePath = masterPath+'/'+items[k].masterKey;
-            row.addEventListener("click", function(){
-                itemSelected(childNodeId, deletePath);
-            });
-            row.setAttribute("key", keys[i]);
-            let id = document.createElement('th');
-            let name = document.createElement('th');
-            let desc = document.createElement('th');
-            id.innerHTML = items[k].itemId;
-            name.innerHTML = items[k].itemName;
-            desc.innerHTML = items[k].itemDescription;
-            row.appendChild(id);
-            row.appendChild(name);
-            row.appendChild(desc);
-            listContainer1.appendChild(row);
-        }
-    }, gotErr);
-}
-*/
-//Update the table for Unit 2
-function renderUnit2(){
-    ref2.once("value", function(snapshot){
-        let items = snapshot.val();
-        let keys = Object.keys(items);
-        for( let i=0; i<keys.length; ++i ){
-            let row = document.createElement('tr');
-            let k = keys[i];
-            let childNodeId = listContainer2.children.length;
-            childNodeId += 200000;
-            let deletePath = masterPath+'/'+items[k].masterKey;
-            row.addEventListener("click", function(){
-                itemSelected(childNodeId, deletePath);
-            });
-            row.setAttribute("key", keys[i]);
-            let id = document.createElement('th');
-            let name = document.createElement('th');
-            let desc = document.createElement('th');
-            id.innerHTML = items[k].itemId;
-            name.innerHTML = items[k].itemName;
-            desc.innerHTML = items[k].itemDescription;
-            row.appendChild(id);
-            row.appendChild(name);
-            row.appendChild(desc);
-            listContainer2.appendChild(row);
-        }
-    }, gotErr);
-}
 
+//Create row in a table and it return row
+function getRowInfo(change, unitNumber){
+    let row = document.createElement('tr');
+    let id = document.createElement('th');
+    let name = document.createElement('th');
+    let quantity = document.createElement('th');
+    let category = document.createElement('th');
+    let subcategory = document.createElement('th');
+    let description = document.createElement('th');
+    //row.setAttribute('key', change.doc.id);
+    row.setAttribute('id', change.doc.id);
+    row.addEventListener('click', function(e){
+        itemSelected(change.doc.id, unitNumber);
+    });
+    if( change.doc.data().id != undefined ){
+        id.innerHTML = change.doc.data().id;
+    }
+    if( change.doc.data().name != undefined ){
+        name.innerHTML = change.doc.data().name;
+    }
+    if( change.doc.data().quantity != undefined ){
+        quantity.innerHTML = change.doc.data().quantity;
+    }
+    if( change.doc.data().category != undefined ){
+        category.innerHTML = change.doc.data().category;
+    }
+    if( change.doc.data().subcategory != undefined ){
+        subcategory.innerHTML = change.doc.data().subcategory;
+    }
+    if( change.doc.data().description != undefined ){
+        description.innerHTML = change.doc.data().description;
+    }
+    row.appendChild(id);
+    row.appendChild(name);
+    row.appendChild(quantity);
+    row.appendChild(category);
+    row.appendChild(subcategory);
+    row.appendChild(description);
+    return row;
+}
 
 /* Rendering funcitons End */
 
@@ -593,8 +751,15 @@ function renderUnit2(){
 /* Onclick function start */
 
 //Handle when item in a list is clicked
-function itemSelected(id, deletePath){
-    
+function itemSelected(key, unitNumber){
+    childNodePath = key;
+    deletePath = unitNameArray[unitNumber];
+    let item = document.getElementById(key);
+    console.log("Clicked item key = "+key+");, item name = "+item.children[1].innerHTML);
+    console.log("Unit number : "+unitNumber);
+    console.log("Unit name : "+unitNameArray[unitNumber]);
+    detailViewUpdate(key, unitNameArray[unitNumber]);
+    /*
     childNodeIndex = id;
     detailViewDeleteItemPath = deletePath;
     //when item is in masterlist
@@ -675,7 +840,103 @@ function itemSelected(id, deletePath){
         document.getElementById("detailViewId").onchange = detailViewItemChanged;
         document.getElementById("detailViewName").onchange = detailViewItemChanged;
         document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
+    }*/
+}
+
+function detailViewUpdate(key, unitName){
+    if( listenData != ''){
+        listenData();
+        //console.log("Detached listener");
     }
+    let unit = document.getElementById('detail_unit');
+    let id = document.getElementById('detail_id');
+    let name = document.getElementById('detail_name');
+    let quantity = document.getElementById('detail_quantity');
+    let quantity_unit = document.getElementById('detail_quantity_unit');
+    let description = document.getElementById('detail_description');
+    let category = document.getElementById('detail_category');
+    let subcategory = document.getElementById('detail_subcategory');
+    let item = document.getElementById(key);
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item').doc(key);
+    listenData = ref.onSnapshot(function(doc){
+        if(doc.type === "modified"){
+            console.log("DATA modified: "+doc.data().unit_name);
+            unit.value = doc.data().unit_name;
+            id.value = doc.data().id;
+            name.value = doc.data().name;
+            quantity.value = doc.data().quantity;
+            quantity_unit = doc.data().quantity_unit;
+            category.value = doc.data().category;
+            subcategory.value = doc.data().subcategory;
+            description.value = doc.data().description;
+        }
+        else if(doc.type === "removed"){
+            console.log("DATA removed: "+doc.data().unit_name);
+            unit.value = '';
+            id.value = '';
+            name.value = '';
+            quantity.value = '';
+            quantity_unit = '';
+            category.value = '';
+            subcategory.value = '';
+            description.value = '';
+        }
+        else {
+            unit.value = doc.data().unit_name;
+            quantity_unit.value = doc.data().quantity_unit;
+            console.log("qu uni: "+quantity_unit);
+        }
+    });
+    
+    id.value = item.children[0].innerHTML;
+    name.value = item.children[1].innerHTML;
+    quantity.value = item.children[2].innerHTML;
+    category.value = item.children[3].innerHTML;
+    subcategory.value = item.children[4].innerHTML;
+    description.value = item.children[5].innerHTML;
+
+    //Set onchange values to modify item information
+    unit.onchange = function(){
+        if( unit.value != ref.unit_name ){
+            ref.update({unit_name: unit.value});
+        }
+    }
+    id.onchange = function(){
+        if( id.value != ref.id ){
+            ref.update({id: id.value});
+        }
+    }
+    name.onchange = function(){
+        if( name.value != ref.name ){
+            ref.update({name: name.value});
+        }
+    }
+    quantity.onchange = function(){
+        if( quantity.value != ref.quantity ){
+            ref.update({quantity: quantity.value});
+        }
+    }
+    quantity_unit.onchange = function(){
+        if( quantity_unit.value != ref.quantity_unit ){
+            ref.update({quantity_unit: quantity_unit.value});
+        }
+    }
+    category.onchange = function(){
+        if( category.value != ref.category ){
+            ref.update({category: category.value});
+        }
+    }
+    subcategory.onchange = function(){
+        if( subcategory.value != ref.subcategory ){
+            ref.update({subcategory: subcategory.value});
+        }
+    }
+    description.onchange = function(){
+        if( description.value != ref.description ){
+            ref.update({description: description.value});
+        }
+    }
+
 }
 
 
@@ -693,8 +954,10 @@ function submitButtonClicked( unitName, i ) {
     let data = {};
     item[0] = document.getElementById('id'+i).value;
     category[0] = 'id';
-    item[1] = document.getElementById('name'+i).value;
-    category[1] = 'name';
+//    item[1] = document.getElementById('name'+i).value;
+//    category[1] = 'name';
+    item[1] = unitName;
+    category[1] = 'unit_name';
     item[2] = document.getElementById('quantity'+i).value;
     category[2] = 'quantity';
     item[3] = document.getElementById('quantity_unit'+i).value;
@@ -707,6 +970,7 @@ function submitButtonClicked( unitName, i ) {
     category[6] = 'subcategory';
     item[7] = document.getElementById('assign'+i).value;
     category[7] = 'assign';
+    
     console.log(unitName);
     
     //Iterate to gather inputs and build data to push
@@ -715,7 +979,7 @@ function submitButtonClicked( unitName, i ) {
             //Add input to data
             data[category[j]] = item[j];
             //Clear the input field
-            document.getElementById(category[j]+i).value = '';
+        //    document.getElementById(category[j]+i).value = '';
         }
     }
 
@@ -782,155 +1046,41 @@ submitButton2.onclick = function(){
 */
 /* onClick handlings End */
 
+/* Randomly generate and add items to units starts */
 
-/* Database modify handling start */
+function randomGen(){
+    console.log('Generating random database...');
+    for( let i=0; i<numOfUnits; i++ ){
+        let unitName = unitNameArray[i];
+        let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+        let data = {};
+        //Add 10 data
+        for( let j=0; j<10; j++ ){
+            let id = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            let name = ['Desk', 'Chair', 'Pen', 'Laptop', 'Desktop', 'Stapler', 'Cords', 'Tape', 'Lamp', 'Delicious Ramen box'];
+            let quantity = Math.floor(Math.random() * 2000);
+            let quantity_unit = 'ea.';
+            let description = ['description0', 'description1', 'description2', 'description3', 'description4', 'description5', 'description6', 'description7', 'description8', 'description9'];
+            let category =['Office Supply', 'Electric', 'Others', 'Furniture'];
+            let subcategory = [1, 2, 3, 4, 5];
+            data['id'] = id[Math.floor(Math.random() * 10)];
+            data['name'] = name[Math.floor(Math.random() * 10)];
+            data['quantity'] = quantity;
+            data['quantity_unit'] = quantity_unit;
+            data['description'] = description[Math.floor(Math.random() * 10)];
+            data['category'] = category[Math.floor(Math.random() * 4)];
+            data['subcategory'] = subcategory[Math.floor(Math.random() * 5)];
 
-//Listen to any value changes on the database
-function renderListen(){
-    //Any item modification, adding, deleting will update the 
-    //list in MasterList
-    refAdmin.on("value", function(snapshot){
-        renderTableContents(masterPath);
-    }, gotErr);
-    //Any item modification, adding, deleting will update the 
-    //list in unit 1
-    ref1.on("value", function(snapshot){
-        renderTableContents(unitPath1);
-    }, gotErr);
-    //Any item modification, adding, deleting will update the 
-    //list in unit 2
-    ref2.on("value", function(snapshot){
-        renderTableContents(unitPath2);
-    }, gotErr);
-    //when item is added to masterlist
-    refAdmin.on("child_added", function(snapshot){
-        newItemKey2 = snapshot.key;
-    }, gotErr);
-    //when item is added to unit 1
-    ref1.on("child_added", function(snapshot){
-        newItemKey = snapshot.key;
-    }, gotErr);
-    //when item is added to unit 2
-    ref2.on("child_added", function(snapshot){
-        newItemKey = snapshot.key;
-    }, gotErr);
-}
+        }
+        data['unit_name'] = unitName;
 
-function detailViewItemChangedMaster(){
-    if(document.getElementById("detailViewTable").getAttribute("path") != ""){
-        let unitNodePath;
-        //Modify master list and it'll return the unit's unique ID
-        unitNodePath = modifyMasterList(masterPath, childNodePath);
-        //console.log("ItemKey: "+unitNodePath);
-        //console.log("Path: "+detailView_UnitPath);
-        
-        //Then modify unit list
-        modifyUnitList(detailView_UnitPath, unitNodePath);
+        ref.add(data);
+
     }
+    console.log("Generating random database done...");
 }
 
-function detailViewItemChanged(){
-    if(document.getElementById("detailViewTable").getAttribute("path") != ""){
-        /*console.log("Change detected");
-        let path = document.getElementById("detailViewTable").getAttribute("path");
-        console.log("Path = "+path);
-        database.ref(path).set({
-            itemId : document.getElementById("detailViewId").value,
-            itemName : document.getElementById("detailViewName").value,
-            itemDescription : document.getElementById("detailViewDescription").value,
-        });*/
-        let unitNodePath;
-        //Modify unit list first
-        unitNodePath = modifyUnitList(detailViewPath, childNodePath);
-
-        //Modify masterlist
-        modifyMasterList(detailView_UnitPath, unitNodePath)
-    }
-}
-
-function modifyMasterList(mPath, cPath){
-        console.log("Modifing MaterList");
-        let path = mPath;
-        let itemPath = cPath;
-        let placeNum, ItemKey, UnitNum, UnitPath, itemDescription, itemId, itemName;
-        //console.log("Path = "+path);
-        let ref = database.ref(path);
-        //update the master list
-        ref.once("value", function(snapshot){
-            let items = snapshot.val();
-            let keys = Object.keys(items);
-            //Get number in which keys
-            for( let i=0; i<keys.length; i++){
-                if( Object.keys(items)[i] == itemPath ){
-                    //console.log("PlaceNum = "+i);
-                    placeNum = i;
-                }
-            }
-            ItemKey = items[keys[placeNum]].ItemKey;
-            UnitNum = items[keys[placeNum]].UnitNum;
-            UnitPath = items[keys[placeNum]].UnitPath;
-            itemDescription = items[keys[placeNum]].itemDescription;
-            itemId = items[keys[placeNum]].itemId;
-            itemName = items[keys[placeNum]].itemName;
-            //console.log("ITEM IS : "+items[keys[placeNum]].ItemKey);
-            //update the masterlist
-            detailView_UnitPath = UnitPath;
-            database.ref(path+'/'+itemPath).set({
-                ItemKey: ItemKey,
-                UnitNum: UnitNum,
-                UnitPath: UnitPath,
-                itemDescription: document.getElementById("detailViewDescription").value,
-                itemId: document.getElementById("detailViewId").value,
-                itemName: document.getElementById("detailViewName").value
-            });
-        });
-        console.log("Modifying MasterList Done...")
-        return ItemKey;
-}
-
-function modifyUnitList(uPath, cPath){
-    console.log("Modifing UnitList");
-        let path = uPath;
-        let itemPath = cPath;
-        let placeNum, itemDescription, itemId, itemName, masterKey;
-        //console.log("Path = "+path);
-        let ref = database.ref(path);
-        //update the master list
-        ref.once("value", function(snapshot){
-            let items = snapshot.val();
-            let keys = Object.keys(items);
-//            console.log("keys: "+keys);
-            //Get number in which keys
-            for( let i=0; i<keys.length; i++){
-                if( Object.keys(items)[i] == itemPath ){
-                    //console.log("PlaceNum = "+i);
-                    placeNum = i;
-                }
-            }
-//            console.log("PlaceNum = "+placeNum);
-            itemDescription = items[keys[placeNum]].itemDescription;
-            itemId = items[keys[placeNum]].itemId;
-            itemName = items[keys[placeNum]].itemName;
-            masterKey = items[keys[placeNum]].masterKey;
-//            console.log("itemId : "+items[keys[placeNum]].itemId);
-//            console.log("itemName : "+items[keys[placeNum]].itemName);
-//            console.log("masterKey : "+items[keys[placeNum]].masterKey);
-            //update the unitList
-            detailView_UnitPath = "MasterList";
-            database.ref(path+'/'+itemPath).set({
-                itemDescription: document.getElementById("detailViewDescription").value,
-                itemId: document.getElementById("detailViewId").value,
-                itemName: document.getElementById("detailViewName").value,
-                masterKey: masterKey
-            });
-        });
-        console.log("Modifying UnitList Done...")
-        return masterKey;
-}
-
-
-/* Database modify handling end */
-
+/* Randomly generate and add items to units end */
 
 
 /* Page Display Stuff (Originally in tp2.js) */
@@ -990,6 +1140,21 @@ function openLink2(evt, linkName) {
   document.getElementById(linkName).style.display = "block";
   evt.currentTarget.className += " w3-red";
 }
+
+//Detail view tab
+function secondopenLink(evt, linkName) {
+    var i, x, tttabbb;
+    x = document.getElementsByClassName("secondmyLink");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+    }
+    tttabbb = document.getElementsByClassName("secondtablink");
+    for (i = 0; i < x.length; i++) {
+      tttabbb[i].className = tttabbb[i].className.replace(" w3-red", "");
+    }
+    document.getElementById(linkName).style.display = "block";
+    evt.currentTarget.className += " w3-red";
+  }
 
 
 // Click on the first tablink on load

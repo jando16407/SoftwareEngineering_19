@@ -193,6 +193,7 @@ function init_tables(){
     tabContentsItemList[0].setAttribute('id', 'masterItemList');
     //Inside Table setup
     tabContentsItemTableContainer[0] = document.createElement('table');
+    //tabContentsItemTableContainer[0].setAttribute('class', "ui sortable celled table");
     tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
     tabContentsItemTableContainer[0].setAttribute('id', 'masterTable');
     let listRow = document.createElement('tr');
@@ -240,6 +241,7 @@ function init_tables(){
         //Inside Table setup
         tabContentsItemTableContainer[i] = document.createElement('table');
         tabContentsItemList[i].appendChild(tabContentsItemTableContainer[i]);
+        tabContentsItemTableContainer[i].setAttribute('class', "ui sortable celled table");
         tabContentsItemTableContainer[i].setAttribute('id', unitNameArray[i-1]+'Table');
         let _listRow = document.createElement('tr');
         let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
@@ -744,6 +746,7 @@ function add_options(){
         item_subcategory_options = add_selections(item_subcategory_options, subcategorySelection);
         tabContentsItemAdd_add[i].appendChild(item_subcategory_options);
     }
+    $('table').tablesort();
 }
 
 function add_selections(item_options, itemSelection){
@@ -758,10 +761,10 @@ function add_selections(item_options, itemSelection){
 async function get_max_id(item_input, unitNum){
     let maxIdRef = database.collection('Office').doc('Inventory').collection('Units').doc(unitNameArray[unitNum]).collection('Item');
     let maxIdQuery = maxIdRef.orderBy("id", "desc").limit(1);
-    let maxIdValue; 
+    let maxIdValue = 0; 
     await maxIdQuery.get().then(function(snapshot){
         snapshot.forEach(function(doc){
-            console.log("RTN value is : "+doc.data().id);
+            //console.log("RTN value is : "+doc.data().id);
             maxIdValue = doc.data().id;
             item_input.value = maxIdValue;
         });
@@ -1164,23 +1167,24 @@ submitButton2.onclick = function(){
 
 /* Randomly generate and add items to units starts */
 
-function randomGen(){
+async function randomGen(){
     console.log('Generating random database...');
     for( let i=0; i<numOfUnits; i++ ){
         let unitName = unitNameArray[i];
         let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
         
         //Add 10 data
-        for( let j=0; j<10; j++ ){
+        let maxId = await get_max_id(document.getElementById('id'+i), i);
+        for( let j=0; j<10; j++, maxId++ ){
             let data = {};
-            let id = Math.floor(Math.random() * 2000);
+            let id = maxId;
             let name = ['Desk', 'Chair', 'Pen', 'Laptop', 'Desktop', 'Stapler', 'Cords', 'Tape', 'Lamp', 'Delicious Ramen box'];
             let quantity = Math.floor(Math.random() * 2000);
             let quantity_unit = 'ea.';
             let description = ['description0', 'description1', 'description2', 'description3', 'description4', 'description5', 'description6', 'description7', 'description8', 'description9'];
             let category =['Office Supply', 'Electric', 'Others', 'Furniture'];
             let subcategory = [1, 2, 3, 4, 5];
-            data['id'] = id;
+            data['id'] = ++id;
             data['name'] = name[Math.floor(Math.random() * 10)];
             data['quantity'] = quantity;
             data['quantity_unit'] = quantity_unit;
@@ -1190,6 +1194,7 @@ function randomGen(){
             data['unit_name'] = unitName;
             ref.add(data);
         }
+        get_max_id(document.getElementById('id'+i), i);
         
 
         

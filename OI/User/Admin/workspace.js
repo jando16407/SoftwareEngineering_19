@@ -17,6 +17,7 @@ var database;
 var officeViewRef;  //Database ref to OfficeView
 var numOfUnits;     //Nuber of units stored on database
 var unitNameArray =[];  //Names of units stored on database
+//var dataSnapshots = []; //keep snapshots of all data in database
 //For the item list tabs
 var itemListTabButtonContainer; //mark to display itemListTabButtons
 var itemListTabContainer;       //mark to display itemListTabsContents
@@ -116,6 +117,7 @@ async function get_unit_info(){
     await init_detail_view();
     await get_selections();
     await add_options();
+    await get_master_list();
 }
 
 
@@ -199,7 +201,7 @@ function init_tables(){
     tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
     tabContentsItemTableContainer[0].setAttribute('id', 'masterTable');
     let listRow = document.createElement('tr');
-    let topRow = "<th>Unit</th><th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
+    let topRow = "<th>Name</th><th>Quantity</th><th>Quantity Unit</th><th>Category</th><th>Sub Category</th><th>Minimum Quantity in Office</th>";
     listRow.innerHTML = topRow;
     tabContentsItemTableContainer[0].appendChild(listRow);
 
@@ -895,6 +897,103 @@ function getRowInfo(change, unitNumber){
 
 /* Rendering funcitons End */
 
+/* Create Master List start */
+
+function get_master_list(){
+    let names=[], quantities=[], quantityUnits=[], categories=[], subcategories=[], minimumQuantities=[];
+
+    //Iterate though the nameSelection list
+    for( let i=0; i<nameSelection.length; i++ ){
+        console.log("getting master list iteration :"+i);
+        //Iterate though each unit
+        for( let num=0; num<numOfUnits; num++ ){
+            let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitNameArray[num]).collection('Item');
+            ref.where('name', '==', nameSelection[i]).onSnapshot(function(querySnapshot){
+                if(querySnapshot.empty){
+                    console.log("Empty query for master list");
+                }
+                else {
+                    querySnapshot.forEach(function(doc){
+                        //For the first time
+                        if( names.length == 0 ){
+                            names[0] = doc.data().name;
+                            quantities[0] = doc.data().quantity;
+                            quantityUnits[0] = doc.data().quantity_unit;
+                            categories[0] = doc.data().category;
+                            subcategories[0] = doc.data().subcategory;
+                            minimumQuantities[0] = doc.data().minimumQuantity;
+                        }
+                        for(let nameIndex=0; nameIndex<names.length; nameIndex++ ){
+                            if(doc.data().name==names[nameIndex]){
+                                //Add data to other lists using index
+                                names[nameIndex] = doc.data().name;
+                                quantities[nameIndex] = doc.data().quantity;
+                                quantityUnits[nameIndex] = doc.data().quantity_unit;
+                                categories[nameIndex] = doc.data().category;
+                                subcategories[nameIndex] = doc.data().subcategory;
+                                minimumQuantities[nameIndex] = doc.data().minimumQuantity;
+                            }
+                            //Else is just skip
+                            
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    //Delete all child first
+    while( tabContentsItemTableContainer[0].children.length > 1 ){
+        tabContentsItemTableContainer[0].removeChild[1];
+    }
+
+    //Then update the master
+    //Iterate
+    for( let i=0; i<nameSelection.length; i++ ){
+        let row = document.createElement('tr');
+        let name = document.createElement('th');
+        let quantity = document.createElement('th');
+        let quantityUnit = document.createElement('th');
+        let category = document.createElement('th');
+        let subcategory = document.createElement('th');
+        let minimumQuantity = document.createElement('th');
+        //row.setAttribute('key', change.doc.id);
+        row.setAttribute('id', "masterListRow"+i);
+        /*
+        row.addEventListener('click', function(e){
+            itemSelected(change.doc.id, unitNumber);
+        });
+        */
+        if( names[i] != undefined ){
+            name.innerHTML = names[i];
+        }
+        if( quantities[i] != undefined ){
+            quantity.innerHTML = quantities[i];
+        }
+        if( quantityUnits[i] != undefined ){
+            quantity.innerHTML = quantityUnits[i];
+        }
+        if( categories[i] != undefined ){
+            category.innerHTML = categories[i];
+        }
+        if( subcategories[i] != undefined ){
+            subcategory.innerHTML = subcategories[i]
+        }
+        if( minimumQuantities[i] != undefined ){
+            description.innerHTML = minimumQuantities[i];
+        }
+        row.appendChild(name);
+        row.appendChild(quantity);
+        row.appendChild(quantityUnit);
+        row.appendChild(category);
+        row.appendChild(subcategory);
+        row.appendChild(minimumQuantity);
+        tabContentsItemTableContainer[0].appendChild(row);
+    }
+}
+
+/* Create Master List end */
+
 
 /* Onclick function start */
 
@@ -924,6 +1023,8 @@ function detailViewUpdate(key, unitName){
     let description = document.getElementById('detail_description');
     let category = document.getElementById('detail_category');
     let subcategory = document.getElementById('detail_subcategory');
+    let assign = document.getElementById('detail_assign');
+    let minimum_quantity = document.getElementById('detail_minimum_quantity');
     let item = document.getElementById(key);
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item').doc(key);
     listenData = ref.onSnapshot(function(doc){
@@ -937,6 +1038,8 @@ function detailViewUpdate(key, unitName){
             category.value = doc.data().category;
             subcategory.value = doc.data().subcategory;
             description.value = doc.data().description;
+            assign.value = doc.data().assign;
+            minimum_quantity.value = doc.data().minimum_quantity;
         }
         else if(doc.type === "removed"){
             console.log("DATA removed: "+doc.data().unit_name);
@@ -948,10 +1051,14 @@ function detailViewUpdate(key, unitName){
             category.value = '';
             subcategory.value = '';
             description.value = '';
+            assign.value = '';
+            minimum_quantity.value = ';'
         }
         else {
             unit.value = doc.data().unit_name;
             quantity_unit.value = doc.data().quantity_unit;
+            assign.value = doc.data().assign;
+            minimum_quantity.value = doc.data().minimum_quantity;
             console.log("qu uni: "+quantity_unit);
         }
     });
@@ -1004,6 +1111,16 @@ function detailViewUpdate(key, unitName){
             ref.update({description: description.value});
         }
     }
+    assign.onchange = function(){
+        if( assign.value != ref.assign ){
+            ref.update({assign: assign.value});
+        }
+    }
+    minimum_quantity.onchange = function(){
+        if( minimum_quantity.value != ref.minimum_quantity ){
+            ref.update({minimum_quantity: minimum_quantity.value});
+        }
+    }
 
 }
 
@@ -1040,6 +1157,8 @@ async function submitButtonClicked( unitName, i ) {
     category[7] = 'assign';
     item[8] = unitName;
     category[8] = 'unit_name';
+    item[9] = document.getElementById('minimum_quantity'+i).value;
+    category[9] = 'minimum_quantity';
     
     console.log(unitName);
     

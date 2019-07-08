@@ -30,7 +30,7 @@ submitButton1.onclick = async function(){
   var itemOldPass = document.getElementById("oldpass");
   var itemNewPass = document.getElementById("newpass");
    
-firebase.auth().signInWithEmailAndPassword(itemUsername.value, itemOldPass.value).catch(function(error) {
+await firebase.auth().signInWithEmailAndPassword(itemUsername.value, itemOldPass.value).catch(function(error) {
    // Handle Errors here.
    var errorCode = error.code;
    var errorMessage = error.message;
@@ -39,7 +39,7 @@ firebase.auth().signInWithEmailAndPassword(itemUsername.value, itemOldPass.value
 });
 
 var user22 = firebase.auth().currentUser;
-firebase.auth().onAuthStateChanged;
+//firebase.auth().onAuthStateChanged;
 user22.updatePassword(itemNewPass.value).then(function() {
 alert('Password Updated successfully');
 }).catch(function(error) {
@@ -49,11 +49,11 @@ const report = document.getElementById('Message');
 report.innerHTML = 'password of user ' + '(' +itemUsername.value  + ')' + ' is changed by employee.'
 }
 /************************* Delete Username ********************************/
-submitButton2.onclick = function(){ 
+submitButton2.onclick = async function(){ 
   var itemDelete = document.getElementById("username2");
   var itemPass = document.getElementById("password2");
   
-  firebase.auth().signInWithEmailAndPassword(itemDelete.value, itemPass.value).catch(function(error) {
+  await firebase.auth().signInWithEmailAndPassword(itemDelete.value, itemPass.value).catch(function(error) {
    // Handle Errors here.
    var errorCode = error.code;
    var errorMessage = error.message;
@@ -62,35 +62,48 @@ submitButton2.onclick = function(){
  });
  
  var user = firebase.auth().currentUser;
- 
+ var userId = itemDelete.value.match(/^(.+)@/)[1]
  user.delete().then(function() {
    alert('User Deleted successfully');
  }).catch(function(error) {
    // An error happened.
  });
+ firebase.firestore().collection("Office").doc("Users").collection("Users").doc(userId).delete()
  const report = document.getElementById('Message');
  report.innerHTML = 'Account of user ' + '(' +itemDelete.value  + ')' + ' is deleted by employee.'
  }
 
 /*******************************Change Section ***************************/
-submitButton3.onclick = function(){ 
+submitButton3.onclick = async function(){ 
     //var userId1 = document.getElementById("username5");
     var nameInput = document.getElementById("name");
     var secNum1 = document.getElementById("section");
     var typeInput = document.getElementById("type");
+    var userIdUpdate 
+    await firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        userIdUpdate = user.email.match(/^(.+)@/)[1]
+        console.log("Clicked: "+user);
+      } else {
+        // No user is signed in.
+        console.log("did not work");
+      }
+  
+    });
+    
     //var telInput = document.getElementById("phone");
     if( nameInput != '' && nameInput != undefined ){
-      database.collection('Office').doc('Users').collection('Users').doc('aa').update({
+      database.collection('Office').doc('Users').collection('Users').doc(userIdUpdate).update({
         name: nameInput.value
       });
     }
     if( secNum1 != '' && secNum1 != undefined ){
-      database.collection('Office').doc('Users').collection('Users').doc('aa').update({
+      database.collection('Office').doc('Users').collection('Users').doc(userIdUpdate).update({
         sectionNum: secNum1.value
       });
     }
     if( typeInput != '' && typeInput != undefined ){
-      database.collection('Office').doc('Users').collection('Users').doc('aa').update({
+      database.collection('Office').doc('Users').collection('Users').doc(userIdUpdate).update({
         userType: typeInput.value
       });
     }/*

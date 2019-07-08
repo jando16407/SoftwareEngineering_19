@@ -33,7 +33,7 @@ submitButton1.onclick = async function(){
   var itemUsername = document.getElementById("username");
   var itemOldPass = document.getElementById("oldpass");
   var itemNewPass = document.getElementById("newpass");
-   
+  /* 
 firebase.auth().signInWithEmailAndPassword(itemUsername.value, itemOldPass.value).catch(function(error) {
    // Handle Errors here.
    var errorCode = error.code;
@@ -41,7 +41,7 @@ firebase.auth().signInWithEmailAndPassword(itemUsername.value, itemOldPass.value
    alert("error")
    // ...º
 });
-
+*/  
 var user22 = firebase.auth().currentUser;
 firebase.auth().onAuthStateChanged;
 user22.updatePassword(itemNewPass.value).then(function() {
@@ -49,6 +49,7 @@ alert('Password Updated successfully');
 }).catch(function(error) {
 console.log('An error happened.')
 });
+
 const report = document.getElementById('Message');
 report.innerHTML = 'password of user ' + '(' +itemUsername.value  + ')' + ' is changed by Admin.'
 }
@@ -56,7 +57,7 @@ report.innerHTML = 'password of user ' + '(' +itemUsername.value  + ')' + ' is c
 submitButton2.onclick = function(){ 
   var itemDelete = document.getElementById("username2");
   var itemPass = document.getElementById("password2");
-  
+  /*
   firebase.auth().signInWithEmailAndPassword(itemDelete.value, itemPass.value).catch(function(error) {
    // Handle Errors here.
    var errorCode = error.code;
@@ -72,10 +73,31 @@ submitButton2.onclick = function(){
  }).catch(function(error) {
    // An error happened.
  });
+*/
+
+
+
+
  const report = document.getElementById('Message');
  report.innerHTML = 'Account of user ' + '(' +itemDelete.value  + ')' + ' is deleted by Admin.'
  }
+ 
+ database.collection("Office").doc("Users").collection("Users").doc("a").delete().then(function() {
+  console.log("Document successfully deleted!");
+}).catch(function(error) {
+  console.error("Error removing document: ", error);
+});
 
+
+
+/*
+var cityRef = database.collection('Office').doc('Users').collection('Users');
+
+// Remove the 'capital' field from the document
+var removeCapital = cityRef.update({
+  itemDelete: firebase.firestore.FieldValue.delete()
+});
+*/
 /*******************************Change Section ***************************/
 submitButton3.onclick = function(){ 
   firebase.auth().onAuthStateChanged(function(user) {

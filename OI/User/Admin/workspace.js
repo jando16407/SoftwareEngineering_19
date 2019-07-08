@@ -715,9 +715,14 @@ async function get_selections(){
                 let unitName = unitNameArray[i];
                 if(doc.id==unitName){
             //        console.log("Found the unit: "+doc.id);
-            console.log("doc.id : "+doc.id);
-            console.log("doc.data() : "+doc.data());
-            console.log("doc.data().collection : "+doc.data().collection('Items'));
+              //      console.log("doc.id : "+doc.id);
+                //    console.log("doc.data() : "+doc.data());
+                  //  console.log("doc.collection : "+doc.collection('Item').doc.id);
+                    doc.get().then(function(snapshot){
+                        snapshot.forEach(function(doc){
+                            console.log("doc.collection.doc.id = "+doc.id);
+                        });
+                    });
             /*
                     names.push(doc.data().name);
                     quantityUnits.push(doc.data().quantity_unit);
@@ -738,9 +743,9 @@ async function get_selections(){
                 });*/
             }
         });
-    }).catch((err)=>{
-        console.log("Failed to read ref\nUnit does not exist.");
-    });
+    });//.catch((err)=>{
+//        console.log("Failed to read ref\nUnit does not exist.");
+//    });
     console.log("Name array : "+names);
     let namesUniqueArray = [], quantityUnitsUniqueArray = [], categoriesUniqueArray = [], subcategoriesUniqueArray = [];
     namesUniqueArray = getUniq(names);

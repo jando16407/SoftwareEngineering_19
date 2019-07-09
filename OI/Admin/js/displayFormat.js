@@ -33,9 +33,12 @@ const setFormat = (data) =>{
         }
     });
     html+="</table>";
-    flist.innerHTML = html;
+    if(flist!=null){
+        flist.innerHTML = html;
+    }
+    
 }
 
-db.collection('Watis/NusiCkayiV6LuuMOu94U/Inventory').onSnapshot(snapshot =>{
+database.collection('Watis/NusiCkayiV6LuuMOu94U/Inventory').onSnapshot(snapshot =>{
     setFormat(snapshot.docs);
 });

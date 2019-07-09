@@ -1,5 +1,5 @@
 //Variables
-var database;
+//var database;
 var officeViewRef;  //Database ref to OfficeView
 var numOfUnits;     //Nuber of units stored on database
 var unitNameArray =[];  //Names of units stored on database
@@ -37,7 +37,9 @@ page_setup();
 /* Initialize Functions Start */
 
 //Basic firebase setups
+
 function firebase_setup(){
+    /*
     var firebaseConfig = {
         apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
         authDomain: "office-inventory-12f99.firebaseapp.com",
@@ -49,7 +51,9 @@ function firebase_setup(){
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+    
     database = firebase.firestore();
+    */
     console.log("01 Firebase set up done...");
 }
 
@@ -347,7 +351,6 @@ function init_add_units_contents(){
         //the most outer div
         tabContentsFrame_add[i] = document.createElement('div');
         tabContentsFrame_add[i].setAttribute('id', unitNameArray[i]+'FrameAdd');
-        //console.log("FRAME NAME = "+unitNameArray[i-1]+'FrameList');
         tabContentsFrame_add[i].setAttribute('class', 'w3-container w3-white w3-padding-16 myLink2');
         //Inside div1
         let div1 = document.createElement('div');
@@ -370,7 +373,6 @@ function init_add_units_contents(){
             item_id_input.setAttribute('placeholder', 'Enter Item ID');
             item_id_input.setAttribute('readonly', true);
             //Get the max ID in the unit
-            //item_id_input.textContent = 
             get_max_id(item_id_input, i);
             
         //Item Name
@@ -461,7 +463,6 @@ function init_add_units_contents(){
             tabContentsItemAdd_add[i].appendChild(item_id_input);
             tabContentsItemAdd_add[i].appendChild(item_name_label);
             tabContentsItemAdd_add[i].appendChild(item_name_input);
-            //tabContentsItemAdd_add[i].appendChild(item_name_options);
             tabContentsItemAdd_add[i].appendChild(item_quantity_label);
             tabContentsItemAdd_add[i].appendChild(item_quantity_input);
         //Quantity Unit, Description, Category
@@ -523,10 +524,9 @@ function init_detail_view(){
     space.setAttribute('style', 'width: 50px; display: inline-block;');
     let div2 = document.createElement('div');
     div2.setAttribute('id', 'detailViewBasicInfo');
-    //div2.setAttribute('style', 'display: inline-block;');// width: 99%; overflow-y: scroll;');
     let div3 = document.createElement('div');
     div3.setAttribute('id', 'detailViewOptionalInfo');
-    div3.setAttribute('style', 'display: inline-block;');// width: 99%; overflow-y: scroll;');
+    div3.setAttribute('style', 'display: inline-block;');
     /**************************************************** */
     //Container for each field
             let div4Left = document.createElement('div');
@@ -583,57 +583,45 @@ function init_detail_view(){
         let item_unit_label = document.createElement('label');
         item_unit_label.setAttribute('for', 'detail_item_unit');
         item_unit_label.innerHTML = '<p>Item Unit</p>';
-  //      item_unit_label.setAttribute('style', 'height: 30px');
         let item_unit_input = document.createElement('input');
         item_unit_input.setAttribute('id', 'detail_unit');
         item_unit_input.setAttribute('placeholder', 'Unit Name');
         item_unit_input.setAttribute('readonly', true);
-        //item_unit_input.setAttribute('list', 'option_unit');
-      //  item_unit_input.setAttribute('style', 'height: 30px');
     //Item ID
         let item_id_label = document.createElement('label');
         item_id_label.setAttribute('for', 'detail_item_id');
         item_id_label.innerHTML = '<p>Item ID</p>';
-    //    item_id_label.setAttribute('style', 'height: 30px');
         let item_id_input = document.createElement('input');
         item_id_input.setAttribute('id', 'detail_id');
         item_id_input.setAttribute('placeholder', 'ID');
-   //     item_id_input.setAttribute('style', 'height: 30px');
     //Item Name
         let item_name_label = document.createElement('label');
         item_name_label.setAttribute('for', 'detail_item_name');
         item_name_label.innerHTML = '<p>Item Name</p>';
-    //    item_name_label.setAttribute('style', 'height: 30px');
         let item_name_input = document.createElement('input');
         item_name_input.setAttribute('id', 'detail_name');
         item_name_input.setAttribute('type', 'test');
         item_name_input.setAttribute('placeholder', 'Name');
-     //   item_name_input.setAttribute('style', 'height: 30px');
     //Quantity
         let item_quantity_label = document.createElement('label');
         item_quantity_label.setAttribute('for', 'detail_item_quantity');
         item_quantity_label.innerHTML = '<p>Item Quantity</p>';
-        //item_quantity_label.setAttribute('style', 'display: inline-block; width: 150px;')
         let item_quantity_input = document.createElement('input');
         item_quantity_input.setAttribute('id', 'detail_quantity');
         item_quantity_input.setAttribute('type', 'test');
         item_quantity_input.setAttribute('placeholder', 'Quantity');
-        //item_quantity_input.setAttribute('style', 'display: inline-block; width: 150px;')
     //Quantity Unit    
         let item_quantity_unit_label = document.createElement('label');
         item_quantity_unit_label.setAttribute('for', 'detail_item_quantity_unit');
         item_quantity_unit_label.innerHTML = '<p>Item Quantity Unit</p>';
-        //item_quantity_unit_label.setAttribute('style', 'display: inline-block;')
         let item_quantity_unit_input = document.createElement('input');
         item_quantity_unit_input.setAttribute('id', 'detail_quantity_unit');
         item_quantity_unit_input.setAttribute('type', 'test');
         item_quantity_unit_input.setAttribute('placeholder', 'Quantity Unit');
-        //item_quantity_unit_input.setAttribute('style', 'display: inline-block;')
     //Item description
         let item_description_label = document.createElement('label');
         item_description_label.setAttribute('for', 'detail_item_description');
         item_description_label.innerHTML = '<p>Item Description</p>';
-        //item_description_label.setAttribute('style', 'display: inline-block;')
         let item_description_input = document.createElement('input');
         item_description_input.setAttribute('id', 'detail_description');
         item_description_input.setAttribute('type', 'test');
@@ -642,27 +630,22 @@ function init_detail_view(){
         let item_category_label = document.createElement('label');
         item_category_label.setAttribute('for', 'detail_category');
         item_category_label.innerHTML = '<p>Item Category</p>';
-        //item_category_label.setAttribute('style', 'display: inline-block;')
         let item_category_input = document.createElement('input');
         item_category_input.setAttribute('id', 'detail_category');
         item_category_input.setAttribute('type', 'test');
         item_category_input.setAttribute('placeholder', 'Category');
-        //item_category_input.setAttribute('style', 'display: inline-block;')
     //Item sub-category
         let item_subcategory_label = document.createElement('label');
         item_subcategory_label.setAttribute('for', 'detail_item_subcategory');
         item_subcategory_label.innerHTML = '<p>Item Sub Category</p>';
-        //item_subcategory_label.setAttribute('style', 'display: inline-block;')
         let item_subcategory_input = document.createElement('input');
         item_subcategory_input.setAttribute('id', 'detail_subcategory');
         item_subcategory_input.setAttribute('type', 'test');
         item_subcategory_input.setAttribute('placeholder', 'Sub Category');
-        //item_subcategory_input.setAttribute('style', 'display: inline-block;')
     //Item Assign
         let item_assign_label = document.createElement('label');
         item_assign_label.setAttribute('for', 'detail_item_assign');
         item_assign_label.innerHTML = '<p>Item Assign</p>';
-        //item_subcategory_label.setAttribute('style', 'display: inline-block;')
         let item_assign_input = document.createElement('input');
         item_assign_input.setAttribute('id', 'detail_assign');
         item_assign_input.setAttribute('type', 'test');
@@ -683,90 +666,76 @@ function init_detail_view(){
                 div4LeftLabel.appendChild(item_unit_label);
                 div4LeftLabel.appendChild(item_id_label);
                 div4LeftLabel.appendChild(item_name_label);
-                //div4LeftLabel.appendChild(blank_label);
             //Id, Name, Quantity Input, blank, Minimum Quantity
                 div4LeftInput.appendChild(item_unit_input);
                 div4LeftInput.appendChild(item_id_input);
                 div4LeftInput.appendChild(item_name_input);
-                //div4LeftInput.appendChild(blank_input);
             //Quantity Label, Quantity Unit, Description Label, blank
                 div4MiddleLabel.appendChild(item_quantity_label);
                 div4MiddleLabel.appendChild(item_quantity_unit_label);
                 div4MiddleLabel.appendChild(item_description_label);
-                //div4MiddleLabel.appendChild(blank_label);
             //Quantity Label, Quantity Unit, Description Input, blank
                 div4MiddleInput.appendChild(item_quantity_input);
                 div4MiddleInput.appendChild(item_quantity_unit_input);
                 div4MiddleInput.appendChild(item_description_input);
-                //div4MiddleInput.appendChild(blank_input);
             //Category, Sub Category, Assign Label, blank
                 div4RightLabel.appendChild(item_category_label);
                 div4RightLabel.appendChild(item_subcategory_label);
                 div4RightLabel.appendChild(item_assign_label);
-                //div4RightLabel.appendChild(blank_label);
             //Category, Sub Category, Assign Input, blank
                 div4RightInput.appendChild(item_category_input);
                 div4RightInput.appendChild(item_subcategory_input);
                 div4RightInput.appendChild(item_assign_input);
-                //div4RightInput.appendChild(blank_input);
     /************************************************** */
 
     /************************************************** */
     //Div5
         //Unit, Id, Name Label, blank, Minimum Quantity
             div5LeftLabel.appendChild(item_minimum_quantity_label);
-          //  div5LeftLabel.appendChild(item_name_label);
         //Id, Name, Quantity Input, blank, Minimum Quantity
             div5LeftInput.appendChild(item_minimum_quantity_input);
-        //    div5LeftInput.appendChild(item_name_input);
         //Quantity Label, Quantity Unit, Description Label, blank
        //     div5MiddleLabel.appendChild(item_minimum_quantity_label);
-         //   div5MiddleLabel.appendChild(item_description_label);
         //Quantity Label, Quantity Unit, Description Input, blank
           //  div5MiddleInput.appendChild(item_minimum_quantity_input);
-   //         div5MiddleInput.appendChild(item_description_input);
         //Category, Sub Category, Assign Label, blank
     //        div5RightLabel.appendChild(item_minimum_quantity_label);
-            //div5RightLabel.appendChild(item_assign_label);
         //Category, Sub Category, Assign Input, blank
       //      div5RightInput.appendChild(item_minimum_quantity_input);
-            //div5RightInput.appendChild(item_assign_input);
 /************************************************** */
 
     //Put all columns to div4 and div5
-    div4Left.appendChild(div4LeftLabel);
-    div4Left.appendChild(div4LeftInput);
-    div4Middle.appendChild(div4MiddleLabel);
-    div4Middle.appendChild(div4MiddleInput);
-    div4Right.appendChild(div4RightLabel);
-    div4Right.appendChild(div4RightInput);
-    div5Left.appendChild(div5LeftLabel);
-    div5Left.appendChild(div5LeftInput);
-    div5Middle.appendChild(div5MiddleLabel);
-    div5Middle.appendChild(div5MiddleInput);
-    div5Right.appendChild(div5RightLabel);
-    div5Right.appendChild(div5RightInput);
+        div4Left.appendChild(div4LeftLabel);
+        div4Left.appendChild(div4LeftInput);
+        div4Middle.appendChild(div4MiddleLabel);
+        div4Middle.appendChild(div4MiddleInput);
+        div4Right.appendChild(div4RightLabel);
+        div4Right.appendChild(div4RightInput);
+        div5Left.appendChild(div5LeftLabel);
+        div5Left.appendChild(div5LeftInput);
+        div5Middle.appendChild(div5MiddleLabel);
+        div5Middle.appendChild(div5MiddleInput);
+        div5Right.appendChild(div5RightLabel);
+        div5Right.appendChild(div5RightInput);
     //Put all columns to div
-    div2.appendChild(div4Left);
-    div2.appendChild(div4Middle);
-    div2.appendChild(div4Right);
-    div3.appendChild(div5Left);
-    div3.appendChild(div5Middle);
-    div3.appendChild(div5Right);
+        div2.appendChild(div4Left);
+        div2.appendChild(div4Middle);
+        div2.appendChild(div4Right);
+        div3.appendChild(div5Left);
+        div3.appendChild(div5Middle);
+        div3.appendChild(div5Right);
     //Put everything toge ther
-    detailViewTitle.appendChild(space);
-    detailViewTitle.appendChild(deleteButton);
-    detailViewTitle.appendChild(randomGenButton);
-    div1.appendChild(detailViewTitle);
-    //div1.appendChild(deleteButton);
-    div1.appendChild(div2);
-    div1.appendChild(div3);
-    detailView = document.getElementById('DetailView');
-    detailView.setAttribute('style', 'overflow: scroll;');
-    detailView.appendChild(div1);
+        detailViewTitle.appendChild(space);
+        detailViewTitle.appendChild(deleteButton);
+        detailViewTitle.appendChild(randomGenButton);
+        div1.appendChild(detailViewTitle);
+        div1.appendChild(div2);
+        div1.appendChild(div3);
+        detailView = document.getElementById('DetailView');
+        detailView.setAttribute('style', 'overflow: scroll;');
+        detailView.appendChild(div1);
     
     //Delete button funciton setup
-    //let deleteButton = document.getElementById("deleteButton");
     deleteButton.onclick = function() {
         if(deletePath != '' && childNodePath != ''){
             let deleteRef = database.collection('Office').doc('Inventory').collection('Units').doc(deletePath).collection('Item').doc(childNodePath);
@@ -807,7 +776,6 @@ async function get_selections(){
         let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
         await ref.get().then(function(snapshot){
             if(snapshot.empty){
-          //      console.log("Noting found");
             }
             snapshot.forEach(function(doc) {
                 names.push(doc.data().name);
@@ -825,14 +793,9 @@ async function get_selections(){
     categoriesUniqueArray = getUniq(categories);
     subcategoriesUniqueArray = getUniq(subcategories);
     
-    
-   // await console.log("namesUniqueArray: "+namesUniqueArray);
     nameSelection = namesUniqueArray;
-   // await console.log("quantityUnitsUniqueArray: "+quantityUnitsUniqueArray);
     quantityUnitSelection = quantityUnitsUniqueArray;
-   // await console.log("categoriesUniqueArray: "+categoriesUniqueArray);
     categorySelection = categoriesUniqueArray;
-   // await console.log("subcategoriesUniqueArray: "+subcategoriesUniqueArray);
     subcategorySelection = subcategoriesUniqueArray;
 
     function getUniq(arr){
@@ -870,19 +833,19 @@ function add_options(){
         let p = i+1;
         let item_search_options = document.createElement("datalist");
         item_search_options.setAttribute('id', 'option_search_area'+p);
-        item_search_options = add_selections(item_search_options, nameSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        item_search_options = add_selections(item_search_options, nameSelection);
         //Add option quantity unit
         let item_search_options_quantity_unit = document.createElement("datalist");
         item_search_options_quantity_unit.setAttribute('id', 'option_search_area_quantity_unit'+p);
-        item_search_options_quantity_unit = add_selections(item_search_options_quantity_unit, quantityUnitSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        item_search_options_quantity_unit = add_selections(item_search_options_quantity_unit, quantityUnitSelection);
         //Add option quantity unit
         let item_search_options_category = document.createElement("datalist");
         item_search_options_category.setAttribute('id', 'option_search_area_category'+p);
-        item_search_options_category = add_selections(item_search_options_category, categorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        item_search_options_category = add_selections(item_search_options_category, categorySelection);
         //Add option quantity unit
         let item_search_options_subcategory = document.createElement("datalist");
         item_search_options_subcategory.setAttribute('id', 'option_search_area_subcategory'+p);
-        item_search_options_subcategory = add_selections(item_search_options_subcategory, subcategorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        item_search_options_subcategory = add_selections(item_search_options_subcategory, subcategorySelection);
         //Put everything together
         let unitDataList = document.getElementById('unitDataList'+p);
         unitDataList.appendChild(item_search_options);
@@ -893,19 +856,19 @@ function add_options(){
     //Add option name to master list
         let item_search_options_master = document.createElement("datalist");
         item_search_options_master.setAttribute('id', 'option_search_masterList');
-        item_search_options_master = add_selections(item_search_options_master, nameSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        item_search_options_master = add_selections(item_search_options_master, nameSelection);
     //Add option quantity unit
         let item_search_options_quantity_unit_master = document.createElement("datalist");
         item_search_options_quantity_unit_master.setAttribute('id', 'option_search_masterList_quantity_unit');
-        item_search_options_quantity_unit_master = add_selections(item_search_options_quantity_unit_master, quantityUnitSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        item_search_options_quantity_unit_master = add_selections(item_search_options_quantity_unit_master, quantityUnitSelection);
     //Add option quantity unit
         let item_search_options_category_master = document.createElement("datalist");
         item_search_options_category_master.setAttribute('id', 'option_search_masterList_category');
-        item_search_options_category_master = add_selections(item_search_options_category_master, categorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        item_search_options_category_master = add_selections(item_search_options_category_master, categorySelection);
     //Add option quantity unit
         let item_search_options_subcategory_master = document.createElement("datalist");
         item_search_options_subcategory_master.setAttribute('id', 'option_search_masterList_subcategory');
-        item_search_options_subcategory_master = add_selections(item_search_options_subcategory_master, subcategorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        item_search_options_subcategory_master = add_selections(item_search_options_subcategory_master, subcategorySelection);
     //Put everyhitng to together
         let masterDataList = document.getElementById('masterDataList');
         masterDataList.appendChild(item_search_options_master);
@@ -931,7 +894,6 @@ async function get_max_id(item_input, unitNum){
     let maxIdValue = 0; 
     await maxIdQuery.get().then(function(snapshot){
         snapshot.forEach(function(doc){
-            //console.log("RTN value is : "+doc.data().id);
             maxIdValue = doc.data().id;
             let maxPlus = ++maxIdValue;
             item_input.value = ("00000"+maxPlus).slice(-5);
@@ -958,7 +920,6 @@ function renderUnit( unitNum ){
                 if(masterlistdone) get_master_list(); 
             }
             if(change.type === "modified"){
-                //console.log("Modifying detected, doc.id = "+change.doc.id);
                 for( let num=0; num<numOfUnits; num++ ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
@@ -971,13 +932,10 @@ function renderUnit( unitNum ){
                 }
             }
             if(change.type === "removed"){
-                //console.log("Delete detected, doc.id = "+change.doc.id);
                 for( let num=0; num<numOfUnits; num++ ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
-                        //console.log("CHECKING : "+tabContentsItemTableContainer[num+1].children[i].getAttribute('id'));
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
                             tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
-                            //console.log("FOUNT IT");
                             if(masterlistdone) resetMasterList();
                             if(masterlistdone) await get_selections();
                             if(masterlistdone) get_master_list();
@@ -996,7 +954,6 @@ function renderUnitOnce( unitNum ){
     //Make the base of table setup
     ref.orderBy('id').get().then(function(querySnapshot) {
         querySnapshot.forEach(async function(doc) {
-        //    if(change.type === "added"){
             console.log("Adding child to unitNUm = "+unitNum);
                 tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(doc, unitNum));
          
@@ -1013,7 +970,6 @@ function getRowInfo(doc, unitNumber){
     let category = document.createElement('th');
     let subcategory = document.createElement('th');
     let description = document.createElement('th');
-    //row.setAttribute('key', change.doc.id);
     row.setAttribute('id', doc.id);
     row.addEventListener('click', function(e){
         itemSelected(doc.id, unitNumber);
@@ -1050,10 +1006,6 @@ function getRowInfo(doc, unitNumber){
 /* Create Master List start */
 
 async function get_master_list(){
-    //Clear the master list first
- /*   while(tabContentsItemTableContainer[0].children.length>1){
-        tabContentsItemTableContainer[0].removeChild[1];
-    }*/
     //Iterate though the nameSelection list
     for( let i=0; i<nameSelection.length; i++ ){
         //Iterate though each unit
@@ -1093,7 +1045,6 @@ async function get_master_list(){
                                     }
                                     addRow( names, quantities, quantityUnits, categories, subcategories, minimumQuantities, i );
                                 }
-                                //Else is just skip
                             }
                         }
                     });
@@ -1117,11 +1068,7 @@ function resetMasterList(){
 
 function addRow(names, quantities, quantityUnits, categories, subcategories, minimumQuantities, i){
     let seen = document.getElementById('Name'+names+'Seen');
-   // console.log("Items: "+names+", "+quantities+", "+quantityUnits+", "+categories+', '+subcategories+', '+minimumQuantities+', '+i);
-    //console.log("Seen = "+seen);
-
     if( seen != undefined && seen.innerHTML == names ){
-        //console.log("FOUND the item, name = "+names);
         //Just add quantity
         for( let k=0; k<tabContentsItemTableContainer[0].children.length; k++ ){
             if( tabContentsItemTableContainer[0].children[k].getAttribute('key') == names ){
@@ -1130,7 +1077,6 @@ function addRow(names, quantities, quantityUnits, categories, subcategories, min
                 let total = quantities + q;
                 qt.innerHTML = total;
                 tabContentsItemTableContainer[0].children[k].setAttribute('quantity', total);
-                //console.log("q = "+q+', quantity = '+quantities+', total = '+total+', qt = '+qt);
             }
         }
     }
@@ -1149,29 +1095,27 @@ function addRow(names, quantities, quantityUnits, categories, subcategories, min
         name.setAttribute('id', 'Name'+names+'Seen');
 
         if( names != undefined ){
-            name.innerHTML = names;//localStorage.getItem('names'+i);
+            name.innerHTML = names;
             row.setAttribute('name', names);
-            //console.log("name in updating table = "+localStorage.getItem('names'+i));
         }
         if( quantities != undefined ){
-      //      console.log("Quantity is : "+quantities);//localStorage.getItem('quantities'+i));
-            quantity.innerHTML = quantities;///localStorage.getItem('quantities'+i);//master_quantities[i];
+            quantity.innerHTML = quantities;
             row.setAttribute('quantity', quantities);
         }
         if( quantityUnits != undefined ){
-            quantityUnit.innerHTML = quantityUnits;// localStorage.getItem('quantityUnits'+i);//master_quantityUnits[i];
+            quantityUnit.innerHTML = quantityUnits;
             row.setAttribute('quantity-unit', quantityUnits);
         }
         if( categories != undefined ){
-            category.innerHTML = categories;//localStorage.getItem('categories'+i);///master_categories[i];
+            category.innerHTML = categories;
             row.setAttribute('category', categories);
         }
         if( subcategories != undefined ){
-            subcategory.innerHTML = subcategories;// localStorage.getItem('subcategories'+i);//master_subcategories[i]
+            subcategory.innerHTML = subcategories;
             row.setAttribute('subcategory', subcategories);
         }
         if( minimumQuantities != undefined ){
-            minimumQuantity.innerHTML = minimumQuantities;// localStorage.getItem('minimumQuantities'+i);//master_minimumQuantities[i];
+            minimumQuantity.innerHTML = minimumQuantities;
         }
         row.appendChild(name);
         row.appendChild(quantity);
@@ -1205,7 +1149,6 @@ function itemSelected(key, unitNumber){
 function detailViewUpdate(key, unitName){
     if( listenData != ''){
         listenData();
-        //console.log("Detached listener");
     }
     let unit = document.getElementById('detail_unit');
     let id = document.getElementById('detail_id');
@@ -1333,8 +1276,6 @@ async function submitButtonClicked( unitName, i ) {
     category[0] = 'id';
     item[1] = document.getElementById('name'+i).value;
     category[1] = 'name';
-    //item[1] = unitName;
-    //category[1] = 'unit_name';
     item[2] = document.getElementById('quantity'+i).value;
     category[2] = 'quantity';
     item[3] = document.getElementById('quantity_unit'+i).value;
@@ -1474,34 +1415,22 @@ function resetSearchButtonClicked(i){
         let searchInput = document.getElementById('masterListSearch');
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Reset input
-           // console.log("Search input = "+searchInput.value);
             searchInput.value = '';
-            //Search the input item
-            
         }
         let searchInputQuantityUnit = document.getElementById('masterListSearchQuantityUnit');
         if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
             //Reset input
-           // console.log("Search input = "+searchInputQuantityUnit.value);
             searchInputQuantityUnit.value = '';
-            //Search the input item
-            
         }
         let searchInputCategory = document.getElementById('masterListSearchCategory');
         if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
             //Reset input
-           /// console.log("Search input = "+searchInputCategory.value);
             searchInputCategory.value = '';
-            //Search the input item
-            
         }
         let searchInputSubCategory = document.getElementById('masterListSearchSubcategory');
         if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
             //Reset input
-           // console.log("Search input = "+searchInputSubCategory.value);
             searchInputSubCategory.value = '';
-            //Search the input item
-            
         }
         resetMasterList();
         get_master_list();
@@ -1509,29 +1438,19 @@ function resetSearchButtonClicked(i){
     }
     else{//All other units searchbuton
         let searchInput = document.getElementById('unitListSearch'+i);
-        let empty = true;
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Reset input
-            //console.log("Search input = "+searchInput.value);
             searchInput.value = '';
-            //Search the input item
-            empty = false;
         }
         let searchInputCategory = document.getElementById('unitListSearchCategory'+i);
         if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
-            //Reset input
-            //console.log("Search input = "+searchInputCategory.value);
+            //Reset inpu
             searchInputCategory.value = '';
-            //Search the input item
-            empty = false;
         }
         let searchInputSubCategory = document.getElementById('unitListSearchSubcategory'+i);
         if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
             //Reset input
-            //console.log("Search input = "+searchInputSubCategory.value);
             searchInputSubCategory.value = '';
-            //Search the input item
-            empty = false;
         }
         if(this.searchClicked){
             let p = i-1;
@@ -1545,12 +1464,8 @@ function resetSearchButtonClicked(i){
                         }
                     }
                     tabContentsItemTableContainer[i].removeChild(child);
-                    child = tabContentsItemTableContainer[i].lastElementChild;
-                    
+                    child = tabContentsItemTableContainer[i].lastElementChild;   
                 }
-                
-           // }
-            //get_master_list()
             renderUnitOnce(p);
             this.searchClicked = false;
         }
@@ -1679,11 +1594,5 @@ function secondopenLink(evt, linkName) {
     document.getElementById(linkName).style.display = "block";
     evt.currentTarget.className += " w3-red";
   }
-
-
-// Click on the first tablink on load
-//document.getElementsByClassName("tablink")[0].click();
-//document.getElementsByClassName("tttabbb")[0].click();
-
 
 /* Page display stuff end */

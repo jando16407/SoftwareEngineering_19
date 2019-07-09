@@ -4,8 +4,8 @@
 <title>OI - Admin Main</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="../../css/w3.css">
-<link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
+<link rel="stylesheet" href="../css/w3.css">
+<link rel="stylesheet" type="text/css" href="../dist/semantic.min.css">
 <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
@@ -13,8 +13,8 @@
   <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
-  <script src="hotkeys.min.js"></script>
-  <script src="timeout.js"></script>
+  <script src="./js/hotkeys.min.js"></script>
+  <script src="./js/timeout.js"></script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -48,9 +48,6 @@ table {
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open(event, 'navbar');"><i class="fa fa-bars"></i>  Menu</button>
   <span class="w3-bar-item w3-right">OI</span>
-  <div class="w3-col s4">
-      <img src="../../img/Inventory-maintenance-icon.png" class="w3-square w3-margin-right" style="width:46px">
-    </div>
 </div>
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
@@ -62,7 +59,7 @@ table {
     <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
-    <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
+    <a href="../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
 
   </div>
 </nav>
@@ -130,12 +127,12 @@ table {
   </div>
 </div>
 
-
-<script src="./AdminMain/main.js"></script>
-<script src="./AdminMain/lowItem.js"></script>
-<script src="./AdminMain/workOrder.js"></script>
-<script src="shortcuts.js"></script>
-<script src="../Admin/AdminMain/displayFormat.js"></script>
+<script src=".//js/loginauthentication.js"></script>
+<script src="./js/main.js"></script>
+<script src="./js/lowItem.js"></script>
+<script src="./js/workOrder.js"></script>
+<script src="./js/shortcuts.js"></script>
+<script src="./js/displayFormat.js"></script>
 
 </body>
 </html>

@@ -1,6 +1,6 @@
 
 //formats time
-  const db = firebase.firestore();
+  //const db = firebase.firestore();
 function formatTime(){
     let time = new Date(),
     minutes = time.getMinutes().toString().length == 1 ? '0'+time.getMinutes() : time.getMinutes(),
@@ -12,14 +12,14 @@ function formatTime(){
     }
 
     
-    const printRequest = document.querySelector('#myRequest');
+//    const printRequest = document.querySelector('#myRequest');
     const form = document.querySelector("#requestForm");
-    const sndBtn = document.querySelector("#submitButton");
+    //const sndBtn = document.querySelector("#submitButton");
 
     // Adds to db from form on button click
     form.addEventListener('submit', (e)=>{
         e.preventDefault();
-        db.collection('Office/Workorder/workOrder').add({
+        database.collection('Office/Workorder/workOrder').add({
             section: form.section.value,
             condition: form.condition.value,
             requestType: form.requestType.value,

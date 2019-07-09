@@ -1,5 +1,6 @@
 
 //connect to firebase
+/*
 var firebaseConfig = {
     apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
     authDomain: "office-inventory-12f99.firebaseapp.com",
@@ -10,6 +11,7 @@ var firebaseConfig = {
     appId: "1:147848186588:web:33dbc8d727af1de4"
   };
   firebase.initializeApp(firebaseConfig);
+  */
   var storage = firebase.storage();
   var storageRef = storage.ref(); 
   var db = firebase.firestore(); 
@@ -370,3 +372,78 @@ function updateColor(listUnits){
     }
 }
 
+
+/* Page Display Stuff (Originally in tp2.js) */
+
+
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+
+// Tabs
+function openLink(evt, linkName) {
+    if(linkName != undefined ){
+        var i, x, tablinks;
+        x = document.getElementsByClassName("myLink");
+        for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < x.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+        }
+        document.getElementById(linkName).style.display = "block";
+        evt.currentTarget.className += " w3-red";
+    }
+}
+
+// Tabs
+function openLink2(evt, linkName) {
+  var i, x, tttabbb;
+  x = document.getElementsByClassName("myLink2");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  tttabbb = document.getElementsByClassName("tttabbb");
+  for (i = 0; i < x.length; i++) {
+    tttabbb[i].className = tttabbb[i].className.replace(" w3-red", "");
+  }
+  document.getElementById(linkName).style.display = "block";
+  evt.currentTarget.className += " w3-red";
+}
+
+//Detail view tab
+function secondopenLink(evt, linkName) {
+    var i, x, tttabbb;
+    x = document.getElementsByClassName("secondmyLink");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+    }
+    tttabbb = document.getElementsByClassName("secondtablink");
+    for (i = 0; i < x.length; i++) {
+      tttabbb[i].className = tttabbb[i].className.replace(" w3-red", "");
+    }
+    document.getElementById(linkName).style.display = "block";
+    evt.currentTarget.className += " w3-red";
+  }
+
+/* Page display stuff end */

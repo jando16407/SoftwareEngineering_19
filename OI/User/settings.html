@@ -10,12 +10,12 @@
 src="https://code.jquery.com/jquery-3.1.1.min.js"
 integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
 crossorigin="anonymous"></script>
-<script src="../../dist/semantic.js"></script>
+<script src="../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
-<script src="hotkeys.min.js"></script>
-<script src="timeout.js"></script>
+<script src="./js/hotkeys.min.js"></script>
+<script src="./js/timeout.js"></script>
 
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
@@ -35,13 +35,11 @@ table {
 </style>
 </header>
 <body class="w3-light-grey">
+  
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
- 
-  <span class="w3-bar-item w3-right">OI</span>
-  <div class="w3-col s4">
-      <img src="../img/Inventory-maintenance-icon.png" class="w3-square w3-margin-right" style="width:46px">
-    </div>
+    <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+    <span class="w3-bar-item w3-right">OI</span>
 </div>
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-light-grey w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
@@ -157,7 +155,7 @@ table {
     </div>
   </div>
 </div>
-<script src="settings.js"></script>
-<script src="shortcuts.js"></script>
+<script src="./js/settings.js"></script>
+<script src="./js/shortcuts.js"></script>
 </body>
 </html>

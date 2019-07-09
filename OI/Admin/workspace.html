@@ -3,18 +3,18 @@
 <title>OI - Admin Workspace</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="../../css/w3.css">
-<link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
+<link rel="stylesheet" href="../css/w3.css">
+<link rel="stylesheet" type="text/css" href="../dist/semantic.min.css">
 <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
   crossorigin="anonymous"></script>
-<script src="../../dist/semantic.js"></script>
+<script src="../dist/semantic.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
-<script src="hotkeys.min.js"></script>
-<script src="timeout.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-auth.js"></script>
+<script src="./js/hotkeys.min.js"></script>
+<script src="./js/timeout.js"></script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -51,7 +51,7 @@ table {
     <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
-    <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
+    <a href="../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
   </div>
 </nav>
 
@@ -87,7 +87,7 @@ table {
             <button class="w3-bar-item w3-button tttabbb" onclick="openLink2(event, 'Tab_add2');">Unit 2 Add Items</button>-->
           </div>
           <!-- Tabs -->
-        <div style="overflow-y: scroll; overflow-x: scroll;">
+          <div style="overflow-y: scroll; overflow-x: scroll;">
             <p id="ItemAddTabContents"></p>
             
           </div>
@@ -114,12 +114,11 @@ table {
 </div>
 
 
-<!--<script src="tp1.js"></script>-->
-<script src ="loginauthentication.js"></script>
-<script src="workspace.js"></script>
-<script src="../UserMain/workRequest.js"></script>
-<script src="../UserMain/auth.js"></script>
-<script src="shortcuts.js"></script>
+<script src ="./js/loginauthentication.js"></script>
+<script src="./js/workspace.js"></script>
+<!--<script src="../UserMain/workRequest.js"></script>
+<script src="../UserMain/auth.js"></script>-->
+<script src="./js/shortcuts.js"></script>
 
 </body>
 </html>

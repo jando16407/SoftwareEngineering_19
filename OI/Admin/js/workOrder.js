@@ -1,4 +1,5 @@
 
+const form = document.querySelector("#requestForm");
 function formatTime(timestamp){
     let time = new Date(),
     minutes = time.getMinutes().toString().length == 1 ? '0'+time.getMinutes() : time.getMinutes(),
@@ -58,17 +59,16 @@ function formatTime(timestamp){
         // delete Announcement
         cross.addEventListener('click',async function(e){
             let id = e.target.parentElement.getAttribute('data-id');
-            await db.collection('Office/Workorder/workOrder').doc(id).update({
+            await database.collection('Office/Workorder/workOrder').doc(id).update({
                 condition: "Resolved"
             })
-            db.collection('Office/Workorder/workOrder').doc(id).delete();
+            database.collection('Office/Workorder/workOrder').doc(id).delete();
         });
     }
     //updates db 
-    db.collection('Office/Workorder/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
+    database.collection('Office/Workorder/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
         let changes = snapshot.docChanges();
         changes.forEach(change =>{
-            console.log(change.doc.data())
             if(change.type == 'added'){
                 renderOrder(change.doc);
             } else if (change.type == 'removed'){
@@ -80,11 +80,13 @@ function formatTime(timestamp){
     
     const printWorkOrder = document.querySelector('#workOrder');
     
-    form.addEventListener('submit', (e)=>{
-        e.preventDefault();
-        db.collection('Office/Completed/completedWork').add({
-            comment: form.comment.value,
-            completedBy: form.completedBy.value,
-            completedDate: formatTime(),
+    if(form != undefined && form != null){
+        form.addEventListener('submit', (e)=>{
+            e.preventDefault();
+            database.collection('Office/Completed/completedWork').add({
+                comment: form.comment.value,
+                completedBy: form.completedBy.value,
+                completedDate: formatTime(),
+            })
         })
-    })
+    }

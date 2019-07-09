@@ -69,7 +69,6 @@ table {
       <div class="w3-display-top " style="width:100%">
           <div class="w3-bar w3-black">
             <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainList');">Office View</button>
-            <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Tab1');">Fault Reports</button>
           </div>
           <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
                 <div id="officeViewDiv" style="display: inline-block">
@@ -82,8 +81,6 @@ table {
                   <h3>Options</h3>
                   <p>Unit Size</p>
                   <input id="size" type="number" value="10"><br><br>
-                  <p>Unit Number</p>
-                  <input id="unitNum" type="number" value="100"><br>
                 </div>
                 <br>
                 <input id="file" class="custom-file-input" type="file" title=" "onchange="readURL(this)" />
@@ -96,7 +93,6 @@ table {
 <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-storage.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.3/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
-<script src="https://unpkg.com/tooltip.js"></script>
 <script src ="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.0.0/fabric.min.js"></script>
 <script src="officeview.js"></script>
 <script src="shortcuts.js"></script>

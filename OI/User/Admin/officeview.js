@@ -16,22 +16,42 @@ var firebaseConfig = {
   var file = document.getElementById('file')
   var fabricCanvas = new fabric.Canvas("officeView")
   var savingUnits = false
+  var isOnLoad = true
 
   // on load functions and listeners
   window.onload = async function(){
       await loadImg()
-      //await updateUnits()
+      await clearCanvas()
+      await updateUnits()
+      await db.collection("Office").doc("Workorder").collection("workOrder")
+      .get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            updateColor(doc.data())
+        });
+    });
+    isOnLoad = false
+    console.log("done")
   }
   //if change in db update units & array
   db.collection("Office").doc("officeView")
     .onSnapshot(async function(doc) {
-        if(!savingUnits){
+        if(!savingUnits && !isOnLoad){
             await clearCanvas()
             updateUnitsArray(doc.data())
-            updateUnits()
+            await updateUnits()
         }
     });
+  //if change to work order
+  db.collection("Office").doc("Workorder").collection("workOrder")
+    .onSnapshot(async function(querySnapshot) {
+        console.log("change detected!!")
+        querySnapshot.forEach(function(doc) {
+            console.log(doc.data())
+            updateColor(doc.data());
+        });
+    });
 /**********************************Loads image, if there is no image stored wait for image to be uploaded!*************************/
+//loads image for office view
 async function loadImg() {
     
 imageDownloadRef = storageRef.child('officeView/officeView')
@@ -76,10 +96,6 @@ var isDeletingUnits = false
 
 var deletedUnits = new Array()
 var tempUnits = new Array()
-
-//TODO: set innerhtml of unitNum input value to highest unit num in db
-
-
 
 //enables adding units & saving units
 async function addUnits(event){
@@ -126,10 +142,6 @@ async function deleteUnits(event){
             await db.collection("Office").doc("officeView").update({
                 [deletedUnits[0]]: firebase.firestore.FieldValue.delete()
             })
-
-
-            //TODO DELETE INVENTORY HEREEEEE
-
 
             await deletedUnits.shift()
         }
@@ -206,6 +218,7 @@ officeView.onclick = async function(event){
 }
 /**********************************************************************************************************************************/
 /*************************************************Update Units*********************************************************************/
+//updates units on any db change
 function updateUnits(){
     db.collection("Office").doc("officeView").get().then(function(doc){
         if (doc.exists) {
@@ -218,6 +231,7 @@ function updateUnits(){
         console.log("Error getting document:", error);
     })
 }
+// draw in all units onto canvas
 function drawInUnits(units){
     const unitArray = Object.values(units)
     for ( i = 0; i < (unitArray.length -1); i++){
@@ -306,7 +320,7 @@ async function getUnitInfo(num, elem){
     await firebase.firestore().collection("Office").doc("Workorder").collection("workOrder").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             if(doc.data().section == num){
-                string = string.concat(doc.data().itemDescription, "<br><br>")
+                string = string.concat(doc.data().itemName, "<br><br>")
                 isFaults = true
             }
         })
@@ -315,5 +329,44 @@ async function getUnitInfo(num, elem){
         string = string.concat("none<br><br>")
     }
     elem.innerHTML = string
+}
+// updates color of each unit when work order is processed for a unit
+function updateColor(listUnits){
+    var objs = fabricCanvas.getObjects()
+    var color
+    console.log(objs.length)
+    for(var i = 0; i < objs.length; i++){
+        if(objs[i].get("id") == listUnits.section){
+            console.log(listUnits.condition)
+            if(listUnits.condition == "Mild")
+                color = "yellow"
+            else if(listUnits.condition == "Severe")
+                color ="red"
+            else
+                color = "green"
+             console.log(color)
+             //objs[i].fill = color
+             var circ = new fabric.Circle({
+                id: objs[i].get("id"),
+                left: objs[i].get("left"),
+                top: objs[i].get("top"),
+                fill: color,
+                radius: objs[i].get("radius"),
+                opacity: 0.3,
+                selectable: false,
+            })
+            circ.on("mouseover", function(){
+                console.log(this.get("id"))
+                createToolTip(this)
+            })
+            circ.on("mouseout", function(){
+                cancelTip()
+            })
+            fabricCanvas.add(circ) 
+            fabricCanvas.remove(objs[i]) 
+        
+            
+        }
+    }
 }
 

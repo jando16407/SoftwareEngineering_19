@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<header>
 <title>OI - Employee Workspace</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,6 +16,9 @@
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
 <script src="hotkeys.min.js"></script>
 <script src="timeout.js"></script>
+<!-- Compiled and minified CSS --
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+--->
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -33,6 +37,7 @@ table {
         background-color: #dddddd;
     }
 </style>
+</header>
 <body class="w3-light-grey">
 
 <!-- Top container -->
@@ -61,8 +66,6 @@ table {
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:200px;margin-top:40px;">
 <h2>Workspace</h2>
-  <header>
-
     <!--The whole workspace-->
     <div style="display: inline-block; width:100%;">
       <div class="w3-display-top " style="width:70%; display: inline-block; overflow-y: scroll; overflow-x: scroll;">
@@ -121,12 +124,47 @@ table {
                 </p>
               </div>
             </div>
-    
+<!--  materialize modal cannot be used with current template of this webpage, not without changing format in other division 
+
+Also, on submit the form appears in the bottom of the page.  It will go away if refreshing the page. -->
             <!--Tab2 (Work Orders)-->
             <div id="Tab_work" class="w3-container w3-white w3-padding-16 myLink2">
               <div style="height: 400px; overflow: scroll;">
                 <h4>Create a work order</h4>
-                
+                  <div class="workRequestForm">
+                    <form id="requestForm" class="w3-btn dark-gray" style="text-align: left">
+                      <label class="label ">Section</label><br>
+                      <input type="textfield" id="section" class="collapsible-body w3-hover-dark-gray" style="height: 30px" /><br>
+                      
+                      <label class="label ">Condition</label><br>
+                      <select  id="condition" list="options" class="collapsible-body w3-hover-dark-gray" style="height: 30px">
+                        <option>Mild</option>
+                        <option>Severe</option>
+                      </select><br>
+                      <label class="label">Nature of request</label><br>
+                      <select id="requestType" class="requestTypes w3-hover-dark-gray" style="height: 30px">
+                        <option value="electrical">Electrical</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="officeSupply">Office Supply</option>
+                      </select><br>
+                           
+                      <label class="label ">What item are you requesting?</label><br>
+                      <input type="text" id="itemName" class="collapsible-body w3-hover-dark-gray" style="height: 30px" placeholder="  ie. folder" /><br>
+                    
+                      <label class="label ">Item description</label><br>
+                      <input type="text" id="itemDescription" class="collapsible-body w3-hover-dark-gray" style="height: 30px" placeholder="  ie. 3-in"/><br>
+                              
+                      <label class="label ">Quantity</label><br>
+                      <input type="text" id="quantity" class="collapsible-body w3-hover-dark-gray" style="height: 30px" /><br>
+                        
+                      <label class="label ">When do you need it by?</label><br>
+                      <input type="text" id="needBy" class="collapsible-body w3-hover-dark-gray" style="height: 30px" /><br>
+              
+                      <label>Brief description of the problem</label><br>
+                      <textarea class="input w3-hover-dark-gray" rows="4" type="input" cols="50" id="problem"></textarea><br>
+                      <button id="submitButton">Submit</button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
@@ -185,12 +223,12 @@ table {
         </div>
       </div>
     </div>
-
-
-    </header>
 </div>
 <script src= 'loginauthentication.js'></script>
+<script src="UserMain/workRequest.js"></script>
 <script src="user_workspace.js"></script>
 <script src="shortcuts.js"></script>
+<script src="../User/UserMain/workRequest.js"
+<!----<script src="../css/materialize/js/materialize.min.js"></script>--->
 </body>
 </html>

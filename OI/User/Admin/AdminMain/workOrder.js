@@ -1,3 +1,4 @@
+
 function formatTime(timestamp){
     let time = new Date(),
     minutes = time.getMinutes().toString().length == 1 ? '0'+time.getMinutes() : time.getMinutes(),
@@ -7,56 +8,63 @@ function formatTime(timestamp){
     days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
     }
-
+    //adds all work order in list view
     function renderOrder(doc){
         let dateRequest = formatTime(doc.data().requestDate);
         let dateNeeded = formatTime(doc.data().needBy);
-
         let li = document.createElement('li');
-        let requestType = document.createElement('span');
-        let request = document.createElement('span');
+        let requestType = document.createElement('div');
+        let problem = document.createElement('span');
         let requestDate = document.createElement('span');
         let needBy = document.createElement('span');
         let itemName = document.createElement('span');
         let itemDescription = document.createElement('span');
         let quantity = document.createElement('span');
         let unit = document.createElement('span')
-
+        let br0 = document.createElement('br');
         let cross = document.createElement('button');
-    
+        let br1 = document.createElement('br');
+        let br2 = document.createElement('br');
+        let br3 = document.createElement('br');
+
         li.setAttribute('data-id', doc.id);
-        requestType.textContent = doc.data().requestType;
-        request.textContent = doc.data().request;
-        requestDate.textContent = dateRequest;
-        needBy.textContent = doc.data().dateNeeded;
-        itemName.textContent = doc.data().itemName;
-        itemDescription.textContent = doc.data().itemDescription;
+        requestType.textContent =`Request type: ${doc.data().requestType}`;
+        problem.textContent = `Description of the problem:  ${doc.data().problem}`;
+        requestDate.textContent = `Requested date: ${dateRequest}`;
+        needBy.textContent = `Needed by: ${dateNeeded}`;
+        itemName.textContent = `Item Name: ${doc.data().itemName}`;
+        itemDescription.textContent = `, ${doc.data().itemDescription}`;
         quantity.textContent = doc.data().quantity;
         unit.textContent = doc.data().unit;
-    
-        cross.textContent = 'X';
-
-        li.appendChild(unit);
+        cross.textContent = 'Delete';
+ 
         li.appendChild(requestType);
-        li.appendChild(request);
+        li.appendChild(problem);
+        li.appendChild(br0)
         li.appendChild(requestDate);
+        li.appendChild(br1)
         li.appendChild(needBy);
+        li.appendChild(br2)
         li.appendChild(itemName);
         li.appendChild(itemDescription);
         li.appendChild(quantity);
         li.appendChild(unit);
+        li.appendChild(br3);
 
         li.appendChild(cross);
-    
+
         printWorkOrder.appendChild(li);
+
         // delete Announcement
-        cross.addEventListener('click', (e)=>{
-            //e.stopPropagation();
+        cross.addEventListener('click',async function(e){
             let id = e.target.parentElement.getAttribute('data-id');
-            //db.collection('Office/Completed/CompletedWork').doc(id).add();
+            await db.collection('Office/Workorder/workOrder').doc(id).update({
+                condition: "Resolved"
+            })
             db.collection('Office/Workorder/workOrder').doc(id).delete();
-        })
+        });
     }
+    //updates db 
     db.collection('Office/Workorder/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
         let changes = snapshot.docChanges();
         changes.forEach(change =>{
@@ -66,16 +74,12 @@ function formatTime(timestamp){
             } else if (change.type == 'removed'){
                 let li = printWorkOrder.querySelector('[data-id=' + change.doc.id + ']');
                 printWorkOrder.removeChild(li);
-            }
+           }
         })
     })  
     
     const printWorkOrder = document.querySelector('#workOrder');
-    // const form = document.querySelector("#send-request-form");
-    // const sndBtn = document.querySelector("sndBtn");
     
-    
-    // Post this for everyone
     form.addEventListener('submit', (e)=>{
         e.preventDefault();
         db.collection('Office/Completed/completedWork').add({

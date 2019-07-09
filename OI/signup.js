@@ -41,7 +41,7 @@ signup.onclick = async function(){
         alert("Passwords are not the same.")
         return
     }
-    //creates new user in firebase authentication
+//creates new user in firebase authentication
     var isError = false
     await firebase.auth().createUserWithEmailAndPassword(email.value, pw1.value).catch(function(error) {
         // Handle Errors here.
@@ -80,6 +80,7 @@ signup.onclick = async function(){
       alert("You have successfully signed up!")
       document.location.href = "index.html"
 }
+//add options for available units
 async function addOptions(){
     var optionList = document.getElementById("options")
     var keys = new Array()

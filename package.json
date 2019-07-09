@@ -24,6 +24,7 @@
     "admin": "^1.4.1",
     "firebase": "^6.2.4",
     "firebaseui": "^4.0.0",
+    "materialize-css": "^1.0.0-rc.2",
     "node.js": "0.0.0"
   }
 }

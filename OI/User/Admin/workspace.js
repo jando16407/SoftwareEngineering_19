@@ -19,6 +19,7 @@ var numOfUnits;     //Nuber of units stored on database
 var unitNameArray =[];  //Names of units stored on database
 //var dataSnapshots = []; //keep snapshots of all data in database
 var masterlistdone = false;
+var searchClicked = false;
 //For the item list tabs
 var itemListTabButtonContainer; //mark to display itemListTabButtons
 var itemListTabContainer;       //mark to display itemListTabsContents
@@ -251,6 +252,7 @@ function init_tables(){
     let listRow = document.createElement('tr');
     let topRow = "<th>Name</th><th>Quantity</th><th>Quantity Unit</th><th>Category</th><th>Sub Category</th><th>Minimum Quantity in Office</th>";
     listRow.innerHTML = topRow;
+    listRow.setAttribute('key', 'TopRow');
     tabContentsItemTableContainer[0].appendChild(listRow);
     //For master list
     let masterDataList = document.createElement('p');
@@ -306,12 +308,6 @@ function init_tables(){
         _searchInput.setAttribute('id', 'unitListSearch'+i);
         _searchInput.setAttribute('placeholder', 'Search items...');
         _searchInput.setAttribute('list', 'option_search_area'+i);
-        //Search Quantity unit input
-        let _searchInputQuantityUnit = document.createElement('input');
-        _searchInputQuantityUnit.setAttribute('id', 'unitListSearchQuantityUnit'+i);
-        _searchInputQuantityUnit.setAttribute('style', 'height: 40px; width: 70px;');
-        _searchInputQuantityUnit.setAttribute('placeholder', 'Qt. unit...');
-        _searchInputQuantityUnit.setAttribute('list', 'option_search_area_quantity_unit'+i);
         //Search Category input
         let _searchInputCategory = document.createElement('input');
         _searchInputCategory.setAttribute('id', 'unitListSearchCategory'+i);
@@ -354,6 +350,7 @@ function init_tables(){
         let _listRow = document.createElement('tr');
         let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
         _listRow.innerHTML = _topRow;
+        _listRow.setAttribute('key', 'TopRow');
         tabContentsItemTableContainer[i].appendChild(_listRow);
         //For master list
         let _unitDataList = document.createElement('p');
@@ -362,7 +359,6 @@ function init_tables(){
 
         //Put everything together
         _searchDiv.appendChild(_searchInput);
-        _searchDiv.appendChild(_searchInputQuantityUnit);
         _searchDiv.appendChild(_searchInputCategory);
         _searchDiv.appendChild(_searchInputSubCategory);
         _searchDiv.appendChild(_searchButton);
@@ -855,7 +851,7 @@ async function get_selections(){
         });
     }
 
-    console.log("Name array : "+names);
+    //console.log("Name array : "+names);
     let namesUniqueArray = [], quantityUnitsUniqueArray = [], categoriesUniqueArray = [], subcategoriesUniqueArray = [];
     namesUniqueArray = getUniq(names);
     quantityUnitsUniqueArray = getUniq(quantityUnits);
@@ -863,13 +859,13 @@ async function get_selections(){
     subcategoriesUniqueArray = getUniq(subcategories);
     
     
-    await console.log("namesUniqueArray: "+namesUniqueArray);
+   // await console.log("namesUniqueArray: "+namesUniqueArray);
     nameSelection = namesUniqueArray;
-    await console.log("quantityUnitsUniqueArray: "+quantityUnitsUniqueArray);
+   // await console.log("quantityUnitsUniqueArray: "+quantityUnitsUniqueArray);
     quantityUnitSelection = quantityUnitsUniqueArray;
-    await console.log("categoriesUniqueArray: "+categoriesUniqueArray);
+   // await console.log("categoriesUniqueArray: "+categoriesUniqueArray);
     categorySelection = categoriesUniqueArray;
-    await console.log("subcategoriesUniqueArray: "+subcategoriesUniqueArray);
+   // await console.log("subcategoriesUniqueArray: "+subcategoriesUniqueArray);
     subcategorySelection = subcategoriesUniqueArray;
 
     function getUniq(arr){
@@ -878,6 +874,7 @@ async function get_selections(){
             return uniqueArr.hasOwnProperty(item) ? false : uniqueArr[item] = true;
         });
     };
+    console.log("Get Selection done...");
 }
 
 function add_options(){
@@ -949,7 +946,7 @@ function add_options(){
         masterDataList.appendChild(item_search_options_category_master);
         masterDataList.appendChild(item_search_options_subcategory_master);
     
-    $('table').tablesort();
+   // $('table').tablesort();
 }
 
 function add_selections(item_options, itemSelection){
@@ -988,7 +985,7 @@ function renderUnit( unitNum ){
     ref.orderBy('id').onSnapshot(function(querySnapshot) {
         querySnapshot.docChanges().forEach(async function(change) {
             if(change.type === "added"){
-                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change, unitNum));
+                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change.doc, unitNum));
                 if(masterlistdone) resetMasterList();
                 if(masterlistdone) await get_selections();
                 if(masterlistdone) get_master_list(); 
@@ -998,7 +995,7 @@ function renderUnit( unitNum ){
                 for( let num=0; num<numOfUnits; num++ ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
-                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change, num), tabContentsItemTableContainer[num+1].children[i]);
+                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change.doc, num), tabContentsItemTableContainer[num+1].children[i]);
                             if(masterlistdone) resetMasterList();
                             if(masterlistdone) await get_selections();
                             if(masterlistdone) get_master_list();
@@ -1030,48 +1027,18 @@ function renderUnitOnce( unitNum ){
     let unitName = unitNameArray[unitNum]
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
     //Make the base of table setup
-    ref.orderBy('id').onSnapshot(function(querySnapshot) {
-        querySnapshot.docChanges().forEach(async function(change) {
-            if(change.type === "added"){
-                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change, unitNum));
-                if(masterlistdone) resetMasterList();
-                if(masterlistdone) await get_selections();
-                if(masterlistdone) get_master_list(); 
-            }
-            if(change.type === "modified"){
-                //console.log("Modifying detected, doc.id = "+change.doc.id);
-                for( let num=0; num<numOfUnits; num++ ){
-                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
-                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
-                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change, num), tabContentsItemTableContainer[num+1].children[i]);
-                            if(masterlistdone) resetMasterList();
-                            if(masterlistdone) await get_selections();
-                            if(masterlistdone) get_master_list();
-                        }
-                    }
-                }
-            }
-            if(change.type === "removed"){
-                //console.log("Delete detected, doc.id = "+change.doc.id);
-                for( let num=0; num<numOfUnits; num++ ){
-                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
-                        //console.log("CHECKING : "+tabContentsItemTableContainer[num+1].children[i].getAttribute('id'));
-                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
-                            tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
-                            //console.log("FOUNT IT");
-                            if(masterlistdone) resetMasterList();
-                            if(masterlistdone) await get_selections();
-                            if(masterlistdone) get_master_list();
-                        }
-                    }
-                }
-            }
+    ref.orderBy('id').get().then(function(querySnapshot) {
+        querySnapshot.forEach(async function(doc) {
+        //    if(change.type === "added"){
+            console.log("Adding child to unitNUm = "+unitNum);
+                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(doc, unitNum));
+         
         });
     });
 }
 
 //Create row in a table and it return row
-function getRowInfo(change, unitNumber){
+function getRowInfo(doc, unitNumber){
     let row = document.createElement('tr');
     let id = document.createElement('th');
     let name = document.createElement('th');
@@ -1080,27 +1047,27 @@ function getRowInfo(change, unitNumber){
     let subcategory = document.createElement('th');
     let description = document.createElement('th');
     //row.setAttribute('key', change.doc.id);
-    row.setAttribute('id', change.doc.id);
+    row.setAttribute('id', doc.id);
     row.addEventListener('click', function(e){
-        itemSelected(change.doc.id, unitNumber);
+        itemSelected(doc.id, unitNumber);
     });
-    if( change.doc.data().id != undefined ){
-        id.innerHTML = change.doc.data().id;
+    if( doc.data().id != undefined ){
+        id.innerHTML = doc.data().id;
     }
-    if( change.doc.data().name != undefined ){
-        name.innerHTML = change.doc.data().name;
+    if( doc.data().name != undefined ){
+        name.innerHTML = doc.data().name;
     }
-    if( change.doc.data().quantity != undefined ){
-        quantity.innerHTML = change.doc.data().quantity;
+    if( doc.data().quantity != undefined ){
+        quantity.innerHTML = doc.data().quantity;
     }
-    if( change.doc.data().category != undefined ){
-        category.innerHTML = change.doc.data().category;
+    if( doc.data().category != undefined ){
+        category.innerHTML = doc.data().category;
     }
-    if( change.doc.data().subcategory != undefined ){
-        subcategory.innerHTML = change.doc.data().subcategory;
+    if( doc.data().subcategory != undefined ){
+        subcategory.innerHTML = doc.data().subcategory;
     }
-    if( change.doc.data().description != undefined ){
-        description.innerHTML = change.doc.data().description;
+    if( doc.data().description != undefined ){
+        description.innerHTML = doc.data().description;
     }
     row.appendChild(id);
     row.appendChild(name);
@@ -1457,6 +1424,7 @@ function searchButtonClicked(i){
             for( let j=table.rows.length-1; j>0; j--){
                 if(table.rows[j].cells[0].innerHTML != searchInput.value){
                     table.deleteRow(j);
+                    this.searchClicked = true;
                 }
             }
         }
@@ -1466,6 +1434,7 @@ function searchButtonClicked(i){
             for( let j=table.rows.length-1; j>0; j--){
                 if(table.rows[j].cells[2].innerHTML != searchInputQuantityUnit.value){
                     table.deleteRow(j);
+                    this.searchClicked = true;
                 }
             }
             
@@ -1476,6 +1445,7 @@ function searchButtonClicked(i){
             for( let j=table.rows.length-1; j>0; j--){
                 if(table.rows[j].cells[3].innerHTML != searchInputCategory.value){
                     table.deleteRow(j);
+                    this.searchClicked = true;
                 }
             }
             
@@ -1486,6 +1456,7 @@ function searchButtonClicked(i){
             for( let j=table.rows.length-1; j>0; j--){
                 if(table.rows[j].cells[4].innerHTML != searchInputSubCategory.value){
                     table.deleteRow(j);
+                    this.searchClicked = true;
                 }
             }
             
@@ -1498,25 +1469,31 @@ function searchButtonClicked(i){
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Search the input item
             for( let j=table.rows.length-1; j>0; j--){
-                if(table.rows[j].cells[0].innerHTML != searchInput.value){
+                if(table.rows[j].cells[1].innerHTML != searchInput.value){
                     table.deleteRow(j);
+                    this.searchClicked = true;
                 }
             }
-        }
-        let searchInputQuantityUnit = document.getElementById('unitListSearchQuantityUnit'+i);
-        if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
-            //Search the input item
-            
         }
         let searchInputCategory = document.getElementById('unitListSearchCategory'+i);
         if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
             //Search the input item
-            
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[3].innerHTML != searchInputCategory.value){
+                    table.deleteRow(j);
+                    this.searchClicked = true;
+                }
+            }
         }
         let searchInputSubCategory = document.getElementById('unitListSearchSubcategory'+i);
         if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
             //Search the input item
-            
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[4].innerHTML != searchInputSubCategory.value){
+                    table.deleteRow(j);
+                    this.searchClicked = true;
+                }
+            }
         }
     }
 
@@ -1530,7 +1507,7 @@ function resetSearchButtonClicked(i){
         let searchInput = document.getElementById('masterListSearch');
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Reset input
-            console.log("Search input = "+searchInput.value);
+           // console.log("Search input = "+searchInput.value);
             searchInput.value = '';
             //Search the input item
             
@@ -1538,7 +1515,7 @@ function resetSearchButtonClicked(i){
         let searchInputQuantityUnit = document.getElementById('masterListSearchQuantityUnit');
         if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
             //Reset input
-            console.log("Search input = "+searchInputQuantityUnit.value);
+           // console.log("Search input = "+searchInputQuantityUnit.value);
             searchInputQuantityUnit.value = '';
             //Search the input item
             
@@ -1546,7 +1523,7 @@ function resetSearchButtonClicked(i){
         let searchInputCategory = document.getElementById('masterListSearchCategory');
         if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
             //Reset input
-            console.log("Search input = "+searchInputCategory.value);
+           /// console.log("Search input = "+searchInputCategory.value);
             searchInputCategory.value = '';
             //Search the input item
             
@@ -1554,37 +1531,29 @@ function resetSearchButtonClicked(i){
         let searchInputSubCategory = document.getElementById('masterListSearchSubcategory');
         if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
             //Reset input
-            console.log("Search input = "+searchInputSubCategory.value);
+           // console.log("Search input = "+searchInputSubCategory.value);
             searchInputSubCategory.value = '';
             //Search the input item
             
         }
         resetMasterList();
         get_master_list();
+        this.searchClicked = false;
     }
     else{//All other units searchbuton
         let searchInput = document.getElementById('unitListSearch'+i);
         let empty = true;
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Reset input
-            console.log("Search input = "+searchInput.value);
+            //console.log("Search input = "+searchInput.value);
             searchInput.value = '';
             //Search the input item
             empty = false;
         }
-        let searchInputQuantityUnit = document.getElementById('unitListSearchQuantityUnit'+i);
-        if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
-            //Reset input
-            console.log("Search input = "+searchInputQuantityUnit.value);
-            searchInputQuantityUnit.value = '';
-            //Search the input item
-            empty = false;
-            
-        }
         let searchInputCategory = document.getElementById('unitListSearchCategory'+i);
         if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
             //Reset input
-            console.log("Search input = "+searchInputCategory.value);
+            //console.log("Search input = "+searchInputCategory.value);
             searchInputCategory.value = '';
             //Search the input item
             empty = false;
@@ -1592,19 +1561,31 @@ function resetSearchButtonClicked(i){
         let searchInputSubCategory = document.getElementById('unitListSearchSubcategory'+i);
         if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
             //Reset input
-            console.log("Search input = "+searchInputSubCategory.value);
+            //console.log("Search input = "+searchInputSubCategory.value);
             searchInputSubCategory.value = '';
             //Search the input item
             empty = false;
         }
-        if(!empty){
+        if(this.searchClicked){
             let p = i-1;
-            //resetMasterList();
-            while(tabContentsItemTableContainer[i].children.length>1){
-                tabContentsItemTableContainer[i].removeChild[1];
-            }
+            console.log("Deleting child i = "+i);
+                let child = tabContentsItemTableContainer[i].lastElementChild;
+                while(child){
+                    if(child!=null){
+                        if(child.getAttribute('key') == 'TopRow'){
+                            console.log("breaking");
+                            break;
+                        }
+                    }
+                    tabContentsItemTableContainer[i].removeChild(child);
+                    child = tabContentsItemTableContainer[i].lastElementChild;
+                    
+                }
+                
+           // }
             //get_master_list()
-            renderUnit(i-1);
+            renderUnitOnce(p);
+            this.searchClicked = false;
         }
 
     }

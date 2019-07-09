@@ -10,16 +10,7 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 var database = firebase.firestore();
-//reset login on window load
-window.onload = function(){
-  /*firebase.auth().signOut().then(function(){
-    //successful
-//      alert('logged out')
-  },function(error){
-    alert('still logged in')
-  })*/
-}
-//setup();
+
 var submitButton1 = document.getElementById("submitButton1");
 var submitButton2 = document.getElementById("submitButton2");
 var submitButton3 = document.getElementById("submitButton3");
@@ -37,16 +28,17 @@ await firebase.auth().signInWithEmailAndPassword(itemUsername.value, itemOldPass
    alert("error")
    // ...º
 });
-
+//get current user
 var user22 = firebase.auth().currentUser;
-//firebase.auth().onAuthStateChanged;
+//update pass
 user22.updatePassword(itemNewPass.value).then(function() {
 alert('Password Updated successfully');
 }).catch(function(error) {
 console.log('An error happened.')
 });
+//Show in report
 const report = document.getElementById('Message');
-report.innerHTML = 'password of user ' + '(' +itemUsername.value  + ')' + ' is changed by employee.'
+report.innerHTML = 'Password of user ' + '(' +itemUsername.value  + ')' + ' is changed by employee.'
 }
 /************************* Delete Username ********************************/
 submitButton2.onclick = async function(){ 
@@ -60,15 +52,18 @@ submitButton2.onclick = async function(){
    alert("error");
    // ...º
  });
- 
+ //get current user
  var user = firebase.auth().currentUser;
+ //get userid
  var userId = itemDelete.value.match(/^(.+)@/)[1]
+ //delete user
  user.delete().then(function() {
    alert('User Deleted successfully');
  }).catch(function(error) {
    // An error happened.
  });
  firebase.firestore().collection("Office").doc("Users").collection("Users").doc(userId).delete()
+ //show report to user
  const report = document.getElementById('Message');
  report.innerHTML = 'Account of user ' + '(' +itemDelete.value  + ')' + ' is deleted by employee.'
  }
@@ -88,16 +83,15 @@ submitButton3.onclick = async function(){
         // No user is signed in.
         console.log("did not work");
       }
-  
     });
     
-    //var telInput = document.getElementById("phone");
-    if( nameInput != '' && nameInput != undefined ){
+    //For each field update in database
+    if( nameInput.value != '' && nameInput != undefined ){
       database.collection('Office').doc('Users').collection('Users').doc(userIdUpdate).update({
         name: nameInput.value
       });
     }
-    if( secNum1 != '' && secNum1 != undefined ){
+    if( secNum1.value != '' && secNum1 != undefined ){
       database.collection('Office').doc('Users').collection('Users').doc(userIdUpdate).update({
         sectionNum: secNum1.value
       });
@@ -106,38 +100,11 @@ submitButton3.onclick = async function(){
       database.collection('Office').doc('Users').collection('Users').doc(userIdUpdate).update({
         userType: typeInput.value
       });
-    }/*
-    if( telInput != '' && nameInput != undefined ){
-      database.collection('Office').doc('Users').collection('Users').doc('aa').update({
-        name: nameInput.value
-      });
-    }*/
-    //var userId = userId1.value;
-    //database.collection('Office').doc('Users').collection('Users').doc('users/' + userId).add({
-      /*
-      database.collection('Office').doc('Users').collection('Users').doc('aa').update({
-      name: nameInput.value,
-      sectionNum: secNum1.value,
-      userType: typeInput.value,
-      userPhone: telInput.value,
-    });*/
-/*
-   firebase.database().ref('users/' + userId).set({
-    name: nameInput.value,
-    sectionNum: secNum1.value,
-    userType: typeInput.value,
-    userPhone: telInput.value,
-  });*/
+    }
   const report = document.getElementById('Message');
-  //const report1 = document.getElementById('Message1');
   const report2 = document.getElementById('Message2');
   const report3 = document.getElementById('Message3');
-  //const report4 = document.getElementById('Message4');
-  //const report5 = document.getElementById('Message5');
   report.innerHTML = 'Profile of user is changed by employee:'
-  //report1.innerHTML = 'Username is: ' + userId1.value;
   report2.innerHTML = 'Name is: '+ nameInput.value;
   report3.innerHTML = 'Section is: '+ secNum1.value;
-  //report4.innerHTML = 'Type of user is: '+ typeInput.value;
-  //report5.innerHTML = 'Telphone number is: ' + telInput.value;
   }

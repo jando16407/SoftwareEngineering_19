@@ -71,8 +71,4 @@ async function identifyUser(email){
   }).catch(function(error) {
       console.log("Error getting document:", error);
   });
-    
-    
-
-  
 }

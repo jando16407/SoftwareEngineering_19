@@ -21,6 +21,7 @@ async function logOut(){
       console.log(error);
   }); 
 }
+//on log out, console.log
 firebase.auth().onAuthStateChanged(user =>{
   console.log(user);
   if(user){

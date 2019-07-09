@@ -7,7 +7,7 @@ function formatTime(timestamp){
     days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
     }
-
+    //adds all work order in list view
     function renderOrder(doc){
         let dateRequest = formatTime(doc.data().requestDate);
         let dateNeeded = formatTime(doc.data().needBy);
@@ -55,17 +55,16 @@ function formatTime(timestamp){
         printWorkOrder.appendChild(li);
         // delete Announcement
         cross.addEventListener('click',async function(e){
-            //e.stopPropagation();
             let id = e.target.parentElement.getAttribute('data-id');
             await db.collection('Office/Workorder/workOrder').doc(id).update({
                 condition: "Resolved"
             })
-            //db.collection('Office/Completed/CompletedWork').doc(id).add();
             db.collection('Office/Workorder/workOrder').doc(id).delete();
             alert("Work Order has been resolved.")
             li.innerHTML =""
         })
     }
+    //updates db 
     db.collection('Office/Workorder/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
         let changes = snapshot.docChanges();
         changes.forEach(change =>{
@@ -80,11 +79,7 @@ function formatTime(timestamp){
     })  
     
     const printWorkOrder = document.querySelector('#workOrder');
-    // const form = document.querySelector("#send-request-form");
-    // const sndBtn = document.querySelector("sndBtn");
     
-    
-    // Post this for everyone
     form.addEventListener('submit', (e)=>{
         e.preventDefault();
         db.collection('Office/Completed/completedWork').add({

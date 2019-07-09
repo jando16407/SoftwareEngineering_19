@@ -200,7 +200,7 @@ function init_tables(){
     //Search Name input
     let searchInputName = document.createElement('input');
     searchInputName.setAttribute('id', 'masterListSearch');
-    searchInputName.setAttribute('style', 'height: 40px; width: 180px;');
+    searchInputName.setAttribute('style', 'height: 40px; width: 150px;');
     searchInputName.setAttribute('placeholder', 'Search item name...');
     searchInputName.setAttribute('list', 'option_search_masterList');
     //Search Quantity unit input
@@ -211,10 +211,16 @@ function init_tables(){
     searchInputQuantityUnit.setAttribute('list', 'option_search_masterList_quantity_unit');
     //Search Category input
     let searchInputCategory = document.createElement('input');
-    searchInputQuantityUnit.setAttribute('id', 'masterListSearchQuantityUnit');
-    searchInputQuantityUnit.setAttribute('style', 'height: 40px; width: 70px;');
-    searchInputQuantityUnit.setAttribute('placeholder', 'Qt. unit...');
-    searchInputQuantityUnit.setAttribute('list', 'option_search_masterList_quantity_unit');
+    searchInputCategory.setAttribute('id', 'masterListSearchCategory');
+    searchInputCategory.setAttribute('style', 'height: 40px; width: 130px;');
+    searchInputCategory.setAttribute('placeholder', 'Search category...');
+    searchInputCategory.setAttribute('list', 'option_search_masterList_category');
+    //Search Sub Category input
+    let searchInputSubCategory = document.createElement('input');
+    searchInputSubCategory.setAttribute('id', 'masterListSearchSubcategory');
+    searchInputSubCategory.setAttribute('style', 'height: 40px; width: 130px;');
+    searchInputSubCategory.setAttribute('placeholder', 'Search subcategory...');
+    searchInputSubCategory.setAttribute('list', 'option_search_masterList_subcategory');
     //Search button
     let searchButton = document.createElement('button');
     searchButton.setAttribute('style', 'height: 40px; width: 70px;');
@@ -253,6 +259,8 @@ function init_tables(){
     //Put everything together
     searchDiv.appendChild(searchInputName);
     searchDiv.appendChild(searchInputQuantityUnit);
+    searchDiv.appendChild(searchInputCategory);
+    searchDiv.appendChild(searchInputSubCategory);
     searchDiv.appendChild(searchButton);
     searchDiv.appendChild(resetSearchButton);
     div2.appendChild(tabContentsItemList[0]);

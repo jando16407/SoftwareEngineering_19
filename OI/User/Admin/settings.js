@@ -53,7 +53,7 @@ const report = document.getElementById('Message');
 report.innerHTML = 'password of user ' + '(' +itemUsername.value  + ')' + ' is changed by Admin.'
 }
 /************************* Delete Username ********************************/
-submitButton2.onclick = function(){ 
+submitButton2.onclick = async function(){ 
   var itemDelete = document.getElementById("username2");
   var itemPass = document.getElementById("password2");
   
@@ -88,17 +88,17 @@ submitButton3.onclick = async function(){
     var typeInput = document.getElementById("type");
     var userIdUpdate = emailInput.value.match(/^(.+)@/)[1]
 
-    if( nameInput != '' && nameInput != undefined ){
+    if( nameInput.value != '' && nameInput != undefined ){
       database.collection('Office').doc('Users').collection('Users').doc(userIdUpdate).update({
         name: nameInput.value
       });
     }
-    if( secNum1 != '' && secNum1 != undefined ){
+    if( secNum1.value != '' && secNum1 != undefined ){
       database.collection('Office').doc('Users').collection('Users').doc(userIdUpdate).update({
         sectionNum: secNum1.value
       });
     }
-    if( typeInput != '' && typeInput != undefined ){
+    if( typeInput.value != '' && typeInput != undefined ){
       database.collection('Office').doc('Users').collection('Users').doc(userIdUpdate).update({
         userType: typeInput.value
       });
@@ -114,5 +114,5 @@ submitButton3.onclick = async function(){
   report2.innerHTML = 'Name is: '+ nameInput.value;
   report3.innerHTML = 'Section is: '+ secNum1.value;
   report4.innerHTML = 'Type of user is: '+ typeInput.value;
-  \
+  
   }

@@ -1,6 +1,6 @@
 
   getState()
-
+//checks user is logged in and in correct area
 async function checkAuth(userId){
   let userType;
     var type = await firebase.firestore().collection("Office").doc("Users").collection('Users').get().then(function(snapshot){
@@ -20,18 +20,16 @@ async function checkAuth(userId){
     document.location.href = "../../index.html"
   }
 }
-
+//gets current state of logged in user
  function getState(){
  firebase.auth().onAuthStateChanged( async function(user) {
     if (user) {
-      //alert("LOGGED IN")
       var email = user.email
       var userId = email.match(/^(.+)@/)[1]
       checkAuth(userId)
       //sign in to appropriate page
     } else {
-      // User is signed out.
-      // ...
+      // User is signed out send to log in page
       alert("Invalid user credentials. Please log in.")
       document.location.href = "../../index.html"
     }

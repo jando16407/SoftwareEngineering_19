@@ -12,6 +12,7 @@ firebase.initializeApp(firebaseConfig);
 //check auth
 getState()
 
+//checks if there is an account logged in and it has the correct access for this page
 async function checkAuth(userId){
   let userType;
     var type = await firebase.firestore().collection("Office").doc("Users").collection('Users').get().then(function(snapshot){
@@ -33,6 +34,7 @@ async function checkAuth(userId){
   }
 
 }
+//gets login state
  function getState(){
  firebase.auth().onAuthStateChanged( async function(user) {
     if (user) {

@@ -90,28 +90,6 @@ table {
             <div style="height: auto; width: auto; overflow: scroll">
               <ul id="lowItem"></ul>
             </div>
-            <div style="overflow: scroll">
-            <!-- Equipment Faults -->
-            <h3>Equipment Faults Status</h3>
-            <div style="height: auto; width: auto;">
-              <div>
-            <p style="width: inherit">Condition of items:</p>
-            <ul>
-              <li>New</li>
-              <li>Good</li>
-              <li>Fair</li>
-              <li>Bad (need repair or replace</li>
-              <li>Need disposing</li>
-            </ul>
-            </div>
-            <div style="height: auto; width: auto; ">
-              <table><thead><th>Item Name</th><th>Item Description</th><th>Item Condition</th></thead></table>
-              <table id="table"></table>
-            </div>
-            </div>
-            </div>
-            <div style="overflow: scroll">
-            <!-- Work Order Request -->
             <h3>Work Order Status</h3>
   
               <p>Displays all work orders</p>
@@ -119,16 +97,6 @@ table {
                 <ul id="workOrder"></ul>
                 <ul id="order"></ul>
               </div>
-            </div>
-            </div>
-            <div style="overflow: scroll">
-                <h3>Office Supply Inventory</h3>
-                <ul id="supplyList"></ul>
-              </div>
-            <div style="overflow: scroll">
-              <h3>Equipment Inventory</h3>
-              <ul id="equipmentList"></ul>
-            </div>-->
           </div>
         </div>
       </div>
@@ -161,15 +129,11 @@ table {
       </div>
   </div>
 </div>
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<!-- !!! Move firestore script up to the head above!!! -->
-<!-- TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/etup#config-web-app -->
 
-<script src="../Admin/AdminMain/main.js"></script>
-<script src="../Admin/AdminMain/equipment.js"></script>
-<script src="../Admin/AdminMain/officeSupply.js"></script>
-<script src="../Admin/AdminMain/lowItem.js"></script>
-<script src="../Admin/AdminMain/workOrder.js"></script>
+
+<script src="./AdminMain/main.js"></script>
+<script src="./AdminMain/lowItem.js"></script>
+<script src="./AdminMain/workOrder.js"></script>
 <script src="shortcuts.js"></script>
 <script src="../Admin/AdminMain/displayFormat.js"></script>
 

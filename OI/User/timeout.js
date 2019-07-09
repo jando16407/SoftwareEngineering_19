@@ -3,6 +3,7 @@
     window.onmousemove =function() {resetTimer()};
     window.onkeypress = function() {resetTimer1()};
 
+    //sets timer for logout
 function logout() {
          window.location.href ="../logout.html"
     }

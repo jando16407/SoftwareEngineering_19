@@ -1,3 +1,4 @@
+//time set for logout
     var t;
     window.onload = function() {resetTimer()};
     window.onmousemove =function() {resetTimer()};

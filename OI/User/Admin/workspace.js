@@ -18,6 +18,7 @@ var officeViewRef;  //Database ref to OfficeView
 var numOfUnits;     //Nuber of units stored on database
 var unitNameArray =[];  //Names of units stored on database
 //var dataSnapshots = []; //keep snapshots of all data in database
+var masterlistdone = false;
 //For the item list tabs
 var itemListTabButtonContainer; //mark to display itemListTabButtons
 var itemListTabContainer;       //mark to display itemListTabsContents
@@ -828,9 +829,12 @@ function renderUnit( unitNum ){
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
     //Make the base of table setup
     ref.orderBy('id').onSnapshot(function(querySnapshot) {
-        querySnapshot.docChanges().forEach(function(change) {
+        querySnapshot.docChanges().forEach(async function(change) {
             if(change.type === "added"){
                 tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change, unitNum));
+                if(masterlistdone) resetMasterList();
+                if(masterlistdone) await get_selections();
+                if(masterlistdone) get_master_list(); 
             }
             if(change.type === "modified"){
                 //console.log("Modifying detected, doc.id = "+change.doc.id);
@@ -838,6 +842,9 @@ function renderUnit( unitNum ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
                             tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change, num), tabContentsItemTableContainer[num+1].children[i]);
+                            if(masterlistdone) resetMasterList();
+                            if(masterlistdone) await get_selections();
+                            if(masterlistdone) get_master_list();
                         }
                     }
                 }
@@ -850,6 +857,9 @@ function renderUnit( unitNum ){
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
                             tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
                             //console.log("FOUNT IT");
+                            if(masterlistdone) resetMasterList();
+                            if(masterlistdone) await get_selections();
+                            if(masterlistdone) get_master_list();
                         }
                     }
                 }
@@ -904,162 +914,76 @@ function getRowInfo(change, unitNumber){
 /* Create Master List start */
 
 async function get_master_list(){
-    //var master_names=[], master_quantities=[], master_quantityUnits=[], master_categories=[], master_subcategories=[], master_minimumQuantities=[];
-
-
+    //Clear the master list first
+ /*   while(tabContentsItemTableContainer[0].children.length>1){
+        tabContentsItemTableContainer[0].removeChild[1];
+    }*/
     //Iterate though the nameSelection list
     for( let i=0; i<nameSelection.length; i++ ){
         //Iterate though each unit
-        /*
-        let row = document.createElement('tr');
-        let name = document.createElement('th');
-        localStorage.setItem('name', name);
-        let quantity = document.createElement('th');
-        let quantityUnit = document.createElement('th');
-        let category = document.createElement('th');
-        let subcategory = document.createElement('th');
-        let minimumQuantity = document.createElement('th');
-        */
         for( let num=0; num<numOfUnits; num++ ){
             let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitNameArray[num]).collection('Item');
-       //     console.log("Unit name : "+unitNameArray[num]);
           ref.where('name', '==', nameSelection[i]).onSnapshot(await async function(querySnapshot){
             
                if(querySnapshot.empty){
-                    console.log("Empty query for master list");
+                   // console.log("Empty query for master list");
                 }
                 else {
-                    querySnapshot.forEach(await async function(doc){
-                        let names, quantities, quantityUnits, categories, subcategories, minimumQuantities;
-                        //let itemSeen = [];
-                        //for( let j=0; j<nameSelection.length; j++){ itemSeen[j] = false; }
-                        for(let nameIndex=0; nameIndex<nameSelection.length; nameIndex++ ){
-                            if(doc.data().name==nameSelection[nameIndex]){
-                                let qt = 0;
-                                //Add data to other lists using index
-                                if(doc.data().name != undefined ){
-                                    //localStorage.setItem('names'+i, doc.data().name);
-                                    names = doc.data().name;
+                    querySnapshot.docChanges().forEach(await async function(change){
+                        if (change.type === "added") {
+                            let doc = change.doc;
+                            let names, quantities, quantityUnits, categories, subcategories, minimumQuantities;
+                            for(let nameIndex=0; nameIndex<nameSelection.length; nameIndex++ ){
+                                if(doc.data().name==nameSelection[nameIndex]){
+                                    let qt = 0;
+                                    //Add data to other lists using index
+                                    if(doc.data().name != undefined ){
+                                        names = doc.data().name;
+                                    }
+                                    if(doc.data().quantity != undefined ){
+                                        quantities = Number(doc.data().quantity);
+                                    }
+                                    if(doc.data().quantity_unit != undefined ){
+                                        quantityUnits = doc.data().quantity_unit;
+                                    }
+                                    if(doc.data().category != undefined ){
+                                        categories = doc.data().category;
+                                    }
+                                    if(doc.data().subcategory != undefined ){
+                                        subcategories = doc.data().subcategory;
+                                    }
+                                    if(doc.data().minimum_quantity != undefined ){
+                                        minimumQuantities = doc.data().minimum_quantity;
+                                    }
+                                    addRow( names, quantities, quantityUnits, categories, subcategories, minimumQuantities, i );
                                 }
-                                if(doc.data().quantity != undefined ){
-                                    
-                                    //if(localStorage.getItem('quantities'+i) != undefined ){
-                                      //  let quantity = Number(localStorage.getItem('quantities'+i));
-                                        qt = Number(doc.data().quantity);//Number(doc.data().quantity);//+Number(localStorage.getItem('quantities'+i));
-                                        //let quantity3 = quantity+quantity2;
-                                        //console.log("Quantity = "+quantity3+", at name:"+doc.data().name);
-                                        //localStorage.setItem('quantities'+i, quantity3);
-                                        //qt = quantity + quantity2;
-                                       // itemSeen[i] = true;
-                                        
-                                        
-                                    //}
-                                }
-                                if(doc.data().quantity_unit != undefined ){
-                                    //localStorage.setItem('quantityUnits'+i, doc.data().quantity_unit);
-                                    quantityUnits = doc.data().quantity_unit;
-                                }
-                                if(doc.data().category != undefined ){
-                                    //localStorage.setItem('categories'+i, doc.data().category);
-                                    categories = doc.data().category;
-                                }
-                                if(doc.data().subcategory != undefined ){
-                                    //localStorage.setItem('subcategories'+i, doc.data().subcategory);
-                                    subcategories = doc.data().subcategory;
-                                }
-                                if(doc.data().minimum_quantity != undefined ){
-                                    //localStorage.setItem('minimumQuantities'+i, doc.data().minimum_quantity);
-                                    minimumQuantities = doc.data().minimum_quantity;
-                                    console.log("Got minimum quantity");
-                                }
-                                console.log("FOUND = ");
-                             //   console.log("itemSeen is "+itemSeen);
-                                addRow( names, qt, quantityUnits, categories, subcategories, minimumQuantities, i );
+                                //Else is just skip
                             }
-                            //Else is just skip
                         }
                     });
                 }
-      //          console.log("Checking name inside: "+master_names[0]);
-        //                console.log("Checking name inside: "+master_names[1]);
-          //              console.log("Checking name inside: "+master_names[2]);
             });
         }
     }
-
-    //Delete all child first
- //   while( tabContentsItemTableContainer[0].children.length > 1 ){
-   //     tabContentsItemTableContainer[0].removeChild[1];
-    //}
-
-    //Then update the master
-    //Iterate
-    
- //   console.log("Right before Updateing master List at "+master_names.length);
- //   console.log("Right before Updateing master List with this at "+this.master_names.length);
-/*
-    for( let i=0; i<nameSelection.length; i++ ){
-        console.log("Updateing master List at "+i);
-        let row = document.createElement('tr');
-        let name = document.createElement('th');
-        let quantity = document.createElement('th');
-        let quantityUnit = document.createElement('th');
-        let category = document.createElement('th');
-        let subcategory = document.createElement('th');
-        let minimumQuantity = document.createElement('th');
-        //row.setAttribute('key', change.doc.id);
-        row.setAttribute('id', "masterListRow"+i);
-        
-//        row.addEventListener('click', function(e){
-//            itemSelected(change.doc.id, unitNumber);
-//        });
-        
-        //if( master_names[i] != undefined ){
-        if( localStorage.getItem('names'+i) != undefined ){
-            name.innerHTML = localStorage.getItem('names'+i);
-            //console.log("name in updating table = "+localStorage.getItem('names'+i));
-        }
-        if( localStorage.getItem('quantities'+i) != undefined ){
-            console.log("Quantity is : "+localStorage.getItem('quantities'+i));
-            quantity.innerHTML = localStorage.getItem('quantities'+i);//master_quantities[i];
-        }
-        if( localStorage.getItem('quantityUnits'+i) != undefined ){
-            quantityUnit.innerHTML = localStorage.getItem('quantityUnits'+i);//master_quantityUnits[i];
-        }
-        if( localStorage.getItem('categories'+i) != undefined ){
-            category.innerHTML = localStorage.getItem('categories'+i);///master_categories[i];
-        }
-        if( localStorage.getItem('subcategories'+i) != undefined ){
-            subcategory.innerHTML = localStorage.getItem('subcategories'+i);//master_subcategories[i]
-        }
-        if( localStorage.getItem('minimumQuantities'+i) != undefined ){
-            minimumQuantity.innerHTML = localStorage.getItem('minimumQuantities'+i);//master_minimumQuantities[i];
-        }
-        row.appendChild(name);
-        row.appendChild(quantity);
-        row.appendChild(quantityUnit);
-        row.appendChild(category);
-        row.appendChild(subcategory);
-        row.appendChild(minimumQuantity);
-        tabContentsItemTableContainer[0].appendChild(row);
-
-        await localStorage.removeItem('names'+i);
-        await localStorage.removeItem('quantities'+i);
-        await localStorage.removeItem('quantityUnits'+i);
-        await localStorage.removeItem('categories'+i);
-        await localStorage.removeItem('subcategories'+i);
-        await localStorage.removeItem('minimumQuantities'+i);
+    this.masterlistdone = true;
+}
+function resetMasterList(){
+    for( let k=0; k<tabContentsItemTableContainer[0].children.length; k++ ){
+        tabContentsItemTableContainer[0].children[k].setAttribute('quantity', 0);
     }
-    */
+    for( let j=0; j<nameSelection.length; j++ ){
+        let qt = document.getElementById("masterListQuantity"+nameSelection[j]);
+        qt.innerHTML = 0;
+    }
 }
 
 function addRow(names, quantities, quantityUnits, categories, subcategories, minimumQuantities, i){
     let seen = document.getElementById('Name'+names+'Seen');
-    console.log("Items: "+names+", "+quantities+", "+quantityUnits+", "+categories+', '+subcategories+', '+minimumQuantities+', '+i);
-    console.log("Seen = "+seen);
+   // console.log("Items: "+names+", "+quantities+", "+quantityUnits+", "+categories+', '+subcategories+', '+minimumQuantities+', '+i);
+    //console.log("Seen = "+seen);
 
     if( seen != undefined && seen.innerHTML == names ){
-        console.log("FOUND the item, name = "+names);
+        //console.log("FOUND the item, name = "+names);
         //Just add quantity
         for( let k=0; k<tabContentsItemTableContainer[0].children.length; k++ ){
             if( tabContentsItemTableContainer[0].children[k].getAttribute('key') == names ){
@@ -1068,6 +992,7 @@ function addRow(names, quantities, quantityUnits, categories, subcategories, min
                 let total = quantities + q;
                 qt.innerHTML = total;
                 tabContentsItemTableContainer[0].children[k].setAttribute('quantity', total);
+                //console.log("q = "+q+', quantity = '+quantities+', total = '+total+', qt = '+qt);
             }
         }
     }
@@ -1081,7 +1006,7 @@ function addRow(names, quantities, quantityUnits, categories, subcategories, min
         let category = document.createElement('th');
         let subcategory = document.createElement('th');
         let minimumQuantity = document.createElement('th');
-        row.setAttribute('key', name);
+        row.setAttribute('key', names);
         row.setAttribute('id', "masterListRow"+i);
         name.setAttribute('id', 'Name'+names+'Seen');
 
@@ -1090,9 +1015,9 @@ function addRow(names, quantities, quantityUnits, categories, subcategories, min
             //console.log("name in updating table = "+localStorage.getItem('names'+i));
         }
         if( quantities != undefined ){
-            console.log("Quantity is : "+quantities);//localStorage.getItem('quantities'+i));
+      //      console.log("Quantity is : "+quantities);//localStorage.getItem('quantities'+i));
             quantity.innerHTML = quantities;///localStorage.getItem('quantities'+i);//master_quantities[i];
-            quantity.setAttribute('quantity', quantities);
+            row.setAttribute('quantity', quantities);
         }
         if( quantityUnits != undefined ){
             quantityUnit.innerHTML = quantityUnits;// localStorage.getItem('quantityUnits'+i);//master_quantityUnits[i];

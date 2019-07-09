@@ -17,6 +17,9 @@ var database;
 var officeViewRef;  //Database ref to OfficeView
 var numOfUnits;     //Nuber of units stored on database
 var unitNameArray =[];  //Names of units stored on database
+//var dataSnapshots = []; //keep snapshots of all data in database
+var masterlistdone = false;
+var searchClicked = false;
 //For the item list tabs
 var itemListTabButtonContainer; //mark to display itemListTabButtons
 var itemListTabContainer;       //mark to display itemListTabsContents
@@ -24,6 +27,10 @@ var tabButtons = [];    //Stores Tab buttons dynamically for item list
 var tabContentsFrame = [];      //Stores Tab contents most outer div dynamically for item list
 var tabContentsItemList = [];   //Stores Tab contents actual list dynamically for item list
 var tabContentsItemTableContainer = [];  //Stores Table contents dynamically for item list
+//For the master list
+//var master_names=[], master_quantities=[];
+//var master_quantityUnits=[], master_categories=[];
+//var master_subcategories=[], master_minimumQuantities=[];
 //For the tabs on right
 var itemAddTabButtonContainer; //mark to display itemAddTabButtons
 var itemAddTabContainer;       //mark to display itemAddTabsContents
@@ -34,7 +41,6 @@ var nameSelection = null;
 var quantityUnitSelection = null;
 var categorySelection = null;
 var subcategorySelection = null;
-
 //For the detail view
 var childNodePath;
 var deletePath;
@@ -116,25 +122,14 @@ async function get_unit_info(){
     await init_detail_view();
     await get_selections();
     await add_options();
+    //if(nameSelection.length)
+    await get_master_list();
 }
 
 
-
-/*
-function page_setup(){
-    submitButton1 = document.getElementById("submitButton1");
-    submitButton2 = document.getElementById("submitButton2");
-    unitPath1 = 'Unit/Unit_001';
-    unitPath2 = 'Unit/Unit_002';
-    masterPath = 'MasterList';
-    ref1 = database.ref(unitPath1);
-    ref2 = database.ref(unitPath2);
-    refAdmin = database.ref(masterPath);
-}
-*/
 
 //Dynamically create tabs
-function init_tabs(){
+async function init_tabs(){
     //Add Main List tab
     tabButtons[0]= document.createElement('button');
     tabButtons[0].setAttribute('class', 'w3-bar-item w3-button tablink');
@@ -153,6 +148,21 @@ function init_tabs(){
         tabButtons[i].innerHTML = unitNameArray[i-1];
         itemListTabButtonContainer.appendChild(tabButtons[i]);
         //console.log("Added tab: "+tabButtons[i]);
+    }
+    //Make sure all unit docs exists, if not create new one
+    for( let i=0; i<numOfUnits; i++ ){
+        let unitName = unitNameArray[i];
+        let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName);
+        await ref.get().then(function(doc){
+            if(doc.exists){
+                console.log("\tdoc: "+doc.id+" exists.");
+            }
+            else{
+                console.log("\tdoc: "+unitName+" does not exist");
+                let newref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName);
+                newref.set({unit: unitName});
+            }
+        });
     }
     console.log("04.1 Init tab done...");
 }
@@ -185,6 +195,49 @@ function init_tables(){
     div1.setAttribute('style', 'display: inline-block;');
     let tabContentsTitle = document.createElement('h3');
     tabContentsTitle.innerHTML = 'Main Inventory Item List';
+    //Search area
+    let searchDiv = document.createElement('div');
+    searchDiv.setAttribute('style', 'height: 70px; width: 800px;');
+    //Search Name input
+    let searchInputName = document.createElement('input');
+    searchInputName.setAttribute('id', 'masterListSearch');
+    searchInputName.setAttribute('style', 'height: 40px; width: 150px;');
+    searchInputName.setAttribute('placeholder', 'Search item name...');
+    searchInputName.setAttribute('list', 'option_search_masterList');
+    //Search Quantity unit input
+    let searchInputQuantityUnit = document.createElement('input');
+    searchInputQuantityUnit.setAttribute('id', 'masterListSearchQuantityUnit');
+    searchInputQuantityUnit.setAttribute('style', 'height: 40px; width: 70px;');
+    searchInputQuantityUnit.setAttribute('placeholder', 'Qt. unit...');
+    searchInputQuantityUnit.setAttribute('list', 'option_search_masterList_quantity_unit');
+    //Search Category input
+    let searchInputCategory = document.createElement('input');
+    searchInputCategory.setAttribute('id', 'masterListSearchCategory');
+    searchInputCategory.setAttribute('style', 'height: 40px; width: 130px;');
+    searchInputCategory.setAttribute('placeholder', 'Search category...');
+    searchInputCategory.setAttribute('list', 'option_search_masterList_category');
+    //Search Sub Category input
+    let searchInputSubCategory = document.createElement('input');
+    searchInputSubCategory.setAttribute('id', 'masterListSearchSubcategory');
+    searchInputSubCategory.setAttribute('style', 'height: 40px; width: 130px;');
+    searchInputSubCategory.setAttribute('placeholder', 'Search subcategory...');
+    searchInputSubCategory.setAttribute('list', 'option_search_masterList_subcategory');
+    //Search button
+    let searchButton = document.createElement('button');
+    searchButton.setAttribute('style', 'height: 40px; width: 70px;');
+    searchButton.setAttribute('id', 'masterListSearchButton');
+    searchButton.innerHTML = 'Search';
+    searchButton.onclick = function(e){
+        searchButtonClicked(0);
+    };
+    //Reset Search button
+    let resetSearchButton = document.createElement('button');
+    resetSearchButton.setAttribute('style', 'height: 40px; width: 70px;');
+    resetSearchButton.setAttribute('id', 'masterListResetSearchButton');
+    resetSearchButton.innerHTML = 'Reset';
+    resetSearchButton.onclick = function(e){
+        resetSearchButtonClicked(0);
+    };
     //Inside div2
     let div2 = document.createElement('div');
     div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
@@ -197,14 +250,28 @@ function init_tables(){
     tabContentsItemList[0].appendChild(tabContentsItemTableContainer[0]);
     tabContentsItemTableContainer[0].setAttribute('id', 'masterTable');
     let listRow = document.createElement('tr');
-    let topRow = "<th>Unit</th><th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
+    let topRow = "<th>Name</th><th>Quantity</th><th>Quantity Unit</th><th>Category</th><th>Sub Category</th><th>Minimum Quantity in Office</th>";
     listRow.innerHTML = topRow;
+    listRow.setAttribute('key', 'TopRow');
     tabContentsItemTableContainer[0].appendChild(listRow);
+    //For master list
+    let masterDataList = document.createElement('p');
+    masterDataList.setAttribute('id', 'masterDataList');
 
     //Put everything together
+    searchDiv.appendChild(searchInputName);
+    searchDiv.appendChild(searchInputQuantityUnit);
+    searchDiv.appendChild(searchInputCategory);
+    searchDiv.appendChild(searchInputSubCategory);
+    searchDiv.appendChild(searchButton);
+    searchDiv.appendChild(resetSearchButton);
     div2.appendChild(tabContentsItemList[0]);
     div1.appendChild(tabContentsTitle);
+    div1.appendChild(searchDiv);
+    //div1.appendChild(searchInput);
+    //div1.appendChild(searchButton);
     div1.appendChild(div2);
+    div1.appendChild(masterDataList);
     tabContentsFrame[0].appendChild(div1);
     itemListTabContainer.appendChild(tabContentsFrame[0]);
 
@@ -232,6 +299,43 @@ function init_tables(){
         _div1.setAttribute('style', 'display: inline-block;');
         let _tabContentsTitle = document.createElement('h3');
         _tabContentsTitle.innerHTML = unitNameArray[i-1]+' Item List';
+        //Search area
+        let _searchDiv = document.createElement('div');
+        _searchDiv.setAttribute('style', 'height: 70px; width: 800px;');
+        //Search Name input
+        let _searchInput = document.createElement('input');
+        _searchInput.setAttribute('style', 'height: 40px; width: 180px;');
+        _searchInput.setAttribute('id', 'unitListSearch'+i);
+        _searchInput.setAttribute('placeholder', 'Search items...');
+        _searchInput.setAttribute('list', 'option_search_area'+i);
+        //Search Category input
+        let _searchInputCategory = document.createElement('input');
+        _searchInputCategory.setAttribute('id', 'unitListSearchCategory'+i);
+        _searchInputCategory.setAttribute('style', 'height: 40px; width: 130px;');
+        _searchInputCategory.setAttribute('placeholder', 'Search category...');
+        _searchInputCategory.setAttribute('list', 'option_search_area_category'+i);
+        //Search Sub Category input
+        let _searchInputSubCategory = document.createElement('input');
+        _searchInputSubCategory.setAttribute('id', 'unitListSearchSubcategory'+i);
+        _searchInputSubCategory.setAttribute('style', 'height: 40px; width: 130px;');
+        _searchInputSubCategory.setAttribute('placeholder', 'Search subcategory...');
+        _searchInputSubCategory.setAttribute('list', 'option_search_area_subcategory'+i);
+        //Search button
+        let _searchButton = document.createElement('button');
+        _searchButton.setAttribute('style', 'height: 40px; width: 70px;');
+        _searchButton.setAttribute('id', 'unitListSearchButton'+i);
+        _searchButton.innerHTML = 'Search';
+        _searchButton.onclick = function(e){
+            searchButtonClicked(i);
+        };
+        //Search button
+        let _resetSearchButton = document.createElement('button');
+        _resetSearchButton.setAttribute('style', 'height: 40px; width: 70px;');
+        _resetSearchButton.setAttribute('id', 'unitListResetSearchButton'+i);
+        _resetSearchButton.innerHTML = 'Reset';
+        _resetSearchButton.onclick = function(e){
+            resetSearchButtonClicked(i);
+        };
         //Inside div2
         let _div2 = document.createElement('div');
         _div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
@@ -241,17 +345,29 @@ function init_tables(){
         //Inside Table setup
         tabContentsItemTableContainer[i] = document.createElement('table');
         tabContentsItemList[i].appendChild(tabContentsItemTableContainer[i]);
-        tabContentsItemTableContainer[i].setAttribute('class', "ui sortable celled table");
+        //tabContentsItemTableContainer[i].setAttribute('class', "ui sortable celled table");
         tabContentsItemTableContainer[i].setAttribute('id', unitNameArray[i-1]+'Table');
         let _listRow = document.createElement('tr');
         let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
         _listRow.innerHTML = _topRow;
+        _listRow.setAttribute('key', 'TopRow');
         tabContentsItemTableContainer[i].appendChild(_listRow);
+        //For master list
+        let _unitDataList = document.createElement('p');
+        //let p = i -1;
+        _unitDataList.setAttribute('id', 'unitDataList'+i);
 
         //Put everything together
+        _searchDiv.appendChild(_searchInput);
+        _searchDiv.appendChild(_searchInputCategory);
+        _searchDiv.appendChild(_searchInputSubCategory);
+        _searchDiv.appendChild(_searchButton);
+        _searchDiv.appendChild(_resetSearchButton);
         _div2.appendChild(tabContentsItemList[i]);
         _div1.appendChild(_tabContentsTitle);
+        _div1.appendChild(_searchDiv);
         _div1.appendChild(_div2);
+        _div1.appendChild(_unitDataList);
         tabContentsFrame[i].appendChild(_div1);
         itemListTabContainer.appendChild(tabContentsFrame[i]);
     }
@@ -298,43 +414,6 @@ function init_add_units_contents(){
             item_name_input.setAttribute('id', 'name'+i);
             item_name_input.setAttribute('list', 'option_name'+i);
             item_name_input.setAttribute('placeholder', 'Enter Item Name');
-//            let item_name_options = document.createElement("datalist");
-//            item_name_options.setAttribute('id', 'option'+i);
-//            item_name_options = add_selections_name(item_name_options);
-            /*
-            ////// Replace this to dropdown selection
-            let item_name_input = document.createElement('div');
-            item_name_input.setAttribute('id', 'name'+i);
-            item_name_input.setAttribute('type', 'test');
-            item_name_input.setAttribute('class', 'ui fluid search selection dropdown');
-            //item_name_input.setAttribute('placeholder', 'Enter Item Name');
-            /////
-            let item_name_input_input = document.createElement('input');
-            item_name_input_input.setAttribute('type', 'hidden');
-            let item_name_input_i = document.createElement('i');
-            item_name_input_i.setAttribute('class', 'dropdown icon')
-            let item_name_input_hint = document.createElement('div');
-            item_name_input_hint.setAttribute('class', 'default text');
-            item_name_input_hint.textContent = 'Select item name';
-            let item_name_input_menu = document.createElement('div');
-            item_name_input_menu.setAttribute('class', 'menu');
-            //let selection = document.createElement('div');
-            
-            item_name_input_menu = add_selections_name(item_name_input_menu);
-            //Add selections
-            
-            //item_name_input_menu.setAttribute('class', 'menu');
-            //item_name_input_menu.appendChild(selection);
-
-            item_name_input.appendChild(item_name_input_input);
-            item_name_input.appendChild(item_name_input_i);
-            item_name_input.appendChild(item_name_input_hint);
-            item_name_input.appendChild(item_name_input_menu);
-           // item_name_input.appendChild(add_selections_name(item_name_input_menu));
-      //      item_name_input.appendChild(add_selections_name(unitNameArray[i]));
-*/
-
-            ////
         //Quantity
             let item_quantity_label = document.createElement('label');
             item_quantity_label.setAttribute('for', 'item_quantity'+i);
@@ -385,7 +464,16 @@ function init_add_units_contents(){
             let item_assign_input = document.createElement('input');
             item_assign_input.setAttribute('id', 'assign'+i);
             item_assign_input.setAttribute('type', 'test');
+            item_assign_input.setAttribute('list', 'option_assign'+i);
             item_assign_input.setAttribute('placeholder', 'Enter Item Assign');
+        //Assign
+            let item_minimum_quantity_label = document.createElement('label');
+            item_minimum_quantity_label.setAttribute('for', 'item_minimum_quantity'+i);
+            item_minimum_quantity_label.innerHTML = '<p>Item Minimum Quantity</p>';
+            let item_minimum_quantity_input = document.createElement('input');
+            item_minimum_quantity_input.setAttribute('id', 'minimum_quantity'+i);
+            item_minimum_quantity_input.setAttribute('type', 'test');
+            item_minimum_quantity_input.setAttribute('placeholder', 'Enter Item Minimum Quantity');
         //Optional detail
             let optional_details = document.createElement('h6');
             optional_details.innerHTML = 'Optional Detail Information:';
@@ -416,12 +504,13 @@ function init_add_units_contents(){
             tabContentsItemAdd_add[i].appendChild(item_description_input);
             tabContentsItemAdd_add[i].appendChild(item_category_label);
             tabContentsItemAdd_add[i].appendChild(item_category_input);
-        //Sub Category, Assign
+        //Sub Category, Assign, Minimum QUantity
             tabContentsItemAdd_add[i].appendChild(item_subcategory_label);
             tabContentsItemAdd_add[i].appendChild(item_subcategory_input);
-//            tabContentsItemAdd_add[i].appendChild(optional_details);
             tabContentsItemAdd_add[i].appendChild(item_assign_label);
             tabContentsItemAdd_add[i].appendChild(item_assign_input);
+            tabContentsItemAdd_add[i].appendChild(item_minimum_quantity_label);
+            tabContentsItemAdd_add[i].appendChild(item_minimum_quantity_input);
 
         //Add Submit button
             tabContentsItemAdd_add[i].appendChild(new_line);
@@ -451,7 +540,7 @@ function gotErr(err){
 function init_detail_view(){
     //Init stuff
     let div1 = document.createElement('div');
-    div1.setAttribute('style', 'overflow: scroll;');
+    div1.setAttribute('style', 'overflow-y: scroll; width: 800xp; height: 300px;');
     let detailViewTitle = document.createElement('h4');
     detailViewTitle.innerHTML = 'Detail View of Selected Item';
     let deleteButton = document.createElement('button');
@@ -467,53 +556,62 @@ function init_detail_view(){
     space.setAttribute('style', 'width: 50px; display: inline-block;');
     let div2 = document.createElement('div');
     div2.setAttribute('id', 'detailViewBasicInfo');
-    div2.setAttribute('style', 'display: inline-block; width: 99%');
+    //div2.setAttribute('style', 'display: inline-block;');// width: 99%; overflow-y: scroll;');
     let div3 = document.createElement('div');
-    div3.setAttribute('id', 'detailViewOptionalInfor');
-    div3.setAttribute('style', 'display: inline-block; width: 99%');
-    
+    div3.setAttribute('id', 'detailViewOptionalInfo');
+    div3.setAttribute('style', 'display: inline-block;');// width: 99%; overflow-y: scroll;');
+    /**************************************************** */
     //Container for each field
-    let div4Left = document.createElement('div');
-    let div4Middle = document.createElement('div');
-    let div4Right = document.createElement('div');
-    let div4LeftLabel = document.createElement('div');
-    let div4LeftInput = document.createElement('div');
-    let div4MiddleLabel = document.createElement('div');
-    let div4MiddleInput = document.createElement('div');
-    let div4RightLabel = document.createElement('div');
-    let div4RightInput = document.createElement('div');
-    //div4
-    div4Left.setAttribute('style', 'display: inline-block;');
-    div4Middle.setAttribute('style', 'display: inline-block;');
-    div4Right.setAttribute('style', 'display: inline-block;');
-    div4LeftLabel.setAttribute('style', 'display: inline-block; width: 150px');
-    div4LeftInput.setAttribute('style', 'display: inline-block; width: 200px');
-    div4MiddleLabel.setAttribute('style', 'display: inline-block; width: 150px');
-    div4MiddleInput.setAttribute('style', 'display: inline-block; width: 200px');
-    div4RightLabel.setAttribute('style', 'display: inline-block; width: 150px');
-    div4RightInput.setAttribute('style', 'display: inline-block; width: 200px');
-    //Cotainer for optional detail info
-    let div5Left = document.createElement('div');
-    let div5Middle = document.createElement('div');
-    let div5Right = document.createElement('div');
-    let div5LeftLabel = document.createElement('div');
-    let div5LeftInput = document.createElement('div');
-    let div5MiddleLabel = document.createElement('div');
-    let div5MiddleInput = document.createElement('div');
-    let div5RightLabel = document.createElement('div');
-    let div5RightInput = document.createElement('div');
-    //div5
-    div5Left.setAttribute('style', 'display: inline-block;');
-    div5Middle.setAttribute('style', 'display: inline-block;');
-    div5Right.setAttribute('style', 'display: inline-block;');
-    div5LeftLabel.setAttribute('style', 'display: inline-block; width: 150px');
-    div5LeftInput.setAttribute('style', 'display: inline-block; width: 200px');
-    div5MiddleLabel.setAttribute('style', 'display: inline-block; width: 150px');
-    div5MiddleInput.setAttribute('style', 'display: inline-block; width: 200px');
-    div5RightLabel.setAttribute('style', 'display: inline-block; width: 150px');
-    div5RightInput.setAttribute('style', 'display: inline-block; width: 200px');
+            let div4Left = document.createElement('div');
+            let div4Middle = document.createElement('div');
+            let div4Right = document.createElement('div');
+            let div4LeftLabel = document.createElement('div');
+            let div4LeftInput = document.createElement('div');
+            let div4MiddleLabel = document.createElement('div');
+            let div4MiddleInput = document.createElement('div');
+            let div4RightLabel = document.createElement('div');
+            let div4RightInput = document.createElement('div');
+            //div4
+            div4Left.setAttribute('style', 'display: inline-block;');
+            div4Middle.setAttribute('style', 'display: inline-block;');
+            div4Right.setAttribute('style', 'display: inline-block;');
+            div4LeftLabel.setAttribute('style', 'display: inline-block; width: 150px');
+            div4LeftInput.setAttribute('style', 'display: inline-block; width: 200px');
+            div4MiddleLabel.setAttribute('style', 'display: inline-block; width: 150px');
+            div4MiddleInput.setAttribute('style', 'display: inline-block; width: 200px');
+            div4RightLabel.setAttribute('style', 'display: inline-block; width: 150px');
+            div4RightInput.setAttribute('style', 'display: inline-block; width: 200px');
+            //Cotainer for optional detail info
+            let div5Left = document.createElement('div');
+            let div5Middle = document.createElement('div');
+            let div5Right = document.createElement('div');
+            let div5LeftLabel = document.createElement('div');
+            let div5LeftInput = document.createElement('div');
+            let div5MiddleLabel = document.createElement('div');
+            let div5MiddleInput = document.createElement('div');
+            let div5RightLabel = document.createElement('div');
+            let div5RightInput = document.createElement('div');
+            //div5
+            div5Left.setAttribute('style', 'display: inline-block;');
+            div5Middle.setAttribute('style', 'display: inline-block;');
+            div5Right.setAttribute('style', 'display: inline-block;');
+            div5LeftLabel.setAttribute('style', 'display: inline-block; width: 150px');
+            div5LeftInput.setAttribute('style', 'display: inline-block; width: 200px');
+            div5MiddleLabel.setAttribute('style', 'display: inline-block; width: 150px');
+            div5MiddleInput.setAttribute('style', 'display: inline-block; width: 200px');
+            div5RightLabel.setAttribute('style', 'display: inline-block; width: 150px');
+            div5RightInput.setAttribute('style', 'display: inline-block; width: 200px');
+    /**************************************************** */
 
     //Detail view display/input field setup
+    //Blank
+        let blank_label = document.createElement('label');
+        blank_label.setAttribute('for', 'detail_blank');
+        blank_label.innerHTML = '<p> </p>';
+        let blank_input = document.createElement('input');
+        blank_input.setAttribute('id', 'detail_unit');
+        blank_input.setAttribute('placeholder', 'Unit Name');
+        blank_input.setAttribute('readonly', true);
     //Item Unit
         let item_unit_label = document.createElement('label');
         item_unit_label.setAttribute('for', 'detail_item_unit');
@@ -593,30 +691,80 @@ function init_detail_view(){
         item_subcategory_input.setAttribute('type', 'test');
         item_subcategory_input.setAttribute('placeholder', 'Sub Category');
         //item_subcategory_input.setAttribute('style', 'display: inline-block;')
+    //Item Assign
+        let item_assign_label = document.createElement('label');
+        item_assign_label.setAttribute('for', 'detail_item_assign');
+        item_assign_label.innerHTML = '<p>Item Assign</p>';
+        //item_subcategory_label.setAttribute('style', 'display: inline-block;')
+        let item_assign_input = document.createElement('input');
+        item_assign_input.setAttribute('id', 'detail_assign');
+        item_assign_input.setAttribute('type', 'test');
+        item_assign_input.setAttribute('placeholder', 'Assign');
+    //Item Minimum Quantity
+        let item_minimum_quantity_label = document.createElement('label');
+        item_minimum_quantity_label.setAttribute('for', 'detail_item_minimum_quantity');
+        item_minimum_quantity_label.innerHTML = '<p>Minimum Quantity</p>';
+        let item_minimum_quantity_input = document.createElement('input');
+        item_minimum_quantity_input.setAttribute('id', 'detail_minimum_quantity');
+        item_minimum_quantity_input.setAttribute('type', 'test');
+        item_minimum_quantity_input.setAttribute('placeholder', 'Minimum Quantity');
     
 
-    //Unit, Id, Name Label
-        div4LeftLabel.appendChild(item_unit_label);
-        div4LeftLabel.appendChild(item_id_label);
-        div4LeftLabel.appendChild(item_name_label);
-    //Id, Name, Quantity Input
-        div4LeftInput.appendChild(item_unit_input);
-        div4LeftInput.appendChild(item_id_input);
-        div4LeftInput.appendChild(item_name_input);
-    //Quantity Label, Quantity Unit, Description Label
-        div4MiddleLabel.appendChild(item_quantity_label);
-        div4MiddleLabel.appendChild(item_quantity_unit_label);
-        div4MiddleLabel.appendChild(item_description_label);
-    //Quantity Label, Quantity Unit, Description Input
-        div4MiddleInput.appendChild(item_quantity_input);
-        div4MiddleInput.appendChild(item_quantity_unit_input);
-        div4MiddleInput.appendChild(item_description_input);
-    //Category, Sub Category, Assign Label
-        div4RightLabel.appendChild(item_category_label);
-        div4RightLabel.appendChild(item_subcategory_label);
-    //Category, Sub Category, Assign Input
-        div4RightInput.appendChild(item_category_input);
-        div4RightInput.appendChild(item_subcategory_input);
+    /************************************************** */
+    //Div4
+            //Unit, Id, Name Label, blank, Minimum Quantity
+                div4LeftLabel.appendChild(item_unit_label);
+                div4LeftLabel.appendChild(item_id_label);
+                div4LeftLabel.appendChild(item_name_label);
+                //div4LeftLabel.appendChild(blank_label);
+            //Id, Name, Quantity Input, blank, Minimum Quantity
+                div4LeftInput.appendChild(item_unit_input);
+                div4LeftInput.appendChild(item_id_input);
+                div4LeftInput.appendChild(item_name_input);
+                //div4LeftInput.appendChild(blank_input);
+            //Quantity Label, Quantity Unit, Description Label, blank
+                div4MiddleLabel.appendChild(item_quantity_label);
+                div4MiddleLabel.appendChild(item_quantity_unit_label);
+                div4MiddleLabel.appendChild(item_description_label);
+                //div4MiddleLabel.appendChild(blank_label);
+            //Quantity Label, Quantity Unit, Description Input, blank
+                div4MiddleInput.appendChild(item_quantity_input);
+                div4MiddleInput.appendChild(item_quantity_unit_input);
+                div4MiddleInput.appendChild(item_description_input);
+                //div4MiddleInput.appendChild(blank_input);
+            //Category, Sub Category, Assign Label, blank
+                div4RightLabel.appendChild(item_category_label);
+                div4RightLabel.appendChild(item_subcategory_label);
+                div4RightLabel.appendChild(item_assign_label);
+                //div4RightLabel.appendChild(blank_label);
+            //Category, Sub Category, Assign Input, blank
+                div4RightInput.appendChild(item_category_input);
+                div4RightInput.appendChild(item_subcategory_input);
+                div4RightInput.appendChild(item_assign_input);
+                //div4RightInput.appendChild(blank_input);
+    /************************************************** */
+
+    /************************************************** */
+    //Div5
+        //Unit, Id, Name Label, blank, Minimum Quantity
+            div5LeftLabel.appendChild(item_minimum_quantity_label);
+          //  div5LeftLabel.appendChild(item_name_label);
+        //Id, Name, Quantity Input, blank, Minimum Quantity
+            div5LeftInput.appendChild(item_minimum_quantity_input);
+        //    div5LeftInput.appendChild(item_name_input);
+        //Quantity Label, Quantity Unit, Description Label, blank
+       //     div5MiddleLabel.appendChild(item_minimum_quantity_label);
+         //   div5MiddleLabel.appendChild(item_description_label);
+        //Quantity Label, Quantity Unit, Description Input, blank
+          //  div5MiddleInput.appendChild(item_minimum_quantity_input);
+   //         div5MiddleInput.appendChild(item_description_input);
+        //Category, Sub Category, Assign Label, blank
+    //        div5RightLabel.appendChild(item_minimum_quantity_label);
+            //div5RightLabel.appendChild(item_assign_label);
+        //Category, Sub Category, Assign Input, blank
+      //      div5RightInput.appendChild(item_minimum_quantity_input);
+            //div5RightInput.appendChild(item_assign_input);
+/************************************************** */
 
     //Put all columns to div4 and div5
     div4Left.appendChild(div4LeftLabel);
@@ -635,9 +783,9 @@ function init_detail_view(){
     div2.appendChild(div4Left);
     div2.appendChild(div4Middle);
     div2.appendChild(div4Right);
-    div2.appendChild(div5Left);
-    div2.appendChild(div5Middle);
-    div2.appendChild(div5Right);
+    div3.appendChild(div5Left);
+    div3.appendChild(div5Middle);
+    div3.appendChild(div5Right);
     //Put everything toge ther
     detailViewTitle.appendChild(space);
     detailViewTitle.appendChild(deleteButton);
@@ -645,8 +793,9 @@ function init_detail_view(){
     div1.appendChild(detailViewTitle);
     //div1.appendChild(deleteButton);
     div1.appendChild(div2);
- //   div1.appendChild(div3);
+    div1.appendChild(div3);
     detailView = document.getElementById('DetailView');
+    detailView.setAttribute('style', 'overflow: scroll;');
     detailView.appendChild(div1);
     
     //Delete button funciton setup
@@ -684,12 +833,14 @@ function init_detail_view(){
 /* Get data from database function start */
 
 async function get_selections(){
+    console.log("Get Selection start");
     let names = [], quantityUnits = [], categories = [], subcategories = [];
     for( let i=0; i<numOfUnits; i++ ){
         let unitName = unitNameArray[i];
         let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
         await ref.get().then(function(snapshot){
             if(snapshot.empty){
+          //      console.log("Noting found");
             }
             snapshot.forEach(function(doc) {
                 names.push(doc.data().name);
@@ -699,6 +850,8 @@ async function get_selections(){
             });
         });
     }
+
+    //console.log("Name array : "+names);
     let namesUniqueArray = [], quantityUnitsUniqueArray = [], categoriesUniqueArray = [], subcategoriesUniqueArray = [];
     namesUniqueArray = getUniq(names);
     quantityUnitsUniqueArray = getUniq(quantityUnits);
@@ -706,13 +859,13 @@ async function get_selections(){
     subcategoriesUniqueArray = getUniq(subcategories);
     
     
-    await console.log("namesUniqueArray: "+namesUniqueArray);
+   // await console.log("namesUniqueArray: "+namesUniqueArray);
     nameSelection = namesUniqueArray;
-    await console.log("quantityUnitsUniqueArray: "+quantityUnitsUniqueArray);
+   // await console.log("quantityUnitsUniqueArray: "+quantityUnitsUniqueArray);
     quantityUnitSelection = quantityUnitsUniqueArray;
-    await console.log("categoriesUniqueArray: "+categoriesUniqueArray);
+   // await console.log("categoriesUniqueArray: "+categoriesUniqueArray);
     categorySelection = categoriesUniqueArray;
-    await console.log("subcategoriesUniqueArray: "+subcategoriesUniqueArray);
+   // await console.log("subcategoriesUniqueArray: "+subcategoriesUniqueArray);
     subcategorySelection = subcategoriesUniqueArray;
 
     function getUniq(arr){
@@ -721,6 +874,7 @@ async function get_selections(){
             return uniqueArr.hasOwnProperty(item) ? false : uniqueArr[item] = true;
         });
     };
+    console.log("Get Selection done...");
 }
 
 function add_options(){
@@ -745,8 +899,54 @@ function add_options(){
         item_subcategory_options.setAttribute('id', 'option_subcategory'+i);
         item_subcategory_options = add_selections(item_subcategory_options, subcategorySelection);
         tabContentsItemAdd_add[i].appendChild(item_subcategory_options);
+        //Search Area
+        let p = i+1;
+        let item_search_options = document.createElement("datalist");
+        item_search_options.setAttribute('id', 'option_search_area'+p);
+        item_search_options = add_selections(item_search_options, nameSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        //Add option quantity unit
+        let item_search_options_quantity_unit = document.createElement("datalist");
+        item_search_options_quantity_unit.setAttribute('id', 'option_search_area_quantity_unit'+p);
+        item_search_options_quantity_unit = add_selections(item_search_options_quantity_unit, quantityUnitSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        //Add option quantity unit
+        let item_search_options_category = document.createElement("datalist");
+        item_search_options_category.setAttribute('id', 'option_search_area_category'+p);
+        item_search_options_category = add_selections(item_search_options_category, categorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        //Add option quantity unit
+        let item_search_options_subcategory = document.createElement("datalist");
+        item_search_options_subcategory.setAttribute('id', 'option_search_area_subcategory'+p);
+        item_search_options_subcategory = add_selections(item_search_options_subcategory, subcategorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        //Put everything together
+        let unitDataList = document.getElementById('unitDataList'+p);
+        unitDataList.appendChild(item_search_options);
+        unitDataList.appendChild(item_search_options_quantity_unit);
+        unitDataList.appendChild(item_search_options_category);
+        unitDataList.appendChild(item_search_options_subcategory);
     }
-    $('table').tablesort();
+    //Add option name to master list
+        let item_search_options_master = document.createElement("datalist");
+        item_search_options_master.setAttribute('id', 'option_search_masterList');
+        item_search_options_master = add_selections(item_search_options_master, nameSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+    //Add option quantity unit
+        let item_search_options_quantity_unit_master = document.createElement("datalist");
+        item_search_options_quantity_unit_master.setAttribute('id', 'option_search_masterList_quantity_unit');
+        item_search_options_quantity_unit_master = add_selections(item_search_options_quantity_unit_master, quantityUnitSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+    //Add option quantity unit
+        let item_search_options_category_master = document.createElement("datalist");
+        item_search_options_category_master.setAttribute('id', 'option_search_masterList_category');
+        item_search_options_category_master = add_selections(item_search_options_category_master, categorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+    //Add option quantity unit
+        let item_search_options_subcategory_master = document.createElement("datalist");
+        item_search_options_subcategory_master.setAttribute('id', 'option_search_masterList_subcategory');
+        item_search_options_subcategory_master = add_selections(item_search_options_subcategory_master, subcategorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+    //Put everyhitng to together
+        let masterDataList = document.getElementById('masterDataList');
+        masterDataList.appendChild(item_search_options_master);
+        masterDataList.appendChild(item_search_options_quantity_unit_master);
+        masterDataList.appendChild(item_search_options_category_master);
+        masterDataList.appendChild(item_search_options_subcategory_master);
+    
+   // $('table').tablesort();
 }
 
 function add_selections(item_options, itemSelection){
@@ -766,7 +966,8 @@ async function get_max_id(item_input, unitNum){
         snapshot.forEach(function(doc){
             //console.log("RTN value is : "+doc.data().id);
             maxIdValue = doc.data().id;
-            item_input.value = maxIdValue;
+            let maxPlus = ++maxIdValue;
+            item_input.value = ("00000"+maxPlus).slice(-5);
         });
     });
     return maxIdValue;
@@ -782,16 +983,22 @@ function renderUnit( unitNum ){
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
     //Make the base of table setup
     ref.orderBy('id').onSnapshot(function(querySnapshot) {
-        querySnapshot.docChanges().forEach(function(change) {
+        querySnapshot.docChanges().forEach(async function(change) {
             if(change.type === "added"){
-                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change, unitNum));
+                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change.doc, unitNum));
+                if(masterlistdone) resetMasterList();
+                if(masterlistdone) await get_selections();
+                if(masterlistdone) get_master_list(); 
             }
             if(change.type === "modified"){
                 //console.log("Modifying detected, doc.id = "+change.doc.id);
                 for( let num=0; num<numOfUnits; num++ ){
                     for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
-                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change, num), tabContentsItemTableContainer[num+1].children[i]);
+                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change.doc, num), tabContentsItemTableContainer[num+1].children[i]);
+                            if(masterlistdone) resetMasterList();
+                            if(masterlistdone) await get_selections();
+                            if(masterlistdone) get_master_list();
                         }
                     }
                 }
@@ -804,6 +1011,9 @@ function renderUnit( unitNum ){
                         if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
                             tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
                             //console.log("FOUNT IT");
+                            if(masterlistdone) resetMasterList();
+                            if(masterlistdone) await get_selections();
+                            if(masterlistdone) get_master_list();
                         }
                     }
                 }
@@ -812,8 +1022,23 @@ function renderUnit( unitNum ){
     });
 }
 
+//Render unit for just once
+function renderUnitOnce( unitNum ){
+    let unitName = unitNameArray[unitNum]
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+    //Make the base of table setup
+    ref.orderBy('id').get().then(function(querySnapshot) {
+        querySnapshot.forEach(async function(doc) {
+        //    if(change.type === "added"){
+            console.log("Adding child to unitNUm = "+unitNum);
+                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(doc, unitNum));
+         
+        });
+    });
+}
+
 //Create row in a table and it return row
-function getRowInfo(change, unitNumber){
+function getRowInfo(doc, unitNumber){
     let row = document.createElement('tr');
     let id = document.createElement('th');
     let name = document.createElement('th');
@@ -822,27 +1047,27 @@ function getRowInfo(change, unitNumber){
     let subcategory = document.createElement('th');
     let description = document.createElement('th');
     //row.setAttribute('key', change.doc.id);
-    row.setAttribute('id', change.doc.id);
+    row.setAttribute('id', doc.id);
     row.addEventListener('click', function(e){
-        itemSelected(change.doc.id, unitNumber);
+        itemSelected(doc.id, unitNumber);
     });
-    if( change.doc.data().id != undefined ){
-        id.innerHTML = change.doc.data().id;
+    if( doc.data().id != undefined ){
+        id.innerHTML = doc.data().id;
     }
-    if( change.doc.data().name != undefined ){
-        name.innerHTML = change.doc.data().name;
+    if( doc.data().name != undefined ){
+        name.innerHTML = doc.data().name;
     }
-    if( change.doc.data().quantity != undefined ){
-        quantity.innerHTML = change.doc.data().quantity;
+    if( doc.data().quantity != undefined ){
+        quantity.innerHTML = doc.data().quantity;
     }
-    if( change.doc.data().category != undefined ){
-        category.innerHTML = change.doc.data().category;
+    if( doc.data().category != undefined ){
+        category.innerHTML = doc.data().category;
     }
-    if( change.doc.data().subcategory != undefined ){
-        subcategory.innerHTML = change.doc.data().subcategory;
+    if( doc.data().subcategory != undefined ){
+        subcategory.innerHTML = doc.data().subcategory;
     }
-    if( change.doc.data().description != undefined ){
-        description.innerHTML = change.doc.data().description;
+    if( doc.data().description != undefined ){
+        description.innerHTML = doc.data().description;
     }
     row.appendChild(id);
     row.appendChild(name);
@@ -854,6 +1079,145 @@ function getRowInfo(change, unitNumber){
 }
 
 /* Rendering funcitons End */
+
+/* Create Master List start */
+
+async function get_master_list(){
+    //Clear the master list first
+ /*   while(tabContentsItemTableContainer[0].children.length>1){
+        tabContentsItemTableContainer[0].removeChild[1];
+    }*/
+    //Iterate though the nameSelection list
+    for( let i=0; i<nameSelection.length; i++ ){
+        //Iterate though each unit
+        for( let num=0; num<numOfUnits; num++ ){
+            let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitNameArray[num]).collection('Item');
+          ref.where('name', '==', nameSelection[i]).onSnapshot(await async function(querySnapshot){
+            
+               if(querySnapshot.empty){
+                   // console.log("Empty query for master list");
+                }
+                else {
+                    querySnapshot.docChanges().forEach(await async function(change){
+                        if (change.type === "added") {
+                            let doc = change.doc;
+                            let names, quantities, quantityUnits, categories, subcategories, minimumQuantities;
+                            for(let nameIndex=0; nameIndex<nameSelection.length; nameIndex++ ){
+                                if(doc.data().name==nameSelection[nameIndex]){
+                                    let qt = 0;
+                                    //Add data to other lists using index
+                                    if(doc.data().name != undefined ){
+                                        names = doc.data().name;
+                                    }
+                                    if(doc.data().quantity != undefined ){
+                                        quantities = Number(doc.data().quantity);
+                                    }
+                                    if(doc.data().quantity_unit != undefined ){
+                                        quantityUnits = doc.data().quantity_unit;
+                                    }
+                                    if(doc.data().category != undefined ){
+                                        categories = doc.data().category;
+                                    }
+                                    if(doc.data().subcategory != undefined ){
+                                        subcategories = doc.data().subcategory;
+                                    }
+                                    if(doc.data().minimum_quantity != undefined ){
+                                        minimumQuantities = doc.data().minimum_quantity;
+                                    }
+                                    addRow( names, quantities, quantityUnits, categories, subcategories, minimumQuantities, i );
+                                }
+                                //Else is just skip
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+    this.masterlistdone = true;
+}
+function resetMasterList(){
+    for( let k=0; k<tabContentsItemTableContainer[0].children.length; k++ ){
+        tabContentsItemTableContainer[0].children[k].setAttribute('quantity', 0);
+    }
+    for( let j=0; j<nameSelection.length; j++ ){
+        let qt = document.getElementById("masterListQuantity"+nameSelection[j]);
+        if( qt != null && qt != undefined ){
+            qt.innerHTML = 0;
+        }
+    }
+}
+
+function addRow(names, quantities, quantityUnits, categories, subcategories, minimumQuantities, i){
+    let seen = document.getElementById('Name'+names+'Seen');
+   // console.log("Items: "+names+", "+quantities+", "+quantityUnits+", "+categories+', '+subcategories+', '+minimumQuantities+', '+i);
+    //console.log("Seen = "+seen);
+
+    if( seen != undefined && seen.innerHTML == names ){
+        //console.log("FOUND the item, name = "+names);
+        //Just add quantity
+        for( let k=0; k<tabContentsItemTableContainer[0].children.length; k++ ){
+            if( tabContentsItemTableContainer[0].children[k].getAttribute('key') == names ){
+                let q = Number(tabContentsItemTableContainer[0].children[k].getAttribute('quantity'));
+                let qt = document.getElementById("masterListQuantity"+names);
+                let total = quantities + q;
+                qt.innerHTML = total;
+                tabContentsItemTableContainer[0].children[k].setAttribute('quantity', total);
+                //console.log("q = "+q+', quantity = '+quantities+', total = '+total+', qt = '+qt);
+            }
+        }
+    }
+    else{//Make new row
+
+        let row = document.createElement('tr');
+        let name = document.createElement('th');
+        let quantity = document.createElement('th');
+        quantity.setAttribute('id', 'masterListQuantity'+names);
+        let quantityUnit = document.createElement('th');
+        let category = document.createElement('th');
+        let subcategory = document.createElement('th');
+        let minimumQuantity = document.createElement('th');
+        row.setAttribute('key', names);
+        row.setAttribute('id', "masterListRow"+i);
+        name.setAttribute('id', 'Name'+names+'Seen');
+
+        if( names != undefined ){
+            name.innerHTML = names;//localStorage.getItem('names'+i);
+            row.setAttribute('name', names);
+            //console.log("name in updating table = "+localStorage.getItem('names'+i));
+        }
+        if( quantities != undefined ){
+      //      console.log("Quantity is : "+quantities);//localStorage.getItem('quantities'+i));
+            quantity.innerHTML = quantities;///localStorage.getItem('quantities'+i);//master_quantities[i];
+            row.setAttribute('quantity', quantities);
+        }
+        if( quantityUnits != undefined ){
+            quantityUnit.innerHTML = quantityUnits;// localStorage.getItem('quantityUnits'+i);//master_quantityUnits[i];
+            row.setAttribute('quantity-unit', quantityUnits);
+        }
+        if( categories != undefined ){
+            category.innerHTML = categories;//localStorage.getItem('categories'+i);///master_categories[i];
+            row.setAttribute('category', categories);
+        }
+        if( subcategories != undefined ){
+            subcategory.innerHTML = subcategories;// localStorage.getItem('subcategories'+i);//master_subcategories[i]
+            row.setAttribute('subcategory', subcategories);
+        }
+        if( minimumQuantities != undefined ){
+            minimumQuantity.innerHTML = minimumQuantities;// localStorage.getItem('minimumQuantities'+i);//master_minimumQuantities[i];
+        }
+        row.appendChild(name);
+        row.appendChild(quantity);
+        row.appendChild(quantityUnit);
+        row.appendChild(category);
+        row.appendChild(subcategory);
+        row.appendChild(minimumQuantity);
+        tabContentsItemTableContainer[0].appendChild(row);
+    }
+}
+
+
+/* Create Master List end */
 
 
 /* Onclick function start */
@@ -868,88 +1232,7 @@ function itemSelected(key, unitNumber){
     console.log("Unit number : "+unitNumber);
     console.log("Unit name : "+unitNameArray[unitNumber]);
     detailViewUpdate(key, unitNameArray[unitNumber]);
-    /*
-    childNodeIndex = id;
-    detailViewDeleteItemPath = deletePath;
-    //when item is in masterlist
-    if(0<=id && id < 100000){
-        detailViewPath = masterPath;
-        childNodePath = document.getElementById("masterTable").childNodes[childNodeIndex].getAttribute("key");
-        let detailId = document.getElementById("masterTable").childNodes[childNodeIndex].cells[1];
-        let detailName = document.getElementById("masterTable").childNodes[childNodeIndex].cells[2];
-        let detailDescription = document.getElementById("masterTable").childNodes[childNodeIndex].cells[3];
-////////////        
-        console.log(detailId);
-        console.log(detailName);
-        console.log(detailDescription);
-        console.log("Key: "+childNodePath);
-        console.log("Clicked childNode#"+childNodeIndex);
-////////////
-        //Set the path of detail view
-        document.getElementById("detailViewTable").setAttribute("path", detailViewPath);
-        //Set values
-        document.getElementById("detailViewId").value = detailId.textContent;
-        document.getElementById("detailViewName").value = detailName.textContent;
-        document.getElementById("detailViewDescription").value = detailDescription.textContent;
-        //Detect Changes
-        document.getElementById("detailViewId").onchange = detailViewItemChangedMaster;
-        document.getElementById("detailViewName").onchange = detailViewItemChangedMaster;
-        document.getElementById("detailViewDescription").onchange = detailViewItemChangedMaster;
-        //set delete path of the item
-        //detailViewDeleteItemPath = deletePath;
-    }
-    //when item is in unit 1
-    else if(100000<=id && id < 200000){
-        detailViewPath = 'Unit/Unit_001';
-        childNodeIndex -= 100000;
-        childNodePath = document.getElementById("unit1Table").childNodes[childNodeIndex].getAttribute("key");
-        let detailId = document.getElementById("unit1Table").childNodes[childNodeIndex].cells[0];
-        let detailName = document.getElementById("unit1Table").childNodes[childNodeIndex].cells[1];
-        let detailDescription = document.getElementById("unit1Table").childNodes[childNodeIndex].cells[2];
-////////////        
-        console.log(detailId);
-        console.log(detailName);
-        console.log(detailDescription);
-        console.log("Key: "+childNodePath);
-        console.log("Clicked childNode#"+childNodeIndex);
-////////////
-        //Set the path of detail view
-        document.getElementById("detailViewTable").setAttribute("path", detailViewPath+"/"+childNodePath);
-        //Set values
-        document.getElementById("detailViewId").value = detailId.textContent;
-        document.getElementById("detailViewName").value = detailName.textContent;
-        document.getElementById("detailViewDescription").value = detailDescription.textContent;
-        //Detect Changes
-        document.getElementById("detailViewId").onchange = detailViewItemChanged;
-        document.getElementById("detailViewName").onchange = detailViewItemChanged;
-        document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
-    } 
-    //when item is in unit 2
-    else if(200000<=id && id < 300000){
-        detailViewPath = 'Unit/Unit_002'
-        childNodeIndex -= 200000;
-        childNodePath = document.getElementById("unit2Table").childNodes[childNodeIndex].getAttribute("key");
-        let detailId = document.getElementById("unit2Table").childNodes[childNodeIndex].cells[0];
-        let detailName = document.getElementById("unit2Table").childNodes[childNodeIndex].cells[1];
-        let detailDescription = document.getElementById("unit2Table").childNodes[childNodeIndex].cells[2];
-////////////        
-        console.log(detailId);
-        console.log(detailName);
-        console.log(detailDescription);
-        console.log("Key: "+childNodePath);
-        console.log("Clicked childNode#"+childNodeIndex);
-////////////
-        //Set the path of detail view
-        document.getElementById("detailViewTable").setAttribute("path", detailViewPath+"/"+childNodePath);
-        //Set values
-        document.getElementById("detailViewId").value = detailId.textContent;
-        document.getElementById("detailViewName").value = detailName.textContent;
-        document.getElementById("detailViewDescription").value = detailDescription.textContent;
-        //Detect Changes
-        document.getElementById("detailViewId").onchange = detailViewItemChanged;
-        document.getElementById("detailViewName").onchange = detailViewItemChanged;
-        document.getElementById("detailViewDescription").onchange = detailViewItemChanged;
-    }*/
+
 }
 
 function detailViewUpdate(key, unitName){
@@ -965,6 +1248,8 @@ function detailViewUpdate(key, unitName){
     let description = document.getElementById('detail_description');
     let category = document.getElementById('detail_category');
     let subcategory = document.getElementById('detail_subcategory');
+    let assign = document.getElementById('detail_assign');
+    let minimum_quantity = document.getElementById('detail_minimum_quantity');
     let item = document.getElementById(key);
     let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item').doc(key);
     listenData = ref.onSnapshot(function(doc){
@@ -978,6 +1263,8 @@ function detailViewUpdate(key, unitName){
             category.value = doc.data().category;
             subcategory.value = doc.data().subcategory;
             description.value = doc.data().description;
+            assign.value = doc.data().assign;
+            minimum_quantity.value = doc.data().minimum_quantity;
         }
         else if(doc.type === "removed"){
             console.log("DATA removed: "+doc.data().unit_name);
@@ -989,10 +1276,14 @@ function detailViewUpdate(key, unitName){
             category.value = '';
             subcategory.value = '';
             description.value = '';
+            assign.value = '';
+            minimum_quantity.value = ';'
         }
         else {
             unit.value = doc.data().unit_name;
             quantity_unit.value = doc.data().quantity_unit;
+            assign.value = doc.data().assign;
+            minimum_quantity.value = doc.data().minimum_quantity;
             console.log("qu uni: "+quantity_unit);
         }
     });
@@ -1045,6 +1336,16 @@ function detailViewUpdate(key, unitName){
             ref.update({description: description.value});
         }
     }
+    assign.onchange = function(){
+        if( assign.value != ref.assign ){
+            ref.update({assign: assign.value});
+        }
+    }
+    minimum_quantity.onchange = function(){
+        if( minimum_quantity.value != ref.minimum_quantity ){
+            ref.update({minimum_quantity: minimum_quantity.value});
+        }
+    }
 
 }
 
@@ -1081,6 +1382,8 @@ async function submitButtonClicked( unitName, i ) {
     category[7] = 'assign';
     item[8] = unitName;
     category[8] = 'unit_name';
+    item[9] = document.getElementById('minimum_quantity'+i).value;
+    category[9] = 'minimum_quantity';
     
     console.log(unitName);
     
@@ -1104,66 +1407,190 @@ async function submitButtonClicked( unitName, i ) {
     console.log("i="+i+", element = "+document.getElementById('id'+i));
     let maxId = await get_max_id(document.getElementById('id'+i), i);
     maxId++;
-    document.getElementById('id'+i).value = ("00000"+maxId);//.slice(-5,0);
+    document.getElementById('id'+i).value = ("00000"+maxId).slice(-5);
     console.log("maxId = "+maxId);
 
     console.log(data);
 }
-/*
-submitButton1.onclick = function(){
-    //Push data to Unit
-    let data = {
-        itemId: document.getElementById("id1").value,
-        itemName: document.getElementById("name1").value,
-        itemDescription: document.getElementById("description1").value,
+
+function searchButtonClicked(i){
+    console.log("Search Button clicked in tab "+i);
+    //MasterlistsearchButton
+    if( i==0 ){
+        let table = document.getElementById('masterTable');
+        let searchInput = document.getElementById('masterListSearch');
+        if(searchInput.value != undefined && searchInput.value != '' ){
+            //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[0].innerHTML != searchInput.value){
+                    table.deleteRow(j);
+                    this.searchClicked = true;
+                }
+            }
+        }
+        let searchInputQuantityUnit = document.getElementById('masterListSearchQuantityUnit');
+        if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
+            //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[2].innerHTML != searchInputQuantityUnit.value){
+                    table.deleteRow(j);
+                    this.searchClicked = true;
+                }
+            }
+            
+        }
+        let searchInputCategory = document.getElementById('masterListSearchCategory');
+        if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
+            //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[3].innerHTML != searchInputCategory.value){
+                    table.deleteRow(j);
+                    this.searchClicked = true;
+                }
+            }
+            
+        }
+        let searchInputSubCategory = document.getElementById('masterListSearchSubcategory');
+        if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
+            //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[4].innerHTML != searchInputSubCategory.value){
+                    table.deleteRow(j);
+                    this.searchClicked = true;
+                }
+            }
+            
+        }
+
     }
-    ref1.push(data)
-    //Push data to MasterList
-    let masterData = {
-        itemId: document.getElementById("id1").value,
-        itemName: document.getElementById("name1").value,
-        itemDescription: document.getElementById("description1").value,
-        UnitNum : "001",
-        UnitPath : unitPath1,
-        ItemKey : newItemKey
+    else{//All other units searchbuton
+        let table = document.getElementById(unitNameArray[i-1]+'Table');
+        let searchInput = document.getElementById('unitListSearch'+i);
+        if(searchInput.value != undefined && searchInput.value != '' ){
+            //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[1].innerHTML != searchInput.value){
+                    table.deleteRow(j);
+                    this.searchClicked = true;
+                }
+            }
+        }
+        let searchInputCategory = document.getElementById('unitListSearchCategory'+i);
+        if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
+            //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[3].innerHTML != searchInputCategory.value){
+                    table.deleteRow(j);
+                    this.searchClicked = true;
+                }
+            }
+        }
+        let searchInputSubCategory = document.getElementById('unitListSearchSubcategory'+i);
+        if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
+            //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[4].innerHTML != searchInputSubCategory.value){
+                    table.deleteRow(j);
+                    this.searchClicked = true;
+                }
+            }
+        }
     }
-    refAdmin.push(masterData);
-    //update unit with master key
-    database.ref(unitPath1+"/"+newItemKey).set({
-        itemId: document.getElementById("id1").value,
-        itemName: document.getElementById("name1").value,
-        itemDescription: document.getElementById("description1").value,
-        masterKey : newItemKey2
-    });
+
 }
 
-submitButton2.onclick = function(){
-    //Push data to Unit
-    let data = {
-        itemId: document.getElementById("id2").value,
-        itemName: document.getElementById("name2").value,
-        itemDescription: document.getElementById("description2").value,
+
+function resetSearchButtonClicked(i){
+    console.log("Reset Button clicked in tab "+i);
+    //MasterlistsearchButton
+    if( i==0 ){
+        let searchInput = document.getElementById('masterListSearch');
+        if(searchInput.value != undefined && searchInput.value != '' ){
+            //Reset input
+           // console.log("Search input = "+searchInput.value);
+            searchInput.value = '';
+            //Search the input item
+            
+        }
+        let searchInputQuantityUnit = document.getElementById('masterListSearchQuantityUnit');
+        if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
+            //Reset input
+           // console.log("Search input = "+searchInputQuantityUnit.value);
+            searchInputQuantityUnit.value = '';
+            //Search the input item
+            
+        }
+        let searchInputCategory = document.getElementById('masterListSearchCategory');
+        if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
+            //Reset input
+           /// console.log("Search input = "+searchInputCategory.value);
+            searchInputCategory.value = '';
+            //Search the input item
+            
+        }
+        let searchInputSubCategory = document.getElementById('masterListSearchSubcategory');
+        if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
+            //Reset input
+           // console.log("Search input = "+searchInputSubCategory.value);
+            searchInputSubCategory.value = '';
+            //Search the input item
+            
+        }
+        resetMasterList();
+        get_master_list();
+        this.searchClicked = false;
     }
-    ref2.push(data)
-    //Push data to MasterList
-    let masterData = {
-        itemId: document.getElementById("id2").value,
-        itemName: document.getElementById("name2").value,
-        itemDescription: document.getElementById("description2").value,
-        UnitNum : "002",
-        UnitPath : unitPath2,
-        ItemKey : newItemKey
+    else{//All other units searchbuton
+        let searchInput = document.getElementById('unitListSearch'+i);
+        let empty = true;
+        if(searchInput.value != undefined && searchInput.value != '' ){
+            //Reset input
+            //console.log("Search input = "+searchInput.value);
+            searchInput.value = '';
+            //Search the input item
+            empty = false;
+        }
+        let searchInputCategory = document.getElementById('unitListSearchCategory'+i);
+        if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
+            //Reset input
+            //console.log("Search input = "+searchInputCategory.value);
+            searchInputCategory.value = '';
+            //Search the input item
+            empty = false;
+        }
+        let searchInputSubCategory = document.getElementById('unitListSearchSubcategory'+i);
+        if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
+            //Reset input
+            //console.log("Search input = "+searchInputSubCategory.value);
+            searchInputSubCategory.value = '';
+            //Search the input item
+            empty = false;
+        }
+        if(this.searchClicked){
+            let p = i-1;
+            console.log("Deleting child i = "+i);
+                let child = tabContentsItemTableContainer[i].lastElementChild;
+                while(child){
+                    if(child!=null){
+                        if(child.getAttribute('key') == 'TopRow'){
+                            console.log("breaking");
+                            break;
+                        }
+                    }
+                    tabContentsItemTableContainer[i].removeChild(child);
+                    child = tabContentsItemTableContainer[i].lastElementChild;
+                    
+                }
+                
+           // }
+            //get_master_list()
+            renderUnitOnce(p);
+            this.searchClicked = false;
+        }
+
     }
-    refAdmin.push(masterData);
-    //update unit with master key
-    database.ref(unitPath2+"/"+newItemKey).set({
-        itemId: document.getElementById("id2").value,
-        itemName: document.getElementById("name2").value,
-        itemDescription: document.getElementById("description2").value,
-        masterKey : newItemKey2
-    });
 }
-*/
+
 /* onClick handlings End */
 
 /* Randomly generate and add items to units starts */
@@ -1176,23 +1603,29 @@ async function randomGen(){
         
         //Add 10 data
         let maxId = await get_max_id(document.getElementById('id'+i), i);
-        for( let j=0; j<10; j++, maxId++ ){
+        for( let j=0; j<3; j++, maxId++ ){
             let data = {};
-            let id = ("00000"+maxId).slice(-5);
+            let num = maxId + 1;
+            let id = ("00000"+num).slice(-5);
             let name = ['Desk', 'Chair', 'Pen', 'Laptop', 'Desktop', 'Stapler', 'Cords', 'Tape', 'Lamp', 'Delicious Ramen box'];
             let quantity = Math.floor(Math.random() * 2000);
             let quantity_unit = 'ea.';
             let description = ['description0', 'description1', 'description2', 'description3', 'description4', 'description5', 'description6', 'description7', 'description8', 'description9'];
             let category =['Office Supply', 'Electric', 'Others', 'Furniture'];
-            let subcategory = [1, 2, 3, 4, 5];
-            data['id'] = ++id;
-            data['name'] = name[Math.floor(Math.random() * 10)];
+            let subcategory = [1, 2, 3, 4];
+            let minimum_quantity = [10, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+            let assign = ['John', 'Smith', 'Autumn', 'Amir', 'Juri', 'Watis', 'Will', 'Torres', 'Sam', 'Ken'];
+            let randomIndex = Math.floor(Math.random() * 10);
+            data['id'] = id;
+            data['name'] = name[randomIndex];
             data['quantity'] = quantity;
             data['quantity_unit'] = quantity_unit;
             data['description'] = description[Math.floor(Math.random() * 10)];
-            data['category'] = category[Math.floor(Math.random() * 4)];
-            data['subcategory'] = subcategory[Math.floor(Math.random() * 5)];
+            data['category'] = category[randomIndex%4];
+            data['subcategory'] = subcategory[randomIndex%4];
             data['unit_name'] = unitName;
+            data['minimum_quantity'] = minimum_quantity[randomIndex];
+            data['assign'] = assign[Math.floor(Math.random() * 10)];
             ref.add(data);
         }
         get_max_id(document.getElementById('id'+i), i);

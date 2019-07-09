@@ -1025,6 +1025,51 @@ function renderUnit( unitNum ){
     });
 }
 
+//Render unit for just once
+function renderUnitOnce( unitNum ){
+    let unitName = unitNameArray[unitNum]
+    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+    //Make the base of table setup
+    ref.orderBy('id').onSnapshot(function(querySnapshot) {
+        querySnapshot.docChanges().forEach(async function(change) {
+            if(change.type === "added"){
+                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change, unitNum));
+                if(masterlistdone) resetMasterList();
+                if(masterlistdone) await get_selections();
+                if(masterlistdone) get_master_list(); 
+            }
+            if(change.type === "modified"){
+                //console.log("Modifying detected, doc.id = "+change.doc.id);
+                for( let num=0; num<numOfUnits; num++ ){
+                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
+                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
+                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change, num), tabContentsItemTableContainer[num+1].children[i]);
+                            if(masterlistdone) resetMasterList();
+                            if(masterlistdone) await get_selections();
+                            if(masterlistdone) get_master_list();
+                        }
+                    }
+                }
+            }
+            if(change.type === "removed"){
+                //console.log("Delete detected, doc.id = "+change.doc.id);
+                for( let num=0; num<numOfUnits; num++ ){
+                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
+                        //console.log("CHECKING : "+tabContentsItemTableContainer[num+1].children[i].getAttribute('id'));
+                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
+                            tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
+                            //console.log("FOUNT IT");
+                            if(masterlistdone) resetMasterList();
+                            if(masterlistdone) await get_selections();
+                            if(masterlistdone) get_master_list();
+                        }
+                    }
+                }
+            }
+        });
+    });
+}
+
 //Create row in a table and it return row
 function getRowInfo(change, unitNumber){
     let row = document.createElement('tr');
@@ -1130,7 +1175,9 @@ function resetMasterList(){
     }
     for( let j=0; j<nameSelection.length; j++ ){
         let qt = document.getElementById("masterListQuantity"+nameSelection[j]);
-        qt.innerHTML = 0;
+        if( qt != null && qt != undefined ){
+            qt.innerHTML = 0;
+        }
     }
 }
 
@@ -1403,40 +1450,58 @@ function searchButtonClicked(i){
     console.log("Search Button clicked in tab "+i);
     //MasterlistsearchButton
     if( i==0 ){
+        let table = document.getElementById('masterTable');
         let searchInput = document.getElementById('masterListSearch');
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Search the input item
-            
-            console.log("Search input value = "+searchInput.value);
-            for(let j=1; j<tabContentsItemTableContainer[0].children.length; j++ ){
-                console.log("CHildren anme = "+tabContentsItemTableContainer[0].children[j].getAttribute('name'));
-                if(tabContentsItemTableContainer[0].children[j].getAttribute('name') != searchInput.value){
-                    tabContentsItemTableContainer[0].removeChild[tabContentsItemTableContainer[0].children[j]];
-                    console.log("deleting chilren j = "+j);
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[0].innerHTML != searchInput.value){
+                    table.deleteRow(j);
                 }
             }
         }
         let searchInputQuantityUnit = document.getElementById('masterListSearchQuantityUnit');
         if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
             //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[2].innerHTML != searchInputQuantityUnit.value){
+                    table.deleteRow(j);
+                }
+            }
             
         }
         let searchInputCategory = document.getElementById('masterListSearchCategory');
         if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
             //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[3].innerHTML != searchInputCategory.value){
+                    table.deleteRow(j);
+                }
+            }
             
         }
         let searchInputSubCategory = document.getElementById('masterListSearchSubcategory');
         if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
             //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[4].innerHTML != searchInputSubCategory.value){
+                    table.deleteRow(j);
+                }
+            }
             
         }
 
     }
     else{//All other units searchbuton
+        let table = document.getElementById(unitNameArray[i-1]+'Table');
         let searchInput = document.getElementById('unitListSearch'+i);
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Search the input item
+            for( let j=table.rows.length-1; j>0; j--){
+                if(table.rows[j].cells[0].innerHTML != searchInput.value){
+                    table.deleteRow(j);
+                }
+            }
         }
         let searchInputQuantityUnit = document.getElementById('unitListSearchQuantityUnit'+i);
         if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
@@ -1494,15 +1559,18 @@ function resetSearchButtonClicked(i){
             //Search the input item
             
         }
-
+        resetMasterList();
+        get_master_list();
     }
     else{//All other units searchbuton
         let searchInput = document.getElementById('unitListSearch'+i);
+        let empty = true;
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Reset input
             console.log("Search input = "+searchInput.value);
             searchInput.value = '';
             //Search the input item
+            empty = false;
         }
         let searchInputQuantityUnit = document.getElementById('unitListSearchQuantityUnit'+i);
         if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
@@ -1510,6 +1578,7 @@ function resetSearchButtonClicked(i){
             console.log("Search input = "+searchInputQuantityUnit.value);
             searchInputQuantityUnit.value = '';
             //Search the input item
+            empty = false;
             
         }
         let searchInputCategory = document.getElementById('unitListSearchCategory'+i);
@@ -1518,7 +1587,7 @@ function resetSearchButtonClicked(i){
             console.log("Search input = "+searchInputCategory.value);
             searchInputCategory.value = '';
             //Search the input item
-            
+            empty = false;
         }
         let searchInputSubCategory = document.getElementById('unitListSearchSubcategory'+i);
         if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
@@ -1526,8 +1595,18 @@ function resetSearchButtonClicked(i){
             console.log("Search input = "+searchInputSubCategory.value);
             searchInputSubCategory.value = '';
             //Search the input item
-            
+            empty = false;
         }
+        if(!empty){
+            let p = i-1;
+            //resetMasterList();
+            while(tabContentsItemTableContainer[i].children.length>1){
+                tabContentsItemTableContainer[i].removeChild[1];
+            }
+            //get_master_list()
+            renderUnit(i-1);
+        }
+
     }
 }
 

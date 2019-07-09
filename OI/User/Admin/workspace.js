@@ -300,12 +300,30 @@ function init_tables(){
         //Search area
         let _searchDiv = document.createElement('div');
         _searchDiv.setAttribute('style', 'height: 70px; width: 800px;');
-        //Search input
+        //Search Name input
         let _searchInput = document.createElement('input');
         _searchInput.setAttribute('style', 'height: 40px; width: 180px;');
         _searchInput.setAttribute('id', 'unitListSearch'+i);
         _searchInput.setAttribute('placeholder', 'Search items...');
         _searchInput.setAttribute('list', 'option_search_area'+i);
+        //Search Quantity unit input
+        let _searchInputQuantityUnit = document.createElement('input');
+        _searchInputQuantityUnit.setAttribute('id', 'unitListSearchQuantityUnit'+i);
+        _searchInputQuantityUnit.setAttribute('style', 'height: 40px; width: 70px;');
+        _searchInputQuantityUnit.setAttribute('placeholder', 'Qt. unit...');
+        _searchInputQuantityUnit.setAttribute('list', 'option_search_area_quantity_unit'+i);
+        //Search Category input
+        let _searchInputCategory = document.createElement('input');
+        _searchInputCategory.setAttribute('id', 'unitListSearchCategory'+i);
+        _searchInputCategory.setAttribute('style', 'height: 40px; width: 130px;');
+        _searchInputCategory.setAttribute('placeholder', 'Search category...');
+        _searchInputCategory.setAttribute('list', 'option_search_area_category'+i);
+        //Search Sub Category input
+        let _searchInputSubCategory = document.createElement('input');
+        _searchInputSubCategory.setAttribute('id', 'unitListSearchSubcategory'+i);
+        _searchInputSubCategory.setAttribute('style', 'height: 40px; width: 130px;');
+        _searchInputSubCategory.setAttribute('placeholder', 'Search subcategory...');
+        _searchInputSubCategory.setAttribute('list', 'option_search_area_subcategory'+i);
         //Search button
         let _searchButton = document.createElement('button');
         _searchButton.setAttribute('style', 'height: 40px; width: 70px;');
@@ -344,6 +362,9 @@ function init_tables(){
 
         //Put everything together
         _searchDiv.appendChild(_searchInput);
+        _searchDiv.appendChild(_searchInputQuantityUnit);
+        _searchDiv.appendChild(_searchInputCategory);
+        _searchDiv.appendChild(_searchInputSubCategory);
         _searchDiv.appendChild(_searchButton);
         _searchDiv.appendChild(_resetSearchButton);
         _div2.appendChild(tabContentsItemList[i]);
@@ -886,15 +907,48 @@ function add_options(){
         let item_search_options = document.createElement("datalist");
         item_search_options.setAttribute('id', 'option_search_area'+p);
         item_search_options = add_selections(item_search_options, nameSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        //Add option quantity unit
+        let item_search_options_quantity_unit = document.createElement("datalist");
+        item_search_options_quantity_unit.setAttribute('id', 'option_search_area_quantity_unit'+p);
+        item_search_options_quantity_unit = add_selections(item_search_options_quantity_unit, quantityUnitSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        //Add option quantity unit
+        let item_search_options_category = document.createElement("datalist");
+        item_search_options_category.setAttribute('id', 'option_search_area_category'+p);
+        item_search_options_category = add_selections(item_search_options_category, categorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        //Add option quantity unit
+        let item_search_options_subcategory = document.createElement("datalist");
+        item_search_options_subcategory.setAttribute('id', 'option_search_area_subcategory'+p);
+        item_search_options_subcategory = add_selections(item_search_options_subcategory, subcategorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        //Put everything together
         let unitDataList = document.getElementById('unitDataList'+p);
         unitDataList.appendChild(item_search_options);
+        unitDataList.appendChild(item_search_options_quantity_unit);
+        unitDataList.appendChild(item_search_options_category);
+        unitDataList.appendChild(item_search_options_subcategory);
     }
-    //Add option to master list
+    //Add option name to master list
         let item_search_options_master = document.createElement("datalist");
         item_search_options_master.setAttribute('id', 'option_search_masterList');
         item_search_options_master = add_selections(item_search_options_master, nameSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+    //Add option quantity unit
+        let item_search_options_quantity_unit_master = document.createElement("datalist");
+        item_search_options_quantity_unit_master.setAttribute('id', 'option_search_masterList_quantity_unit');
+        item_search_options_quantity_unit_master = add_selections(item_search_options_quantity_unit_master, quantityUnitSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+    //Add option quantity unit
+        let item_search_options_category_master = document.createElement("datalist");
+        item_search_options_category_master.setAttribute('id', 'option_search_masterList_category');
+        item_search_options_category_master = add_selections(item_search_options_category_master, categorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+    //Add option quantity unit
+        let item_search_options_subcategory_master = document.createElement("datalist");
+        item_search_options_subcategory_master.setAttribute('id', 'option_search_masterList_subcategory');
+        item_search_options_subcategory_master = add_selections(item_search_options_subcategory_master, subcategorySelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+    //Put everyhitng to together
         let masterDataList = document.getElementById('masterDataList');
         masterDataList.appendChild(item_search_options_master);
+        masterDataList.appendChild(item_search_options_quantity_unit_master);
+        masterDataList.appendChild(item_search_options_category_master);
+        masterDataList.appendChild(item_search_options_subcategory_master);
+    
     $('table').tablesort();
 }
 
@@ -1115,6 +1169,7 @@ function addRow(names, quantities, quantityUnits, categories, subcategories, min
 
         if( names != undefined ){
             name.innerHTML = names;//localStorage.getItem('names'+i);
+            row.setAttribute('name', names);
             //console.log("name in updating table = "+localStorage.getItem('names'+i));
         }
         if( quantities != undefined ){
@@ -1124,12 +1179,15 @@ function addRow(names, quantities, quantityUnits, categories, subcategories, min
         }
         if( quantityUnits != undefined ){
             quantityUnit.innerHTML = quantityUnits;// localStorage.getItem('quantityUnits'+i);//master_quantityUnits[i];
+            row.setAttribute('quantity-unit', quantityUnits);
         }
         if( categories != undefined ){
             category.innerHTML = categories;//localStorage.getItem('categories'+i);///master_categories[i];
+            row.setAttribute('category', categories);
         }
         if( subcategories != undefined ){
             subcategory.innerHTML = subcategories;// localStorage.getItem('subcategories'+i);//master_subcategories[i]
+            row.setAttribute('subcategory', subcategories);
         }
         if( minimumQuantities != undefined ){
             minimumQuantity.innerHTML = minimumQuantities;// localStorage.getItem('minimumQuantities'+i);//master_minimumQuantities[i];
@@ -1348,7 +1406,30 @@ function searchButtonClicked(i){
         let searchInput = document.getElementById('masterListSearch');
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Search the input item
-
+            
+            console.log("Search input value = "+searchInput.value);
+            for(let j=1; j<tabContentsItemTableContainer[0].children.length; j++ ){
+                console.log("CHildren anme = "+tabContentsItemTableContainer[0].children[j].getAttribute('name'));
+                if(tabContentsItemTableContainer[0].children[j].getAttribute('name') != searchInput.value){
+                    tabContentsItemTableContainer[0].removeChild[tabContentsItemTableContainer[0].children[j]];
+                    console.log("deleting chilren j = "+j);
+                }
+            }
+        }
+        let searchInputQuantityUnit = document.getElementById('masterListSearchQuantityUnit');
+        if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
+            //Search the input item
+            
+        }
+        let searchInputCategory = document.getElementById('masterListSearchCategory');
+        if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
+            //Search the input item
+            
+        }
+        let searchInputSubCategory = document.getElementById('masterListSearchSubcategory');
+        if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
+            //Search the input item
+            
         }
 
     }
@@ -1356,6 +1437,21 @@ function searchButtonClicked(i){
         let searchInput = document.getElementById('unitListSearch'+i);
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Search the input item
+        }
+        let searchInputQuantityUnit = document.getElementById('unitListSearchQuantityUnit'+i);
+        if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
+            //Search the input item
+            
+        }
+        let searchInputCategory = document.getElementById('unitListSearchCategory'+i);
+        if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
+            //Search the input item
+            
+        }
+        let searchInputSubCategory = document.getElementById('unitListSearchSubcategory'+i);
+        if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
+            //Search the input item
+            
         }
     }
 
@@ -1369,8 +1465,32 @@ function resetSearchButtonClicked(i){
         let searchInput = document.getElementById('masterListSearch');
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Reset input
-            console.log("Search input = "+searchInput.textContent);
+            console.log("Search input = "+searchInput.value);
             searchInput.value = '';
+            //Search the input item
+            
+        }
+        let searchInputQuantityUnit = document.getElementById('masterListSearchQuantityUnit');
+        if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
+            //Reset input
+            console.log("Search input = "+searchInputQuantityUnit.value);
+            searchInputQuantityUnit.value = '';
+            //Search the input item
+            
+        }
+        let searchInputCategory = document.getElementById('masterListSearchCategory');
+        if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
+            //Reset input
+            console.log("Search input = "+searchInputCategory.value);
+            searchInputCategory.value = '';
+            //Search the input item
+            
+        }
+        let searchInputSubCategory = document.getElementById('masterListSearchSubcategory');
+        if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
+            //Reset input
+            console.log("Search input = "+searchInputSubCategory.value);
+            searchInputSubCategory.value = '';
             //Search the input item
             
         }
@@ -1383,6 +1503,30 @@ function resetSearchButtonClicked(i){
             console.log("Search input = "+searchInput.value);
             searchInput.value = '';
             //Search the input item
+        }
+        let searchInputQuantityUnit = document.getElementById('unitListSearchQuantityUnit'+i);
+        if(searchInputQuantityUnit.value != undefined && searchInputQuantityUnit.value != '' ){
+            //Reset input
+            console.log("Search input = "+searchInputQuantityUnit.value);
+            searchInputQuantityUnit.value = '';
+            //Search the input item
+            
+        }
+        let searchInputCategory = document.getElementById('unitListSearchCategory'+i);
+        if(searchInputCategory.value != undefined && searchInputCategory.value != '' ){
+            //Reset input
+            console.log("Search input = "+searchInputCategory.value);
+            searchInputCategory.value = '';
+            //Search the input item
+            
+        }
+        let searchInputSubCategory = document.getElementById('unitListSearchSubcategory'+i);
+        if(searchInputSubCategory.value != undefined && searchInputSubCategory.value != '' ){
+            //Reset input
+            console.log("Search input = "+searchInputSubCategory.value);
+            searchInputSubCategory.value = '';
+            //Search the input item
+            
         }
     }
 }

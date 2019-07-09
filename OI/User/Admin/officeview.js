@@ -51,6 +51,7 @@ var firebaseConfig = {
         });
     });
 /**********************************Loads image, if there is no image stored wait for image to be uploaded!*************************/
+//loads image for office view
 async function loadImg() {
     
 imageDownloadRef = storageRef.child('officeView/officeView')
@@ -95,10 +96,6 @@ var isDeletingUnits = false
 
 var deletedUnits = new Array()
 var tempUnits = new Array()
-
-//TODO: set innerhtml of unitNum input value to highest unit num in db
-
-
 
 //enables adding units & saving units
 async function addUnits(event){
@@ -145,10 +142,6 @@ async function deleteUnits(event){
             await db.collection("Office").doc("officeView").update({
                 [deletedUnits[0]]: firebase.firestore.FieldValue.delete()
             })
-
-
-            //TODO DELETE INVENTORY HEREEEEE
-
 
             await deletedUnits.shift()
         }
@@ -225,6 +218,7 @@ officeView.onclick = async function(event){
 }
 /**********************************************************************************************************************************/
 /*************************************************Update Units*********************************************************************/
+//updates units on any db change
 function updateUnits(){
     db.collection("Office").doc("officeView").get().then(function(doc){
         if (doc.exists) {
@@ -237,6 +231,7 @@ function updateUnits(){
         console.log("Error getting document:", error);
     })
 }
+// draw in all units onto canvas
 function drawInUnits(units){
     const unitArray = Object.values(units)
     for ( i = 0; i < (unitArray.length -1); i++){
@@ -335,6 +330,7 @@ async function getUnitInfo(num, elem){
     }
     elem.innerHTML = string
 }
+// updates color of each unit when work order is processed for a unit
 function updateColor(listUnits){
     var objs = fabricCanvas.getObjects()
     var color

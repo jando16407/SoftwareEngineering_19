@@ -22,19 +22,25 @@ table {
         border-collapse: collapse;
         width: 100%;
     }
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
+    th {
+      background: #000000;
+      color: #ffffff;
+      text-align: center;
+      padding: 8px;
     }
     tr:nth-child(even) {
-        background-color: #dddddd;
+      background-color: #f1f1f1;
+      border-color: darkslategrey;
+      border:darkslategrey;
     }
-.input{
-  border-radius: 5%;
-  width: 100%;
-  align-self:'center';
-}
+    tr:nth-child(odd) {
+      background-color: #dddddd;
+    }
+    td {
+      text-align: left;
+      border:darkviolet;
+    }
+
 </style>
 </header>
 <body class="w3-light-grey">
@@ -68,8 +74,7 @@ table {
   <h2>Main Panel</h2>
   <!--The whole workspace-->
   <div style="display: inline-block; width:100%;">
-    <!-- First tab on the left side -->
-    <div class="w3-display-top " style="width:54%; display: inline-block;">
+    <div class="w3-display-top " style="display: inline-block; overflow: scroll">
       <!-- Tab buttons -->
       <div class="w3-bar w3-black">
         <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainTab');"></button>
@@ -81,33 +86,17 @@ table {
           <div style="display: inline-block; height:550px; width:100%;">
             <!-- Low Items -->
             <h3>Low Item Status</h3>
-            <p>Display list of low items</p>
-            <div style="height: 29%; width:100% ; overflow-y: scroll">
+            <p>Display list of low items through item id, name, and quanity</p>
+            <div style="height: auto; width: auto; overflow: scroll">
               <ul id="lowItem"></ul>
             </div>
-            <!-- Equipment Faults 
-            <h3>Equipment Faults Status</h3>
-            <p style="width: inherit">Displays list of unit # where the fault is, the item id and name, and level of severity</p>
-            <div style="height: auto; width: auto; background-color: #f2d1f7">
-              <ul id="faulty"></ul>
-            </div> -->
-            <!-- Work Order Request -->
             <h3>Work Order Status</h3>
   
               <p>Displays all work orders</p>
               <div style="height: 50%; overflow-y: scroll;">
                 <ul id="workOrder"></ul>
+                <ul id="order"></ul>
               </div>
-            
-            <!--
-            <div style="background-color: #c3e6f3">
-                <h3>Office Supply Inventory</h3>
-                <ul id="supplyList"></ul>
-              </div>
-            <div style="background-color: #c3e6f3">
-              <h3>Equipment Inventory</h3>
-              <ul id="equipmentList"></ul>
-            </div>-->
           </div>
         </div>
       </div>
@@ -123,14 +112,14 @@ table {
           <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
             <!-- Top Part (Display past announcements) -->
             <h3>Past Announcements</h3>                
-            <div id="pastAnnouncementsList" style="height: 310px; overflow-y: scroll;">
+            <div id="pastAnnouncementsList" style="height: 360px; overflow: scroll">
             </div>
             <input id="selectedAnnouncement"class="input" style="width:80%; height: 30px;" placeholder="Click Announcement to delete"></input>
             <button id="deleteButton" class="w3-bar-item w3-button tablink" style="width:15%;">Delete</button>
             <!-- Bottom Part (Send Announcements) -->
             <h3>Send New Announcement</h3>
-            <div style="height: 170px;">
-              <input id="title" class="input" type="text" placeholder="Type title..." style="height: 40px;"/><br>
+            <div style="height: 170px; overflow: scroll">
+              <input id="title" type="text" placeholder="Type title..." style="width: 302px; height: 40px;"/><br>
               <!--<input id="body" type="text" placeholder="Body" style="width: 300px; height: 100px;"/>-->
               <textarea id="body" class="input" placeholder="Type body..." cols=40 rows=5 ></textarea>
               <button id="submitButton1"class="w3-bar-item w3-button tablink" >Send Announcement</button>
@@ -140,18 +129,13 @@ table {
       </div>
   </div>
 </div>
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<!-- !!! Move firestore script up to the head above!!! -->
-<!-- TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/etup#config-web-app -->
+
 
 <script src="./AdminMain/main.js"></script>
-<!--<script src="./AdminMain/equipment.js"></script>
-<script src="./AdminMain/juriUML.js"></script>
-<script src="./AdminMain/officeSupply.js"></script>-->
 <script src="./AdminMain/lowItem.js"></script>
-<!--<script src="./AdminMain/faulty.js"></script>-->
 <script src="./AdminMain/workOrder.js"></script>
 <script src="shortcuts.js"></script>
-<script src ="loginauthentication.js"></script>
+<script src="../Admin/AdminMain/displayFormat.js"></script>
+
 </body>
 </html>

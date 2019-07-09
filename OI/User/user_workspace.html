@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<header>
 <title>OI - Employee Workspace</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,6 +16,9 @@
 <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
 <script src="hotkeys.min.js"></script>
 <script src="timeout.js"></script>
+<!-- Compiled and minified CSS --
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+--->
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -33,6 +37,7 @@ table {
         background-color: #dddddd;
     }
 </style>
+</header>
 <body class="w3-light-grey">
 
 <!-- Top container -->
@@ -61,8 +66,6 @@ table {
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:200px;margin-top:40px;">
 <h2>Workspace</h2>
-  <header>
-
     <!--The whole workspace-->
     <div style="display: inline-block; width:100%;">
       <div class="w3-display-top " style="width:70%; display: inline-block; overflow-y: scroll; overflow-x: scroll;">
@@ -121,7 +124,9 @@ table {
                 </p>
               </div>
             </div>
-    
+<!--  materialize modal cannot be used with current template of this webpage, not without changing format in other division 
+
+Also, on submit the form appears in the bottom of the page.  It will go away if refreshing the page. -->
             <!--Tab2 (Work Orders)-->
             <div id="Tab_work" class="w3-container w3-white w3-padding-16 myLink2">
               <div style="height: 400px; overflow: scroll;">
@@ -218,13 +223,12 @@ table {
         </div>
       </div>
     </div>
-
-
-    </header>
 </div>
 <script src= 'loginauthentication.js'></script>
 <script src="UserMain/workRequest.js"></script>
 <script src="user_workspace.js"></script>
 <script src="shortcuts.js"></script>
+<script src="../User/UserMain/workRequest.js"
+<!----<script src="../css/materialize/js/materialize.min.js"></script>--->
 </body>
 </html>

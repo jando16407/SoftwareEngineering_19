@@ -1,4 +1,5 @@
 const db = firebase.firestore();
+//formats time
 function formatTime(){
     let time = new Date(),
     minutes = time.getMinutes().toString().length == 1 ? '0'+time.getMinutes() : time.getMinutes(),
@@ -8,7 +9,7 @@ function formatTime(){
     days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
     }
-
+// displays info for all Employee's section work orders
     function renderMsg(doc){
         let li = document.createElement('li');
         let requestDate = document.createElement('li');
@@ -57,6 +58,7 @@ function formatTime(){
         })
     }
 var unit
+//gets employee section
 async function getSection(){
     var user = localStorage.getItem("user")
     await db.collection("Office/Users/Users").doc(user).get().then(function(doc){
@@ -64,6 +66,7 @@ async function getSection(){
         
     })
 }
+//adds work order info on fb change
 function setSection(temp){
     unit = temp
     console.log(unit)

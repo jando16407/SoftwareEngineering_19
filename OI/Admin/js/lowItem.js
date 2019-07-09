@@ -29,11 +29,10 @@ function renderLowItem(doc){
     printLowItem.appendChild(li);
 }
 
-db.collection('Watis/NusiCkayiV6LuuMOu94U/Supply').orderBy('itemName').onSnapshot((snapshot) =>{
+database.collection('Watis/NusiCkayiV6LuuMOu94U/Supply').orderBy('itemName').onSnapshot((snapshot) =>{
   let changes = snapshot.docChanges();
   changes.forEach(change =>{
       if(change.type == 'added' && change.doc.data().quantity < 3){
-        console.log(change.doc.data())
           renderLowItem(change.doc);
       } else if (change.type == 'removed'){
           let li = printLowItem.querySelector('[data-id=' + change.doc.id + ']');

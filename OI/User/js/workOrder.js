@@ -69,7 +69,7 @@ async function getSection(){
 //adds work order info on fb change
 function setSection(temp){
     unit = temp
-    console.log(unit)
+    //console.log(unit)
     db.collection('Office/Workorder/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
         let changes = snapshot.docChanges();
         changes.forEach(change =>{

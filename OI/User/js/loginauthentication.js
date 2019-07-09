@@ -7,8 +7,10 @@ var firebaseConfig = {
   messagingSenderId: "147848186588",
   appId: "1:147848186588:web:33dbc8d727af1de4"
 };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+const database = firebase.firestore();
 //check auth
 getState()
 
@@ -18,13 +20,14 @@ async function checkAuth(userId){
     var type = await firebase.firestore().collection("Office").doc("Users").collection('Users').get().then(function(snapshot){
     snapshot.forEach(function(doc){
       if (doc.id == userId) {
-        console.log("hey", userId)
+        //console.log("Your credential is : ", userId)
         // type = (doc.data())[userId].userType
-        console.log('userId'+doc.data().userType);
+        //console.log('userId'+doc.data().userType);
         userType = doc.data().userType;
+        console.log("Your credential is : ", userType)
       } else {
           // doc.data() will be undefined in this case
-          console.log("No such document!");
+          //console.log("No such document!");
       }
   })
 });

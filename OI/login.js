@@ -58,7 +58,7 @@ async function identifyUser(email){
         if (doc.id == userId) {
           //send user to their page based on userType
         if(doc.data().userType == 'Admin')
-              window.location.href = "User/Admin/main.html";
+              window.location.href = "Admin/main.html";
             else
               window.location.href = "User/main.html";
 

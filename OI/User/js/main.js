@@ -1,4 +1,4 @@
-var database;
+//var database;
 var announcementsPath;
 var announcementContainer;
 
@@ -11,7 +11,7 @@ renderAnnouncements();
 
 //Basic firebase setups
 function firebase_setup(){
-    database = firebase.firestore();
+    //database = firebase.firestore();
 }
 
 //initial setup for the page

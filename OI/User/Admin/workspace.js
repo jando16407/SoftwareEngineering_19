@@ -1,23 +1,8 @@
-//var database;
-/*
-var submitButton1, submitButton2;
-var unitPath1, unitPath2, masterPath;
-var ref1, ref2, refAdmin;
-var ref1_L, ref2_L;
-var masterListContainer, listContainer1, listContainer2;
-var tableMaster, tableUnit1, tableUnit2;
-var detailViewPath, detailViewKey, detailView_itemId;
-var detailView_itemName, detailView_itemDescription;
-var detailView_UnitPath;
-//var childNodeIndex, childNodePath;
-var newItemKey, newItemKey2, detailViewDeleteItemPath;
-*/
 //Variables
 var database;
 var officeViewRef;  //Database ref to OfficeView
 var numOfUnits;     //Nuber of units stored on database
 var unitNameArray =[];  //Names of units stored on database
-//var dataSnapshots = []; //keep snapshots of all data in database
 var masterlistdone = false;
 var searchClicked = false;
 //For the item list tabs
@@ -27,10 +12,6 @@ var tabButtons = [];    //Stores Tab buttons dynamically for item list
 var tabContentsFrame = [];      //Stores Tab contents most outer div dynamically for item list
 var tabContentsItemList = [];   //Stores Tab contents actual list dynamically for item list
 var tabContentsItemTableContainer = [];  //Stores Table contents dynamically for item list
-//For the master list
-//var master_names=[], master_quantities=[];
-//var master_quantityUnits=[], master_categories=[];
-//var master_subcategories=[], master_minimumQuantities=[];
 //For the tabs on right
 var itemAddTabButtonContainer; //mark to display itemAddTabButtons
 var itemAddTabContainer;       //mark to display itemAddTabsContents
@@ -51,12 +32,6 @@ var selectedUnitNumber = 0;
 
 firebase_setup();
 page_setup();
-//get_unit_info();
-//detailView_setting();
-//init_tables();
-//renderListen();
-
-
 
 
 /* Initialize Functions Start */
@@ -95,25 +70,22 @@ async function get_unit_info(){
         if(doc.exists){
             //Get number of units
             numOfUnits = doc.data().Units.length;
-            console.log("Number of Units: "+numOfUnits);
+            console.log("\tNumber of Units: "+numOfUnits);
             //Get unit's name and store it in an array
             for( let i=0; i<numOfUnits; i++ ){
                 unitNameArray[i] = doc.data().Units[i];
-                //console.log(unitNameArray[i]);
             }
         } 
         else {
-            console.log("No such document");
+            console.log("No such document at get_unit_info()");
         }
     }).catch(function(error) {
-        console.log('Error: ');
+        console.log('Error at get_unit_info(): ');
     });
     console.log("03 Get unit info done...")
     await init_tabs();
     await init_tables();
     await init_tabs_add();
-    //await get_selections();
-    
     await init_add_units_contents();
     await document.getElementsByClassName("tablink")[0].click();
     await document.getElementsByClassName("tttabbb")[0].click();
@@ -122,7 +94,6 @@ async function get_unit_info(){
     await init_detail_view();
     await get_selections();
     await add_options();
-    //if(nameSelection.length)
     await get_master_list();
 }
 
@@ -268,8 +239,6 @@ function init_tables(){
     div2.appendChild(tabContentsItemList[0]);
     div1.appendChild(tabContentsTitle);
     div1.appendChild(searchDiv);
-    //div1.appendChild(searchInput);
-    //div1.appendChild(searchButton);
     div1.appendChild(div2);
     div1.appendChild(masterDataList);
     tabContentsFrame[0].appendChild(div1);
@@ -292,7 +261,6 @@ function init_tables(){
        //the most outer div
         tabContentsFrame[i] = document.createElement('div');
         tabContentsFrame[i].setAttribute('id', unitNameArray[i-1]+'FrameList');
-        //console.log("FRAME NAME = "+unitNameArray[i-1]+'FrameList');
         tabContentsFrame[i].setAttribute('class', 'w3-container w3-white w3-padding-16 myLink');
         //Inside div1
         let _div1 = document.createElement('div');
@@ -345,7 +313,6 @@ function init_tables(){
         //Inside Table setup
         tabContentsItemTableContainer[i] = document.createElement('table');
         tabContentsItemList[i].appendChild(tabContentsItemTableContainer[i]);
-        //tabContentsItemTableContainer[i].setAttribute('class', "ui sortable celled table");
         tabContentsItemTableContainer[i].setAttribute('id', unitNameArray[i-1]+'Table');
         let _listRow = document.createElement('tr');
         let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
@@ -833,7 +800,7 @@ function init_detail_view(){
 /* Get data from database function start */
 
 async function get_selections(){
-    console.log("Get Selection start");
+    //console.log("Get Selection start");
     let names = [], quantityUnits = [], categories = [], subcategories = [];
     for( let i=0; i<numOfUnits; i++ ){
         let unitName = unitNameArray[i];
@@ -874,7 +841,7 @@ async function get_selections(){
             return uniqueArr.hasOwnProperty(item) ? false : uniqueArr[item] = true;
         });
     };
-    console.log("Get Selection done...");
+    console.log("08 Get Selection done...");
 }
 
 function add_options(){
@@ -946,7 +913,7 @@ function add_options(){
         masterDataList.appendChild(item_search_options_category_master);
         masterDataList.appendChild(item_search_options_subcategory_master);
     
-   // $('table').tablesort();
+   console.log('09 Add options done...');
 }
 
 function add_selections(item_options, itemSelection){

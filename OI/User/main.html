@@ -90,37 +90,18 @@ table {
         <!-- Tabs -->
         <div>
           <!-- Main Tab -->
-          <div id="MainTab" class="w3-container w3-white w3-padding-16 myLink">
-            <div style="display: inline-block">
-              <!-- Low Items -->
-              <h3>Low Item Status</h3>
-              <p>Display list of low items through item id, name, and quanity</p>
-              <div style="height: auto; width: auto; background-color: #f2d1f7">
-                <ul id="lowItem"></ul>
-              </div>
-              <!-- Equipment Faults -->
-              <h3>Equipment Faults Status</h3>
-              <p style="width: inherit">Displays list of unit # where the fault is, the item id and name, and level of severity</p>
-              <div style="height: auto; width: auto; background-color: #f2d1f7">
-                <ul id="faulty"></ul>
-              </div>
+          <div id="MainTab" class="w3-container w3-white w3-padding-16 myLink" style="width:100%">
+            <div style="display: inline-block; width:100%; height:700px;">
               <!-- Work Order Request -->
               <h3>Work Order Status</h3>
-              <div style="height: auto; width: auto;">
+              <div style="width: 100%">
                 <p>Display the brief summary of workorder status</p>
-                <div style="height: auto; width: 90%; word-wrap: break-word">
+                <div style="height: auto; width: 100%; word-wrap: break-word; overflow-y:scroll;">
                   <ul id="workOrder"></ul>
                 </div>
               </div>
-              <div style="background-color: #c3e6f3">
-                  <h3>Office Supply Inventory</h3>
-                  <ul id="supplyList"></ul>
-                </div>
-              <div style="background-color: #c3e6f3">
-                <h3>Equipment Inventory</h3>
-                <ul id="equipmentList"></ul>
-              </div>
             </div>
+            
           </div>
           </div>
       </div>
@@ -129,6 +110,7 @@ table {
 </div>
 <script src ="loginauthentication.js"></script>
 <script src="main.js"></script>
+<script src="UserMain/workOrder.js"></script>
 <script src="shortcuts.js"></script>
 
 </body>

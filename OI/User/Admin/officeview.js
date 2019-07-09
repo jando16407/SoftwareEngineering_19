@@ -325,7 +325,7 @@ async function getUnitInfo(num, elem){
     await firebase.firestore().collection("Office").doc("Workorder").collection("workOrder").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             if(doc.data().section == num){
-                string = string.concat(doc.data().itemDescription, "<br><br>")
+                string = string.concat(doc.data().itemName, "<br><br>")
                 isFaults = true
             }
         })
@@ -342,9 +342,9 @@ function updateColor(listUnits){
     for(var i = 0; i < objs.length; i++){
         if(objs[i].get("id") == listUnits.section){
             console.log(listUnits.condition)
-            if(listUnits.condition == "mild")
+            if(listUnits.condition == "Mild")
                 color = "yellow"
-            else if(listUnits.condition == "severe")
+            else if(listUnits.condition == "Severe")
                 color ="red"
             else
                 color = "green"
@@ -358,6 +358,13 @@ function updateColor(listUnits){
                 radius: objs[i].get("radius"),
                 opacity: 0.3,
                 selectable: false,
+            })
+            circ.on("mouseover", function(){
+                console.log(this.get("id"))
+                createToolTip(this)
+            })
+            circ.on("mouseout", function(){
+                cancelTip()
             })
             fabricCanvas.add(circ) 
             fabricCanvas.remove(objs[i]) 

@@ -11,7 +11,7 @@
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+ // const db = firebase.firestore();
   // create element and render item list
 function renderList(doc){
     let li = document.createElement('li');

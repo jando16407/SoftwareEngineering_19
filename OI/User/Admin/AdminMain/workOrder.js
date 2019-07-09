@@ -13,29 +13,33 @@ function formatTime(timestamp){
         let dateNeeded = formatTime(doc.data().needBy);
 
         let li = document.createElement('li');
-        let requestType = document.createElement('span');
-        let request = document.createElement('span');
-        let requestDate = document.createElement('span');
-        let needBy = document.createElement('span');
-        let itemName = document.createElement('span');
-        let itemDescription = document.createElement('span');
-        let quantity = document.createElement('span');
-        let unit = document.createElement('span')
-        let condition = document.createElement('span')
+        let requestType = document.createElement('li');
+        let request = document.createElement('li');
+        let requestDate = document.createElement('li');
+        let needBy = document.createElement('li');
+        let itemName = document.createElement('li');
+        let itemDescription = document.createElement('li');
+        let quantity = document.createElement('li');
+        let unit = document.createElement('li')
+        let condition = document.createElement('li')
         let cross = document.createElement('button');
-    
+        cross.classList.add("w3-bar-item")
+        cross.classList.add("w3-button")
+        cross.classList.add("tablink")
+        cross.style.paddingBottom = " 20px";
+
         li.setAttribute('data-id', doc.id);
-        requestType.textContent = doc.data().requestType;
-        request.textContent = doc.data().request;
-        requestDate.textContent = dateRequest;
-        needBy.textContent = doc.data().dateNeeded;
-        itemName.textContent = doc.data().itemName;
-        itemDescription.textContent = doc.data().itemDescription;
-        quantity.textContent = doc.data().quantity;
-        unit.textContent = doc.data().unit;
-        condition.textContent = doc.data().condition
+        requestType.textContent = "Request Type: " + doc.data().requestType + "\n";
+        request.textContent ="Problem: " + doc.data().problem + "\n";
+        requestDate.textContent ="Request Date: " + dateRequest + "\n";
+        needBy.textContent = "Date Needed By: " + doc.data().needBy + "\n";
+        itemName.textContent ="Item Name: " + doc.data().itemName + "\n";
+        itemDescription.textContent = "Item Description: " + doc.data().itemDescription + "\n";
+        quantity.textContent ="Quantity: " + doc.data().quantity + "\n";
+        unit.textContent = "Unit: " + doc.data().section + "\n";
+        condition.textContent ="Condition: " + doc.data().condition + "\n"
     
-        cross.textContent = 'X';
+        cross.textContent = 'Resolve';
 
         li.appendChild(unit);
         li.appendChild(requestType);
@@ -45,18 +49,21 @@ function formatTime(timestamp){
         li.appendChild(itemName);
         li.appendChild(itemDescription);
         li.appendChild(quantity);
-        li.appendChild(unit);
         li.appendChild(condition);
-
         li.appendChild(cross);
-    
+
         printWorkOrder.appendChild(li);
         // delete Announcement
-        cross.addEventListener('click', (e)=>{
+        cross.addEventListener('click',async function(e){
             //e.stopPropagation();
             let id = e.target.parentElement.getAttribute('data-id');
+            await db.collection('Office/Workorder/workOrder').doc(id).update({
+                condition: "Resolved"
+            })
             //db.collection('Office/Completed/CompletedWork').doc(id).add();
             db.collection('Office/Workorder/workOrder').doc(id).delete();
+            alert("Work Order has been resolved.")
+            li.innerHTML =""
         })
     }
     db.collection('Office/Workorder/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{

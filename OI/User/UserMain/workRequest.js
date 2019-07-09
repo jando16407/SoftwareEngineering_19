@@ -1,5 +1,5 @@
 
-  // Your web app's Firebase configuration
+ /* // Your web app's Firebase configuration
   var firebaseConfig = {
     apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
     authDomain: "office-inventory-12f99.firebaseapp.com",
@@ -10,7 +10,7 @@
     appId: "1:147848186588:web:33dbc8d727af1de4"
   };
   // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);*/
   const db = firebase.firestore();
 function formatTime(){
     let time = new Date(),
@@ -21,7 +21,7 @@ function formatTime(){
     days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     return days[time.getDay()]+' '+months[time.getMonth()]+' '+time.getDate()+' '+time.getFullYear()+' '+hours+':'+minutes+ampm;
     }
-
+/*
     function renderMsg(doc){
         let li = document.createElement('li');
         let firstName = document.createElement('span');
@@ -79,7 +79,7 @@ function formatTime(){
                 printRequest.removeChild(li);
             }
         })
-    })  
+    })  */
     
     const printRequest = document.querySelector('#myRequest');
     const form = document.querySelector("#requestForm");
@@ -89,9 +89,6 @@ function formatTime(){
     form.addEventListener('submit', (e)=>{
         e.preventDefault();
         db.collection('Office/Workorder/workOrder').add({
-            firstName: form.firstName.value,
-            midName: form.midName.value,
-            lastName: form.lastName.value,
             section: form.section.value,
             condition: form.condition.value,
             requestType: form.requestType.value,
@@ -102,4 +99,6 @@ function formatTime(){
             needBy: form.needBy.value,
             requestDate: formatTime(),
         })
+        alert("Work Order has been submitted!")
+        form.reset()
     })

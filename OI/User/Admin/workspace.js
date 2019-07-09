@@ -194,6 +194,43 @@ function init_tables(){
     div1.setAttribute('style', 'display: inline-block;');
     let tabContentsTitle = document.createElement('h3');
     tabContentsTitle.innerHTML = 'Main Inventory Item List';
+    //Search area
+    let searchDiv = document.createElement('div');
+    searchDiv.setAttribute('style', 'height: 70px; width: 800px;');
+    //Search Name input
+    let searchInputName = document.createElement('input');
+    searchInputName.setAttribute('id', 'masterListSearch');
+    searchInputName.setAttribute('style', 'height: 40px; width: 180px;');
+    searchInputName.setAttribute('placeholder', 'Search item name...');
+    searchInputName.setAttribute('list', 'option_search_masterList');
+    //Search Quantity unit input
+    let searchInputQuantityUnit = document.createElement('input');
+    searchInputQuantityUnit.setAttribute('id', 'masterListSearchQuantityUnit');
+    searchInputQuantityUnit.setAttribute('style', 'height: 40px; width: 70px;');
+    searchInputQuantityUnit.setAttribute('placeholder', 'Qt. unit...');
+    searchInputQuantityUnit.setAttribute('list', 'option_search_masterList_quantity_unit');
+    //Search Category input
+    let searchInputCategory = document.createElement('input');
+    searchInputQuantityUnit.setAttribute('id', 'masterListSearchQuantityUnit');
+    searchInputQuantityUnit.setAttribute('style', 'height: 40px; width: 70px;');
+    searchInputQuantityUnit.setAttribute('placeholder', 'Qt. unit...');
+    searchInputQuantityUnit.setAttribute('list', 'option_search_masterList_quantity_unit');
+    //Search button
+    let searchButton = document.createElement('button');
+    searchButton.setAttribute('style', 'height: 40px; width: 70px;');
+    searchButton.setAttribute('id', 'masterListSearchButton');
+    searchButton.innerHTML = 'Search';
+    searchButton.onclick = function(e){
+        searchButtonClicked(0);
+    };
+    //Reset Search button
+    let resetSearchButton = document.createElement('button');
+    resetSearchButton.setAttribute('style', 'height: 40px; width: 70px;');
+    resetSearchButton.setAttribute('id', 'masterListResetSearchButton');
+    resetSearchButton.innerHTML = 'Reset';
+    resetSearchButton.onclick = function(e){
+        resetSearchButtonClicked(0);
+    };
     //Inside div2
     let div2 = document.createElement('div');
     div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
@@ -209,11 +246,22 @@ function init_tables(){
     let topRow = "<th>Name</th><th>Quantity</th><th>Quantity Unit</th><th>Category</th><th>Sub Category</th><th>Minimum Quantity in Office</th>";
     listRow.innerHTML = topRow;
     tabContentsItemTableContainer[0].appendChild(listRow);
+    //For master list
+    let masterDataList = document.createElement('p');
+    masterDataList.setAttribute('id', 'masterDataList');
 
     //Put everything together
+    searchDiv.appendChild(searchInputName);
+    searchDiv.appendChild(searchInputQuantityUnit);
+    searchDiv.appendChild(searchButton);
+    searchDiv.appendChild(resetSearchButton);
     div2.appendChild(tabContentsItemList[0]);
     div1.appendChild(tabContentsTitle);
+    div1.appendChild(searchDiv);
+    //div1.appendChild(searchInput);
+    //div1.appendChild(searchButton);
     div1.appendChild(div2);
+    div1.appendChild(masterDataList);
     tabContentsFrame[0].appendChild(div1);
     itemListTabContainer.appendChild(tabContentsFrame[0]);
 
@@ -241,6 +289,31 @@ function init_tables(){
         _div1.setAttribute('style', 'display: inline-block;');
         let _tabContentsTitle = document.createElement('h3');
         _tabContentsTitle.innerHTML = unitNameArray[i-1]+' Item List';
+        //Search area
+        let _searchDiv = document.createElement('div');
+        _searchDiv.setAttribute('style', 'height: 70px; width: 800px;');
+        //Search input
+        let _searchInput = document.createElement('input');
+        _searchInput.setAttribute('style', 'height: 40px; width: 180px;');
+        _searchInput.setAttribute('id', 'unitListSearch'+i);
+        _searchInput.setAttribute('placeholder', 'Search items...');
+        _searchInput.setAttribute('list', 'option_search_area'+i);
+        //Search button
+        let _searchButton = document.createElement('button');
+        _searchButton.setAttribute('style', 'height: 40px; width: 70px;');
+        _searchButton.setAttribute('id', 'unitListSearchButton'+i);
+        _searchButton.innerHTML = 'Search';
+        _searchButton.onclick = function(e){
+            searchButtonClicked(i);
+        };
+        //Search button
+        let _resetSearchButton = document.createElement('button');
+        _resetSearchButton.setAttribute('style', 'height: 40px; width: 70px;');
+        _resetSearchButton.setAttribute('id', 'unitListResetSearchButton'+i);
+        _resetSearchButton.innerHTML = 'Reset';
+        _resetSearchButton.onclick = function(e){
+            resetSearchButtonClicked(i);
+        };
         //Inside div2
         let _div2 = document.createElement('div');
         _div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
@@ -256,11 +329,20 @@ function init_tables(){
         let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
         _listRow.innerHTML = _topRow;
         tabContentsItemTableContainer[i].appendChild(_listRow);
+        //For master list
+        let _unitDataList = document.createElement('p');
+        //let p = i -1;
+        _unitDataList.setAttribute('id', 'unitDataList'+i);
 
         //Put everything together
+        _searchDiv.appendChild(_searchInput);
+        _searchDiv.appendChild(_searchButton);
+        _searchDiv.appendChild(_resetSearchButton);
         _div2.appendChild(tabContentsItemList[i]);
         _div1.appendChild(_tabContentsTitle);
+        _div1.appendChild(_searchDiv);
         _div1.appendChild(_div2);
+        _div1.appendChild(_unitDataList);
         tabContentsFrame[i].appendChild(_div1);
         itemListTabContainer.appendChild(tabContentsFrame[i]);
     }
@@ -791,7 +873,20 @@ function add_options(){
         item_subcategory_options.setAttribute('id', 'option_subcategory'+i);
         item_subcategory_options = add_selections(item_subcategory_options, subcategorySelection);
         tabContentsItemAdd_add[i].appendChild(item_subcategory_options);
+        //Search Area
+        let p = i+1;
+        let item_search_options = document.createElement("datalist");
+        item_search_options.setAttribute('id', 'option_search_area'+p);
+        item_search_options = add_selections(item_search_options, nameSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        let unitDataList = document.getElementById('unitDataList'+p);
+        unitDataList.appendChild(item_search_options);
     }
+    //Add option to master list
+        let item_search_options_master = document.createElement("datalist");
+        item_search_options_master.setAttribute('id', 'option_search_masterList');
+        item_search_options_master = add_selections(item_search_options_master, nameSelection);//+quantityUnitSelection+categorySelection+subcategorySelection);
+        let masterDataList = document.getElementById('masterDataList');
+        masterDataList.appendChild(item_search_options_master);
     $('table').tablesort();
 }
 
@@ -1237,6 +1332,53 @@ async function submitButtonClicked( unitName, i ) {
 
     console.log(data);
 }
+
+function searchButtonClicked(i){
+    console.log("Search Button clicked in tab "+i);
+    //MasterlistsearchButton
+    if( i==0 ){
+        let searchInput = document.getElementById('masterListSearch');
+        if(searchInput.value != undefined && searchInput.value != '' ){
+            //Search the input item
+
+        }
+
+    }
+    else{//All other units searchbuton
+        let searchInput = document.getElementById('unitListSearch'+i);
+        if(searchInput.value != undefined && searchInput.value != '' ){
+            //Search the input item
+        }
+    }
+
+}
+
+
+function resetSearchButtonClicked(i){
+    console.log("Reset Button clicked in tab "+i);
+    //MasterlistsearchButton
+    if( i==0 ){
+        let searchInput = document.getElementById('masterListSearch');
+        if(searchInput.value != undefined && searchInput.value != '' ){
+            //Reset input
+            console.log("Search input = "+searchInput.textContent);
+            searchInput.value = '';
+            //Search the input item
+            
+        }
+
+    }
+    else{//All other units searchbuton
+        let searchInput = document.getElementById('unitListSearch'+i);
+        if(searchInput.value != undefined && searchInput.value != '' ){
+            //Reset input
+            console.log("Search input = "+searchInput.value);
+            searchInput.value = '';
+            //Search the input item
+        }
+    }
+}
+
 /* onClick handlings End */
 
 /* Randomly generate and add items to units starts */

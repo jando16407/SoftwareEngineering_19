@@ -28,6 +28,7 @@ var deletePath;
 var detailView;
 var listenData = '';
 var selectedUnitNumber = 0;
+var deleting = false;
 
 
 firebase_setup();
@@ -735,6 +736,7 @@ function init_detail_view(){
     
     //Delete button funciton setup
     deleteButton.onclick = function() {
+        deleting = true;
         if(deletePath != '' && childNodePath != ''){
             let deleteRef = database.collection('Office').doc('Inventory').collection('Units').doc(deletePath).collection('Item').doc(childNodePath);
             deleteRef.delete().then(function() {
@@ -1188,11 +1190,15 @@ function detailViewUpdate(key, unitName){
             minimum_quantity.value = ';'
         }
         else {
-            unit.value = doc.data().unit_name;
-            quantity_unit.value = doc.data().quantity_unit;
-            assign.value = doc.data().assign;
-            minimum_quantity.value = doc.data().minimum_quantity;
-            console.log("qu uni: "+quantity_unit);
+            if(!deleting){
+                unit.value = doc.data().unit_name;
+                quantity_unit.value = doc.data().quantity_unit;
+                assign.value = doc.data().assign;
+                minimum_quantity.value = doc.data().minimum_quantity;
+            }
+            else{
+                deleting = false;
+            }
         }
     });
     

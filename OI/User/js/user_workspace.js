@@ -5,6 +5,7 @@ var numOfUnits;     //Nuber of units stored on database
 var unitNameArray =[];  //Names of units stored on database
 var masterlistdone = false;
 var searchClicked = false;
+var userSection = null;
 //For the item list tabs
 var itemListTabButtonContainer; //mark to display itemListTabButtons
 var itemListTabContainer;       //mark to display itemListTabsContents
@@ -28,6 +29,7 @@ var deletePath;
 var detailView;
 var listenData = '';
 var selectedUnitNumber = 0;
+var deleting = false;
 
 
 firebase_setup();
@@ -64,29 +66,13 @@ function page_setup(){
     itemListTabContainer = document.getElementById('ItemListTabContents');
     itemAddTabButtonContainer = document.getElementById('ItemAddTabContainer');
     itemAddTabContainer = document.getElementById('ItemAddTabContents');
-    console.log("02 Page setup done...")
-    get_unit_info();
+    console.log("02.1 Page setup done...")
+    get_user_section();
 }
 
-//Get unit information and create units dynamically
-async function get_unit_info(){
-    await officeViewRef.get().then(function(doc) {
-        if(doc.exists){
-            //Get number of units
-            numOfUnits = doc.data().Units.length;
-            console.log("\tNumber of Units: "+numOfUnits);
-            //Get unit's name and store it in an array
-            for( let i=0; i<numOfUnits; i++ ){
-                unitNameArray[i] = doc.data().Units[i];
-            }
-        } 
-        else {
-            console.log("No such document at get_unit_info()");
-        }
-    }).catch(function(error) {
-        console.log('Error at get_unit_info(): ');
-    });
-    console.log("03 Get unit info done...")
+async function load_page(){
+    
+    //await get_unit_info();
     await init_tabs();
     await init_tables();
     await init_tabs_add();
@@ -98,14 +84,64 @@ async function get_unit_info(){
     await init_detail_view();
     await get_selections();
     await add_options();
-    await get_master_list();
 }
 
+//Get current user info and his/her section number
+async function get_user_section(){
+    console.log("02.2 Get user section start...");
+    firebase.auth().onAuthStateChanged(await async function(user) {
+        console.log("State changed");
+        if (user) {
+            let email = user.email
+            let userId = email.match(/^(.+)@/)[1]
+            firebase.firestore().collection("Office").doc("Users").collection('Users').get().then(function(snapshot){
+                snapshot.forEach( async function(doc){
+                  if (doc.id == userId) {
+                    let userType = doc.data().userType;
+                    this.userSection = doc.data().sectionNum;
+                    if(userType == 'Employee'){
+                        this.userSection = 'Unit_'+this.userSection;
+                        get_unit_info();
+                    }
+                  }
+              })
+            });
+        }
+    });
+    console.log("02.2 Get user section done...");
+}
+
+//Get unit information and create units dynamically
+function get_unit_info(){
+    console.log("03 Get unit info start...");
+    officeViewRef.get().then( function(doc) {
+        if(doc.exists){
+            //Get number of units
+            this.numOfUnits = 1;
+            let numUnits = doc.data().Units.length;
+            console.log("\tNumber of Units: "+numOfUnits);
+            //Get unit's name and store it in an array
+            for( let i=0; i<numUnits; i++ ){
+                if( this.userSection == doc.data().Units[i] ){
+                    this.unitNameArray[0] = doc.data().Units[i];
+                }
+            }
+            load_page();
+        } 
+        else {
+            console.log("No such document at get_unit_info()");
+        }
+    }).catch(function(error) {
+        console.log('Error at get_unit_info(): ');
+    });
+    console.log("03 Get unit info done...");
+}
 
 
 //Dynamically create tabs
 async function init_tabs(){
     //Add Main List tab
+    /*
     tabButtons[0]= document.createElement('button');
     tabButtons[0].setAttribute('class', 'w3-bar-item w3-button tablink');
     tabButtons[0].onclick = function(){
@@ -113,14 +149,15 @@ async function init_tabs(){
     };
     tabButtons[0].innerHTML = 'Main List';
     itemListTabButtonContainer.appendChild(tabButtons[0]);
+    */
     //Iterate through units and create new tabs dynamically
-    for( let i=1; i<numOfUnits+1; i++ ){
+    for( let i=0; i<numOfUnits; i++ ){
         tabButtons[i] = document.createElement('button');
         tabButtons[i].setAttribute('class', 'w3-bar-item w3-button tablink');
         tabButtons[i].onclick = function(){
-            openLink(event, unitNameArray[i-1]+'FrameList');
+            openLink(event, unitNameArray[i]+'FrameList');
         };
-        tabButtons[i].innerHTML = unitNameArray[i-1];
+        tabButtons[i].innerHTML = unitNameArray[i];
         itemListTabButtonContainer.appendChild(tabButtons[i]);
         //console.log("Added tab: "+tabButtons[i]);
     }
@@ -160,6 +197,7 @@ function init_tabs_add(){
 
 //Initial rendering of tables
 function init_tables(){
+ /*
     //Init the Main List tab first
     //the most outer div
     tabContentsFrame[0] = document.createElement('div');
@@ -247,7 +285,7 @@ function init_tables(){
     div1.appendChild(masterDataList);
     tabContentsFrame[0].appendChild(div1);
     itemListTabContainer.appendChild(tabContentsFrame[0]);
-
+*/
     /* Example HTML 
     <div id="MainList" class="w3-container w3-white w3-padding-16 myLink">
         <div style="display: inline-block">
@@ -261,16 +299,16 @@ function init_tables(){
     */
 
     //Init tables for all units as well
-    for( let i=1; i<numOfUnits+1; i++ ){
+    for( let i=0; i<numOfUnits; i++ ){
        //the most outer div
         tabContentsFrame[i] = document.createElement('div');
-        tabContentsFrame[i].setAttribute('id', unitNameArray[i-1]+'FrameList');
+        tabContentsFrame[i].setAttribute('id', unitNameArray[i]+'FrameList');
         tabContentsFrame[i].setAttribute('class', 'w3-container w3-white w3-padding-16 myLink');
         //Inside div1
         let _div1 = document.createElement('div');
         _div1.setAttribute('style', 'display: inline-block;');
         let _tabContentsTitle = document.createElement('h3');
-        _tabContentsTitle.innerHTML = unitNameArray[i-1]+' Item List';
+        _tabContentsTitle.innerHTML = unitNameArray[i]+' Item List';
         //Search area
         let _searchDiv = document.createElement('div');
         _searchDiv.setAttribute('style', 'height: 70px; width: 800px;');
@@ -313,11 +351,11 @@ function init_tables(){
         _div2.setAttribute('style', 'height: 320px; overflow: scroll; width: 800px;');
         //Inside <p>
         tabContentsItemList[i] = document.createElement('p');
-        tabContentsItemList[i].setAttribute('id', unitNameArray[i-1]+'ItemList');
+        tabContentsItemList[i].setAttribute('id', unitNameArray[i]+'ItemList');
         //Inside Table setup
         tabContentsItemTableContainer[i] = document.createElement('table');
         tabContentsItemList[i].appendChild(tabContentsItemTableContainer[i]);
-        tabContentsItemTableContainer[i].setAttribute('id', unitNameArray[i-1]+'Table');
+        tabContentsItemTableContainer[i].setAttribute('id', unitNameArray[i]+'Table');
         let _listRow = document.createElement('tr');
         let _topRow = "<th>ID</th><th>Name</th><th>Quantity</th><th>Category</th><th>Sub Category</th><th>Item Description</th>";
         _listRow.innerHTML = _topRow;
@@ -737,6 +775,8 @@ function init_detail_view(){
     
     //Delete button funciton setup
     deleteButton.onclick = function() {
+        deleting = true;
+        //console.log("deleting = "+deleting);
         if(deletePath != '' && childNodePath != ''){
             let deleteRef = database.collection('Office').doc('Inventory').collection('Units').doc(deletePath).collection('Item').doc(childNodePath);
             deleteRef.delete().then(function() {
@@ -751,6 +791,7 @@ function init_detail_view(){
                 document.getElementById('detail_description').value = '';
                 document.getElementById('detail_category').value = '';
                 document.getElementById('detail_subcategory').value = '';
+                //this.deleting = false;
             }).catch(function(error) {
                 console.error("Error removing item from database: "+error);
             });
@@ -764,6 +805,8 @@ function init_detail_view(){
     
     console.log('07 Init detail view done...');
 }
+
+
 /* Initialize Functions End */
 
 /* Get data from database function start */
@@ -830,7 +873,7 @@ function add_options(){
         item_subcategory_options = add_selections(item_subcategory_options, subcategorySelection);
         tabContentsItemAdd_add[i].appendChild(item_subcategory_options);
         //Search Area
-        let p = i+1;
+        let p = i;
         let item_search_options = document.createElement("datalist");
         item_search_options.setAttribute('id', 'option_search_area'+p);
         item_search_options = add_selections(item_search_options, nameSelection);
@@ -853,6 +896,7 @@ function add_options(){
         unitDataList.appendChild(item_search_options_category);
         unitDataList.appendChild(item_search_options_subcategory);
     }
+    /*
     //Add option name to master list
         let item_search_options_master = document.createElement("datalist");
         item_search_options_master.setAttribute('id', 'option_search_masterList');
@@ -875,7 +919,7 @@ function add_options(){
         masterDataList.appendChild(item_search_options_quantity_unit_master);
         masterDataList.appendChild(item_search_options_category_master);
         masterDataList.appendChild(item_search_options_subcategory_master);
-    
+    */
    console.log('09 Add options done...');
 }
 
@@ -914,16 +958,16 @@ function renderUnit( unitNum ){
     ref.orderBy('id').onSnapshot(function(querySnapshot) {
         querySnapshot.docChanges().forEach(async function(change) {
             if(change.type === "added"){
-                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(change.doc, unitNum));
+                tabContentsItemTableContainer[unitNum].appendChild(getRowInfo(change.doc, unitNum));
                 if(masterlistdone) resetMasterList();
                 if(masterlistdone) await get_selections();
                 if(masterlistdone) get_master_list(); 
             }
             if(change.type === "modified"){
                 for( let num=0; num<numOfUnits; num++ ){
-                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
-                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
-                            tabContentsItemTableContainer[num+1].replaceChild(getRowInfo(change.doc, num), tabContentsItemTableContainer[num+1].children[i]);
+                    for( let i=0; i<tabContentsItemTableContainer[num].children.length; i++ ){
+                        if(tabContentsItemTableContainer[num].children[i].getAttribute('id') == change.doc.id ){
+                            tabContentsItemTableContainer[num].replaceChild(getRowInfo(change.doc, num), tabContentsItemTableContainer[num].children[i]);
                             if(masterlistdone) resetMasterList();
                             if(masterlistdone) await get_selections();
                             if(masterlistdone) get_master_list();
@@ -933,9 +977,9 @@ function renderUnit( unitNum ){
             }
             if(change.type === "removed"){
                 for( let num=0; num<numOfUnits; num++ ){
-                    for( let i=0; i<tabContentsItemTableContainer[num+1].children.length; i++ ){
-                        if(tabContentsItemTableContainer[num+1].children[i].getAttribute('id') == change.doc.id ){
-                            tabContentsItemTableContainer[num+1].removeChild(tabContentsItemTableContainer[num+1].children[i]);
+                    for( let i=0; i<tabContentsItemTableContainer[num].children.length; i++ ){
+                        if(tabContentsItemTableContainer[num].children[i].getAttribute('id') == change.doc.id ){
+                            tabContentsItemTableContainer[num].removeChild(tabContentsItemTableContainer[num].children[i]);
                             if(masterlistdone) resetMasterList();
                             if(masterlistdone) await get_selections();
                             if(masterlistdone) get_master_list();
@@ -955,7 +999,7 @@ function renderUnitOnce( unitNum ){
     ref.orderBy('id').get().then(function(querySnapshot) {
         querySnapshot.forEach(async function(doc) {
             console.log("Adding child to unitNUm = "+unitNum);
-                tabContentsItemTableContainer[unitNum+1].appendChild(getRowInfo(doc, unitNum));
+                tabContentsItemTableContainer[unitNum].appendChild(getRowInfo(doc, unitNum));
          
         });
     });
@@ -1190,11 +1234,17 @@ function detailViewUpdate(key, unitName){
             minimum_quantity.value = ';'
         }
         else {
-            unit.value = doc.data().unit_name;
-            quantity_unit.value = doc.data().quantity_unit;
-            assign.value = doc.data().assign;
-            minimum_quantity.value = doc.data().minimum_quantity;
-            console.log("qu uni: "+quantity_unit);
+            console.log("deleting = "+deleting);
+            if(!deleting){
+                unit.value = doc.data().unit_name;
+                quantity_unit.value = doc.data().quantity_unit;
+                assign.value = doc.data().assign;
+                minimum_quantity.value = doc.data().minimum_quantity;
+            }
+            else{
+                deleting = false;
+            }
+            //console.log("qu uni: "+quantity_unit);
         }
     });
     
@@ -1324,6 +1374,7 @@ async function submitButtonClicked( unitName, i ) {
 function searchButtonClicked(i){
     console.log("Search Button clicked in tab "+i);
     //MasterlistsearchButton
+    /*
     if( i==0 ){
         let table = document.getElementById('masterTable');
         let searchInput = document.getElementById('masterListSearch');
@@ -1371,8 +1422,8 @@ function searchButtonClicked(i){
         }
 
     }
-    else{//All other units searchbuton
-        let table = document.getElementById(unitNameArray[i-1]+'Table');
+    else{*///All other units searchbuton
+        let table = document.getElementById(unitNameArray[i]+'Table');
         let searchInput = document.getElementById('unitListSearch'+i);
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Search the input item
@@ -1403,7 +1454,7 @@ function searchButtonClicked(i){
                 }
             }
         }
-    }
+  //  }
 
 }
 
@@ -1411,6 +1462,7 @@ function searchButtonClicked(i){
 function resetSearchButtonClicked(i){
     console.log("Reset Button clicked in tab "+i);
     //MasterlistsearchButton
+/*
     if( i==0 ){
         let searchInput = document.getElementById('masterListSearch');
         if(searchInput.value != undefined && searchInput.value != '' ){
@@ -1436,7 +1488,7 @@ function resetSearchButtonClicked(i){
         get_master_list();
         this.searchClicked = false;
     }
-    else{//All other units searchbuton
+    else{*///All other units searchbuton
         let searchInput = document.getElementById('unitListSearch'+i);
         if(searchInput.value != undefined && searchInput.value != '' ){
             //Reset input
@@ -1453,7 +1505,7 @@ function resetSearchButtonClicked(i){
             searchInputSubCategory.value = '';
         }
         if(this.searchClicked){
-            let p = i-1;
+            let p = i;
             console.log("Deleting child i = "+i);
                 let child = tabContentsItemTableContainer[i].lastElementChild;
                 while(child){
@@ -1469,8 +1521,7 @@ function resetSearchButtonClicked(i){
             renderUnitOnce(p);
             this.searchClicked = false;
         }
-
-    }
+   // }
 }
 
 /* onClick handlings End */
@@ -1483,7 +1534,7 @@ async function randomGen(){
         let unitName = unitNameArray[i];
         let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
         
-        //Add 10 data
+        //Add 3 data
         let maxId = await get_max_id(document.getElementById('id'+i), i);
         for( let j=0; j<3; j++, maxId++ ){
             let data = {};

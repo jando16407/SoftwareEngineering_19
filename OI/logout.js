@@ -1,17 +1,11 @@
-/*firebase.auth().signOut().then(function() {
-//
-}, function(error) {
-  // An error happened.
-});
-*/
+logOut()
 function logOut(){  
   firebase.initializeApp(settings);
 
-  firebase.auth().signOut().then(function() {
+  await firebase.auth().signOut().then(function() {
           sessionStorage.removeItem('tokenK');
           sessionStorage.removeItem('displayName');
-          sessionStorage.removeItem('userName');
-          window.open('index.html', '_self');                 
+          sessionStorage.removeItem('userName');              
   }).catch(function(error) {
       console.log(error);
   }); 
@@ -23,10 +17,4 @@ firebase.auth().onAuthStateChanged(user =>{
   } else {
     console.log('user logged out...');
   }
-})
-// adding this function for logout and not allow the user to see anything after log out.
-const logout = document.querySelector('#logout');
-logout.addEventListener('click', (e) => {
-  e.preventDefault();
-  firebase.auth().signOut();
 })

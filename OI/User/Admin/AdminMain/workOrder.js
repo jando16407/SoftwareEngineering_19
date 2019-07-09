@@ -21,7 +21,7 @@ function formatTime(timestamp){
         let itemDescription = document.createElement('span');
         let quantity = document.createElement('span');
         let unit = document.createElement('span')
-
+        let condition = document.createElement('span')
         let cross = document.createElement('button');
     
         li.setAttribute('data-id', doc.id);
@@ -33,6 +33,7 @@ function formatTime(timestamp){
         itemDescription.textContent = doc.data().itemDescription;
         quantity.textContent = doc.data().quantity;
         unit.textContent = doc.data().unit;
+        condition.textContent = doc.data().condition
     
         cross.textContent = 'X';
 
@@ -45,6 +46,7 @@ function formatTime(timestamp){
         li.appendChild(itemDescription);
         li.appendChild(quantity);
         li.appendChild(unit);
+        li.appendChild(condition);
 
         li.appendChild(cross);
     

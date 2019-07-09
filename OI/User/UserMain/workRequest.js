@@ -33,7 +33,7 @@ function formatTime(){
         let itemDescription = document.createElement('span');
         let requestType = document.createElement('span');
         let needBy = document.createElement('span');
-
+        let condition = document.createElement('span')
         let cross = document.createElement('button');
     
         li.setAttribute('data-id', doc.id);
@@ -46,6 +46,7 @@ function formatTime(){
         itemDescription.textContent = doc.data().itemDescription;
         requestType.textContent = doc.data().requestType;
         needBy.textContent = doc.data().needBy
+        condition.textContent = doc.data().condition
 
         cross.textContent = 'X';
 
@@ -92,6 +93,7 @@ function formatTime(){
             midName: form.midName.value,
             lastName: form.lastName.value,
             section: form.section.value,
+            condition: form.condition.value,
             requestType: form.requestType.value,
             itemName: form.itemName.value,
             itemDescription:form.itemDescription.value,

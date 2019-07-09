@@ -10,23 +10,7 @@ var firebaseConfig = {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  firebase.auth().onAuthStateChanged(user =>{
-    console.log(user);
-    if(user){
-      console.log('user logged in...', user);
-    } else {
-      console.log('user logged out...');
-    }
-  })
-  //reset login on window load
-  window.onload = function(){
-    firebase.auth().signOut().then(function(){
-      //successful
-//      alert('logged out')
-    },function(error){
-      alert('still logged in')
-    })
-  }
+ 
   //did user hit login?
   var login = document.getElementById("loginButton")
 

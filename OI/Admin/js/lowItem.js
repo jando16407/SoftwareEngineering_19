@@ -53,21 +53,4 @@ async function getItemList(arrayList){
         listView.appendChild(li)
         }
 
-<<<<<<< HEAD:OI/User/Admin/AdminMain/lowItem.js
     }
-=======
-database.collection('Watis/NusiCkayiV6LuuMOu94U/Supply').orderBy('itemName').onSnapshot((snapshot) =>{
-  let changes = snapshot.docChanges();
-  changes.forEach(change =>{
-      if(change.type == 'added' && change.doc.data().quantity < 3){
-          renderLowItem(change.doc);
-      } else if (change.type == 'removed'){
-          let li = printLowItem.querySelector('[data-id=' + change.doc.id + ']');
-          printLowItem.removeChild(li);
-      } else if (change.type == 'updated'){
-          renderLowItem(change.doc);
-      }
-  })
-})
-const printLowItem = document.querySelector('#lowItem');
->>>>>>> c9a19df1d0f8a51517860120d36c766290855987:OI/Admin/js/lowItem.js

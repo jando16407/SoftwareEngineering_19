@@ -4,8 +4,8 @@
 <title>OI - Admin Main</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="../../css/w3.css">
-<link rel="stylesheet" type="text/css" href="../../dist/semantic.min.css">
+<link rel="stylesheet" href="../css/w3.css">
+<link rel="stylesheet" type="text/css" href="../dist/semantic.min.css">
 <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
@@ -13,8 +13,8 @@
   <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
-  <script src="hotkeys.min.js"></script>
-  <script src="timeout.js"></script>
+  <script src="./js/hotkeys.min.js"></script>
+  <script src="./js/timeout.js"></script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 table {
@@ -22,19 +22,25 @@ table {
         border-collapse: collapse;
         width: 100%;
     }
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
+    th {
+      background: #000000;
+      color: #ffffff;
+      text-align: center;
+      padding: 8px;
     }
     tr:nth-child(even) {
-        background-color: #dddddd;
+      background-color: #f1f1f1;
+      border-color: darkslategrey;
+      border:darkslategrey;
     }
-.input{
-  border-radius: 5%;
-  width: 100%;
-  align-self:'center';
-}
+    tr:nth-child(odd) {
+      background-color: #dddddd;
+    }
+    td {
+      text-align: left;
+      border:darkviolet;
+    }
+
 </style>
 </header>
 <body class="w3-light-grey">
@@ -42,9 +48,6 @@ table {
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open(event, 'navbar');"><i class="fa fa-bars"></i>  Menu</button>
   <span class="w3-bar-item w3-right">OI</span>
-  <div class="w3-col s4">
-      <img src="../../img/Inventory-maintenance-icon.png" class="w3-square w3-margin-right" style="width:46px">
-    </div>
 </div>
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
@@ -56,7 +59,7 @@ table {
     <a href="workspace.html" class="w3-bar-item w3-button w3-padding">Admin Workspace</a>
     <a href="officeview.html" class="w3-bar-item w3-button w3-padding">Admin Office View</a>
     <a href="settings.html" class="w3-bar-item w3-button w3-padding">Admin Settings</a>
-    <a href="../../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
+    <a href="../logout.html" class="w3-bar-item w3-button w3-padding">Log Out</a>
 
   </div>
 </nav>
@@ -68,8 +71,7 @@ table {
   <h2>Main Panel</h2>
   <!--The whole workspace-->
   <div style="display: inline-block; width:100%;">
-    <!-- First tab on the left side -->
-    <div class="w3-display-top " style="width:54%; display: inline-block;">
+    <div class="w3-display-top " style="display: inline-block; overflow: scroll">
       <!-- Tab buttons -->
       <div class="w3-bar w3-black">
         <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainTab');"></button>
@@ -81,8 +83,8 @@ table {
           <div style="display: inline-block; height:550px; width:100%;">
             <!-- Low Items -->
             <h3>Low Item Status</h3>
-            <p>Display list of low items</p>
-            <div style="height: 29%; width:100% ; overflow-y: scroll">
+            <p>Display list of low items through item id, name, and quanity</p>
+            <div style="height: auto; width: auto; overflow: scroll">
               <ul id="lowItem"></ul>
             </div>
             <h3>Work Order Status</h3>
@@ -90,6 +92,7 @@ table {
               <p>Displays all work orders</p>
               <div style="height: 50%; overflow-y: scroll;">
                 <ul id="workOrder"></ul>
+                <ul id="order"></ul>
               </div>
           </div>
         </div>
@@ -106,14 +109,14 @@ table {
           <div id="AnnouncementsTab" class="w3-container w3-white w3-padding-16 myLink2">
             <!-- Top Part (Display past announcements) -->
             <h3>Past Announcements</h3>                
-            <div id="pastAnnouncementsList" style="height: 310px; overflow-y: scroll;">
+            <div id="pastAnnouncementsList" style="height: 360px; overflow: scroll">
             </div>
             <input id="selectedAnnouncement"class="input" style="width:80%; height: 30px;" placeholder="Click Announcement to delete"></input>
             <button id="deleteButton" class="w3-bar-item w3-button tablink" style="width:15%;">Delete</button>
             <!-- Bottom Part (Send Announcements) -->
             <h3>Send New Announcement</h3>
-            <div style="height: 170px;">
-              <input id="title" class="input" type="text" placeholder="Type title..." style="height: 40px;"/><br>
+            <div style="height: 170px; overflow: scroll">
+              <input id="title" type="text" placeholder="Type title..." style="width: 302px; height: 40px;"/><br>
               <!--<input id="body" type="text" placeholder="Body" style="width: 300px; height: 100px;"/>-->
               <textarea id="body" class="input" placeholder="Type body..." cols=40 rows=5 ></textarea>
               <button id="submitButton1"class="w3-bar-item w3-button tablink" >Send Announcement</button>
@@ -124,11 +127,12 @@ table {
   </div>
 </div>
 
+<script src=".//js/loginauthentication.js"></script>
+<script src="./js/main.js"></script>
+<script src="./js/lowItem.js"></script>
+<script src="./js/workOrder.js"></script>
+<script src="./js/shortcuts.js"></script>
+<script src="./js/displayFormat.js"></script>
 
-<script src="./AdminMain/main.js"></script>
-<script src="./AdminMain/lowItem.js"></script>
-<script src="./AdminMain/workOrder.js"></script>
-<script src="shortcuts.js"></script>
-<script src ="loginauthentication.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-var db;
+//var db;
 var announcementsPath;
 var submitButton1, deleteButton;
 var announcementContainer;
@@ -17,6 +17,7 @@ renderAnnouncements();
 
 //Basic firebase setups
 function firebase_setup(){
+    /*
     var firebaseConfig = {
         apiKey: "AIzaSyB0ZY93KxJK4UIRVnyXWqNm2V1l1M-4j_4",
         authDomain: "office-inventory-12f99.firebaseapp.com",
@@ -29,6 +30,7 @@ function firebase_setup(){
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
+    */
 }
 //initial setup for the page
 function page_setup(){
@@ -53,7 +55,7 @@ function gotErr(err){
 
 //Update the table for Annnouncements
 function renderAnnouncements(){
-    let ref = db.collection('Office').doc('Announcement').collection('Posts');
+    let ref = database.collection('Office').doc('Announcement').collection('Posts');
     ref.orderBy('date').onSnapshot(function(querySnapshot) {
         querySnapshot.docChanges().forEach(function(change) {
             if(change.type === "added"){
@@ -123,7 +125,7 @@ submitButton1.onclick = function(){
         body: document.getElementById("body").value.replace(/\r?\n/g, '<br />'),
         date: formatTime()
     }
-    db.collection('Office').doc('Announcement').collection('Posts').add(data);
+    database.collection('Office').doc('Announcement').collection('Posts').add(data);
     document.getElementById("title").value = "";
     document.getElementById("body").value = "";
 }
@@ -132,9 +134,9 @@ submitButton1.onclick = function(){
 deleteButton.onclick = function(){
     //Check if item is selected or not
     if(childNodePath!='' && childNodePath!=undefined){
-        let deleteRef = db.collection('Office').doc('Announcement').collection('Posts').doc(childNodePath);
+        let deleteRef = database.collection('Office').doc('Announcement').collection('Posts').doc(childNodePath);
         deleteRef.delete().then(function() {
-            console.log("Document successfully deleted from database!");
+            //console.log("Document successfully deleted from database!");
         }).catch(function(error) {
             console.error("Error removing document: ", error);
         });

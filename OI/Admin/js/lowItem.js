@@ -1,7 +1,7 @@
 
 
-const printLowItem = document.querySelector('#lowItem');
 var list = new Array()
+var db = firebase.firestore()
 db.collection("Office/Inventory/Units").onSnapshot(async function(querySnapshot) {
     await querySnapshot.forEach(function(doc) {
         list.push(doc.id)

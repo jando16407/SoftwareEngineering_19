@@ -1,5 +1,6 @@
 const db = firebase.firestore();
 //formats time
+
 function formatTime(){
     let time = new Date(),
     minutes = time.getMinutes().toString().length == 1 ? '0'+time.getMinutes() : time.getMinutes(),
@@ -43,6 +44,7 @@ function formatTime(){
 
         li.appendChild(cross);
         var printRequest = document.getElementById("workOrder")
+        console.log("hi")
         printRequest.appendChild(li);
         // delete Announcement
         cross.addEventListener('click', async function(e){
@@ -69,7 +71,6 @@ async function getSection(){
 //adds work order info on fb change
 function setSection(temp){
     unit = temp
-    //console.log(unit)
     db.collection('Office/Workorder/workOrder').orderBy('requestDate').onSnapshot((snapshot) =>{
         let changes = snapshot.docChanges();
         changes.forEach(change =>{
@@ -83,4 +84,5 @@ function setSection(temp){
     }) 
 }
 getSection()
+
      

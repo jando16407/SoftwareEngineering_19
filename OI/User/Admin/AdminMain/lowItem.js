@@ -1,46 +1,56 @@
-function renderLowItem(doc){
-    let li = document.createElement('li');
-    let itemName = document.createElement('span');
-    let itemDescription = document.createElement('span');
-    let quantity = document.createElement('span');
-    let price = document.createElement('span');
-    let col1 = document.createElement('span');
-    let col2 = document.createElement('span');
-    let col3 = document.createElement('span');
 
 
-    li.setAttribute('data-id', doc.id);
-    itemName.textContent = doc.data().itemName;
-    itemDescription.textContent = doc.data().itemDescription;
-    quantity.textContent = doc.data().quantity;
-    price.textContent = doc.data().price;
-    col1.textContent = ' - ';
-    col2.textContent = ' - ';
-    col3.textContent = ' x ';
-
-    li.appendChild(itemName);
-    li.appendChild(col1);
-    li.appendChild(itemDescription);
-    li.appendChild(col2);
-    li.appendChild(price);
-    li.appendChild(col3);
-    li.appendChild(quantity);
-
-    printLowItem.appendChild(li);
-}
-
-db.collection('Watis/NusiCkayiV6LuuMOu94U/Supply').orderBy('itemName').onSnapshot((snapshot) =>{
-  let changes = snapshot.docChanges();
-  changes.forEach(change =>{
-      if(change.type == 'added' && change.doc.data().quantity < 3){
-        console.log(change.doc.data())
-          renderLowItem(change.doc);
-      } else if (change.type == 'removed'){
-          let li = printLowItem.querySelector('[data-id=' + change.doc.id + ']');
-          printLowItem.removeChild(li);
-      } else if (change.type == 'updated'){
-          renderLowItem(change.doc);
-      }
-  })
-})
 const printLowItem = document.querySelector('#lowItem');
+var list = new Array()
+db.collection("Office/Inventory/Units").onSnapshot(async function(querySnapshot) {
+    await querySnapshot.forEach(function(doc) {
+        list.push(doc.id)
+    });
+    getItemList(list)
+    
+})
+var newList = new Array()
+async function getItemList(arrayList){
+    console.log(arrayList)
+    for(var i= 0; i < arrayList.length; i++){
+        
+    await db.collection("Office").doc("Inventory").collection("Units").doc(arrayList[i]).collection("Item")
+      .get().then(function(querySnapshot) {
+          
+        querySnapshot.forEach(function(doc) {
+            newList.push(doc.data())
+        });
+        
+    });
+    
+    }
+    
+    //create master list
+    for(var i = 0; i < newList.length; i++){
+        for(var j = i + 1; j < newList.length; j++){
+            if(newList[i].name == newList[j].name){
+                newList[i].quantity =parseInt(newList[i].quantity) + parseInt(newList[j].quantity)
+                newList.splice(j, 1);
+                    j--
+            }
+        }
+    }
+    //get rid of all that are greater than min value
+    for(var i = 0; i < newList.length; i++){
+        if(parseInt(newList[i].quantity) > parseInt(newList[i].minimum_quantity)){
+            newList.splice(i, 1)
+            i--
+        }
+    }
+    displayLow(newList)
+}
+    
+    function displayLow(list){
+        var listView = document.getElementById("lowItem")
+        for(var i = 0; i < list.length; i++){
+        var li = document.createElement("li")
+        li.textContent = list[i].name + " - " + list[i].quantity + " " + list[i].quantity_unit
+        listView.appendChild(li)
+        }
+
+    }

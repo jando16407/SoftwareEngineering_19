@@ -26,6 +26,7 @@ var firebaseConfig = {
       await db.collection("Office").doc("Workorder").collection("workOrder")
       .get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
+            console.log("load")
             updateColor(doc.data())
         });
     });
@@ -36,17 +37,28 @@ var firebaseConfig = {
   db.collection("Office").doc("officeView")
     .onSnapshot(async function(doc) {
         if(!savingUnits && !isOnLoad){
+            console.log("CHANGE")
             await clearCanvas()
             updateUnitsArray(doc.data())
             await updateUnits()
-        }
+            
+        }await db.collection("Office").doc("Workorder").collection("workOrder")
+            .get()
+            .then(function(querySnapshot) {
+                querySnapshot.forEach(function(doc) {
+                    console.log("change")
+                    updateColor(doc.data());
+                });
+            })
+            .catch(function(error) {
+                console.log("Error getting documents: ", error);
+            });
     });
   //if change to work order
   db.collection("Office").doc("Workorder").collection("workOrder")
     .onSnapshot(async function(querySnapshot) {
         console.log("change detected!!")
         querySnapshot.forEach(function(doc) {
-            console.log(doc.data())
             updateColor(doc.data());
         });
     });
@@ -107,6 +119,7 @@ async function addUnits(event){
         button.innerHTML = "Add Units"
         //add save function here
         await fabricCanvas.forEachObject(async function(element){
+            savingUnits = true
             var varX = element.get("left")
             var varY = element.get("top")
             var unitSize = element.get("radius")
@@ -120,9 +133,10 @@ async function addUnits(event){
                     id: unitNum
                 }
             })
+            await console.log(savingUnits)
             tempUnits = []
         })
-        savingUnits = false
+        setTimeout(function(){ savingUnits = false }, 3000);
     }
     // go into add units mode
     else if(!isAddingUnits && !isDeletingUnits){
@@ -138,6 +152,7 @@ async function deleteUnits(event){
         isDeletingUnits = false
         savingUnits = true
         button.innerHTML = "Delete Units"
+        updateUnitsArrayDelete(deletedUnits)
         while(deletedUnits.length > 0){
             await db.collection("Office").doc("officeView").update({
                 [deletedUnits[0]]: firebase.firestore.FieldValue.delete()
@@ -258,7 +273,7 @@ function drawInUnits(units){
 
 }
 // updates array of unit numbers for the inventory workspace 
-function updateUnitsArray(data){
+async function updateUnitsArray(data){
     keys = Object.keys(data)
     keys.pop()
     var i
@@ -267,13 +282,22 @@ function updateUnitsArray(data){
         var tempString = "Unit_" + keys[i]
         unitArray.push(tempString)
     }
-    db.collection("Office").doc("officeView").update({
+
+    await db.collection("Office").doc("officeView").update({
         Units: unitArray
      })
 }
+async function updateUnitsArrayDelete(deleteList){
+    console.log(deleteList)
+    for(var i = 0; i < deleteList.length; i++){
+        var temp = "Unit_"+ deleteList[i]
+        await db.collection("Office").doc("officeView").update({
+            Units: firebase.firestore.FieldValue.arrayRemove(temp)
+         })
+    }
+}
 //for on change in db -- clears canvas
 async function clearCanvas(){
-    console.log("im doing something")
     var objs = fabricCanvas.getObjects()
     for(var i = 0; i < objs.length; i++){
     await fabricCanvas.setActiveObject(objs[i])
@@ -334,7 +358,6 @@ async function getUnitInfo(num, elem){
 function updateColor(listUnits){
     var objs = fabricCanvas.getObjects()
     var color
-    console.log(objs.length)
     for(var i = 0; i < objs.length; i++){
         if(objs[i].get("id") == listUnits.section){
             console.log(listUnits.condition)

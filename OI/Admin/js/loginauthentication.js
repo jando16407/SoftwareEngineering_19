@@ -29,7 +29,7 @@ async function checkAuth(userId){
   });
   if(userType != "Admin"){
     alert("Access restricted.")
-    document.location.href = "../../index.html"
+    document.location.href = "../index.html"
   }
 }
 //gets current state of logged in user
@@ -43,7 +43,7 @@ async function checkAuth(userId){
     } else {
       // User is signed out send to log in page
       alert("Invalid user credentials. Please log in.")
-      document.location.href = "../../index.html"
+      document.location.href = "../index.html"
     }
 })
 }

@@ -1344,9 +1344,15 @@ async function submitButtonClicked( unitName, i ) {
     category[9] = 'minimum_quantity';
     
     console.log(unitName);
-    
+    let checkInputFieldFilled = true;
     //Iterate to gather inputs and build data to push
     for( let j=0; j<item.length; j++ ){
+        if( j==0 || j==1 || j==2 || j==3 || j==5 || j==6 || j==8 || j==9){
+            if(item[j] == ''){
+                console.log("Fail at j = "+j);
+                checkInputFieldFilled = false;
+            } 
+        }
         if( item[j] != ''){
             //Add input to data
             data[category[j]] = item[j];
@@ -1358,8 +1364,14 @@ async function submitButtonClicked( unitName, i ) {
     }
 
     //Add data to database
-    let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
-    ref.add(data)
+    if(!checkInputFieldFilled){
+        alert("Please fill required input field.\nID, Name, Quantity, Quantity Unit, Category, Subcategory, Minumum Quantity Required.");
+        return;
+    }
+    else{
+        let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
+        ref.add(data)
+    }
 
     //Set the ID
     console.log("i="+i+", element = "+document.getElementById('id'+i));

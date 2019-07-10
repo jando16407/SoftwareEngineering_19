@@ -2,7 +2,9 @@
 //var database;
 var officeViewRef;  //Database ref to OfficeView
 var numOfUnits;     //Nuber of units stored on database
+var realNumOfUnits;
 var unitNameArray =[];  //Names of units stored on database
+var realUnitNameArray = [];
 var masterlistdone = false;
 var searchClicked = false;
 var userSection = null;
@@ -118,13 +120,14 @@ function get_unit_info(){
         if(doc.exists){
             //Get number of units
             this.numOfUnits = 1;
-            let numUnits = doc.data().Units.length;
-            console.log("\tNumber of Units: "+numOfUnits);
+            this.realNumOfUnits = doc.data().Units.length;
+            //console.log("\tNumber of Units: "+numOfUnits);
             //Get unit's name and store it in an array
-            for( let i=0; i<numUnits; i++ ){
+            for( let i=0; i<realNumOfUnits; i++ ){
                 if( this.userSection == doc.data().Units[i] ){
                     this.unitNameArray[0] = doc.data().Units[i];
                 }
+                this.realUnitNameArray[i] = doc.data().Units[i];
             }
             load_page();
         } 
@@ -632,6 +635,7 @@ function init_detail_view(){
         let item_id_input = document.createElement('input');
         item_id_input.setAttribute('id', 'detail_id');
         item_id_input.setAttribute('placeholder', 'ID');
+        item_id_input.setAttribute('readonly', true);
     //Item Name
         let item_name_label = document.createElement('label');
         item_name_label.setAttribute('for', 'detail_item_name');
@@ -640,6 +644,7 @@ function init_detail_view(){
         item_name_input.setAttribute('id', 'detail_name');
         item_name_input.setAttribute('type', 'test');
         item_name_input.setAttribute('placeholder', 'Name');
+        item_name_input.setAttribute('readonly', true);
     //Quantity
         let item_quantity_label = document.createElement('label');
         item_quantity_label.setAttribute('for', 'detail_item_quantity');
@@ -656,6 +661,7 @@ function init_detail_view(){
         item_quantity_unit_input.setAttribute('id', 'detail_quantity_unit');
         item_quantity_unit_input.setAttribute('type', 'test');
         item_quantity_unit_input.setAttribute('placeholder', 'Quantity Unit');
+        item_quantity_unit_input.setAttribute('readonly', true);
     //Item description
         let item_description_label = document.createElement('label');
         item_description_label.setAttribute('for', 'detail_item_description');
@@ -664,6 +670,7 @@ function init_detail_view(){
         item_description_input.setAttribute('id', 'detail_description');
         item_description_input.setAttribute('type', 'test');
         item_description_input.setAttribute('placeholder', 'Description');
+        item_description_input.setAttribute('readonly', true);
     //Item category
         let item_category_label = document.createElement('label');
         item_category_label.setAttribute('for', 'detail_category');
@@ -672,6 +679,7 @@ function init_detail_view(){
         item_category_input.setAttribute('id', 'detail_category');
         item_category_input.setAttribute('type', 'test');
         item_category_input.setAttribute('placeholder', 'Category');
+        item_category_input.setAttribute('readonly', true);
     //Item sub-category
         let item_subcategory_label = document.createElement('label');
         item_subcategory_label.setAttribute('for', 'detail_item_subcategory');
@@ -680,6 +688,7 @@ function init_detail_view(){
         item_subcategory_input.setAttribute('id', 'detail_subcategory');
         item_subcategory_input.setAttribute('type', 'test');
         item_subcategory_input.setAttribute('placeholder', 'Sub Category');
+        item_subcategory_input.setAttribute('readonly', true);
     //Item Assign
         let item_assign_label = document.createElement('label');
         item_assign_label.setAttribute('for', 'detail_item_assign');
@@ -696,6 +705,7 @@ function init_detail_view(){
         item_minimum_quantity_input.setAttribute('id', 'detail_minimum_quantity');
         item_minimum_quantity_input.setAttribute('type', 'test');
         item_minimum_quantity_input.setAttribute('placeholder', 'Minimum Quantity');
+        item_minimum_quantity_input.setAttribute('readonly', true);
     
 
     /************************************************** */
@@ -791,6 +801,8 @@ function init_detail_view(){
                 document.getElementById('detail_description').value = '';
                 document.getElementById('detail_category').value = '';
                 document.getElementById('detail_subcategory').value = '';
+                document.getElementById('detail_assign').value = '';
+                document.getElementById('detail_minimum_quantity').value = '';
                 //this.deleting = false;
             }).catch(function(error) {
                 console.error("Error removing item from database: "+error);
@@ -814,8 +826,8 @@ function init_detail_view(){
 async function get_selections(){
     //console.log("Get Selection start");
     let names = [], quantityUnits = [], categories = [], subcategories = [];
-    for( let i=0; i<numOfUnits; i++ ){
-        let unitName = unitNameArray[i];
+    for( let i=0; i<realNumOfUnits; i++ ){
+        let unitName = realUnitNameArray[i];
         let ref = database.collection('Office').doc('Inventory').collection('Units').doc(unitName).collection('Item');
         await ref.get().then(function(snapshot){
             if(snapshot.empty){
@@ -835,7 +847,6 @@ async function get_selections(){
     quantityUnitsUniqueArray = getUniq(quantityUnits);
     categoriesUniqueArray = getUniq(categories);
     subcategoriesUniqueArray = getUniq(subcategories);
-    
     nameSelection = namesUniqueArray;
     quantityUnitSelection = quantityUnitsUniqueArray;
     categorySelection = categoriesUniqueArray;
@@ -895,31 +906,8 @@ function add_options(){
         unitDataList.appendChild(item_search_options_quantity_unit);
         unitDataList.appendChild(item_search_options_category);
         unitDataList.appendChild(item_search_options_subcategory);
+        
     }
-    /*
-    //Add option name to master list
-        let item_search_options_master = document.createElement("datalist");
-        item_search_options_master.setAttribute('id', 'option_search_masterList');
-        item_search_options_master = add_selections(item_search_options_master, nameSelection);
-    //Add option quantity unit
-        let item_search_options_quantity_unit_master = document.createElement("datalist");
-        item_search_options_quantity_unit_master.setAttribute('id', 'option_search_masterList_quantity_unit');
-        item_search_options_quantity_unit_master = add_selections(item_search_options_quantity_unit_master, quantityUnitSelection);
-    //Add option quantity unit
-        let item_search_options_category_master = document.createElement("datalist");
-        item_search_options_category_master.setAttribute('id', 'option_search_masterList_category');
-        item_search_options_category_master = add_selections(item_search_options_category_master, categorySelection);
-    //Add option quantity unit
-        let item_search_options_subcategory_master = document.createElement("datalist");
-        item_search_options_subcategory_master.setAttribute('id', 'option_search_masterList_subcategory');
-        item_search_options_subcategory_master = add_selections(item_search_options_subcategory_master, subcategorySelection);
-    //Put everyhitng to together
-        let masterDataList = document.getElementById('masterDataList');
-        masterDataList.appendChild(item_search_options_master);
-        masterDataList.appendChild(item_search_options_quantity_unit_master);
-        masterDataList.appendChild(item_search_options_category_master);
-        masterDataList.appendChild(item_search_options_subcategory_master);
-    */
    console.log('09 Add options done...');
 }
 
@@ -937,6 +925,9 @@ async function get_max_id(item_input, unitNum){
     let maxIdQuery = maxIdRef.orderBy("id", "desc").limit(1);
     let maxIdValue = 0; 
     await maxIdQuery.get().then(function(snapshot){
+        if(snapshot.empty){
+            item_input.value = ("00000001").slice(-5);
+        }
         snapshot.forEach(function(doc){
             maxIdValue = doc.data().id;
             let maxPlus = ++maxIdValue;

@@ -71,7 +71,8 @@ table {
   <h2>Main Panel</h2>
   <!--The whole workspace-->
   <div style="display: inline-block; width:100%;">
-    <div class="w3-display-top " style="display: inline-block; overflow: scroll">
+    <!-- First tab on the left side -->
+    <div class="w3-display-top " style="display: inline-block; overflow: scroll; width:48%">
       <!-- Tab buttons -->
       <div class="w3-bar w3-black">
         <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'MainTab');"></button>
@@ -82,13 +83,14 @@ table {
         <div id="MainTab" class="w3-container w3-white w3-padding-16 myLink" style="width:100%;">
           <div style="display: inline-block; height:550px; width:100%;">
             <!-- Low Items -->
-            <h3>Low Item Status</h3>
-            <p>Display list of low items through item id, name, and quanity</p>
-            <div style="height: auto; width: auto; overflow: scroll">
-              <ul id="lowItem"></ul>
+            <div style='height: 250px;'>
+              <h3>Low Item Status</h3>
+              <p>Display list of low items through item id, name, and quanity</p>
+              <div style="height: 200px; width: auto; overflow: scroll">
+                <ul id="lowItem"></ul>
+              </div>
             </div>
             <h3>Work Order Status</h3>
-  
               <p>Displays all work orders</p>
               <div style="height: 50%; overflow-y: scroll;">
                 <ul id="workOrder"></ul>
@@ -99,7 +101,7 @@ table {
       </div>
     </div>
     <!-- Second Tab on the Right side -->
-    <div style ="display: inline-block; vertical-align: top; width:45%;">
+    <div style ="display: inline-block; vertical-align: top; width:50%;">
         <div class="w3-display-top " style="width:100%; height: 425px; ">
           <!-- Tab buttons -->
           <div class="w3-bar w3-black">
@@ -111,7 +113,7 @@ table {
             <h3>Past Announcements</h3>                
             <div id="pastAnnouncementsList" style="height: 360px; overflow: scroll">
             </div>
-            <input id="selectedAnnouncement"class="input" style="width:80%; height: 30px;" placeholder="Click Announcement to delete"></input>
+            <input id="selectedAnnouncement"class="input" style="width:80%; height: 30px;" placeholder="Click Announcement to delete" readonly></input>
             <button id="deleteButton" class="w3-bar-item w3-button tablink" style="width:15%;">Delete</button>
             <!-- Bottom Part (Send Announcements) -->
             <h3>Send New Announcement</h3>

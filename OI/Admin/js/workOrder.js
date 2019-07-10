@@ -27,6 +27,8 @@ function formatTime(timestamp){
         let br1 = document.createElement('br');
         let br2 = document.createElement('br');
         let br3 = document.createElement('br');
+        let br4 = document.createElement('br');
+        let br5 = document.createElement('br');
 
         li.setAttribute('data-id', doc.id);
         requestType.textContent =`Request type: ${doc.data().requestType}`;
@@ -35,8 +37,8 @@ function formatTime(timestamp){
         needBy.textContent = `Needed by: ${dateNeeded}`;
         itemName.textContent = `Item Name: ${doc.data().itemName}`;
         itemDescription.textContent = `, ${doc.data().itemDescription}`;
-        quantity.textContent = doc.data().quantity;
-        unit.textContent = doc.data().unit;
+        quantity.textContent = `Requested Quantity: ${doc.data().quantity}`;
+        unit.textContent = `Requesting Unit: ${doc.data().section}`;
         cross.textContent = 'Delete';
  
         li.appendChild(requestType);
@@ -48,9 +50,11 @@ function formatTime(timestamp){
         li.appendChild(br2)
         li.appendChild(itemName);
         li.appendChild(itemDescription);
-        li.appendChild(quantity);
-        li.appendChild(unit);
         li.appendChild(br3);
+        li.appendChild(quantity);
+        li.appendChild(br4);
+        li.appendChild(unit);
+        li.appendChild(br5);
 
         li.appendChild(cross);
 

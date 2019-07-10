@@ -753,6 +753,8 @@ function init_detail_view(){
                 document.getElementById('detail_description').value = '';
                 document.getElementById('detail_category').value = '';
                 document.getElementById('detail_subcategory').value = '';
+                document.getElementById('detail_assign').value = '';
+                document.getElementById('detail_minimum_quantity').value = '';
             }).catch(function(error) {
                 console.error("Error removing item from database: "+error);
             });
@@ -895,6 +897,9 @@ async function get_max_id(item_input, unitNum){
     let maxIdQuery = maxIdRef.orderBy("id", "desc").limit(1);
     let maxIdValue = 0; 
     await maxIdQuery.get().then(function(snapshot){
+        if(snapshot.empty){
+            item_input.value = ("00000001").slice(-5);
+        }
         snapshot.forEach(function(doc){
             maxIdValue = doc.data().id;
             let maxPlus = ++maxIdValue;

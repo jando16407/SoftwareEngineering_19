@@ -49,7 +49,18 @@ async function getItemList(arrayList){
         var listView = document.getElementById("lowItem")
         for(var i = 0; i < list.length; i++){
         var li = document.createElement("li")
-        li.textContent = list[i].name + " - " + list[i].quantity + " " + list[i].quantity_unit
+        var name = document.createElement('div');
+        var qt = document.createElement('span')
+        var min = document.createElement('span')
+        let br0 = document.createElement('br');
+        name.textContent = 'Low Item Name:    '+list[i].name
+        qt.textContent =  "Current qt:    " + list[i].quantity + " " + list[i].quantity_unit
+        min.textContent = "Minimum qt:    "+list[i].minimum_quantity + " " + list[i].quantity_unit
+        li.appendChild(name);
+        li.appendChild(qt);
+        li.appendChild(br0);
+        li.appendChild(min);
+        //li.textContent = list[i].name + ":  -Current qt:  " + list[i].quantity + " " + list[i].quantity_unit+"\n"+"Minimum qt.:  "+list[i].minimum_quantity
         listView.appendChild(li)
         }
 
